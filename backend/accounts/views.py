@@ -13,6 +13,7 @@ from .models import User
 @permission_classes([AllowAny,])
 def signup(request):
     serializer = UserSerializer(data=request.POST)  
+    
     # 1.입력받은 password를 암호화하기 위해 
     if serializer.is_valid(raise_exception=True):
         password = serializer.validated_data.get('password')
