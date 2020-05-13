@@ -115,6 +115,8 @@ celerybeat-schedule
 .mypy_cache/
 .dmypy.json
 dmypy.json
+.secrets.json
+secrets.json
 
 # Pyre type checker
 .pyre/
@@ -186,4 +188,4 @@ $RECYCLE.BIN/
 
 # End of https://www.gitignore.io/api/macos,django,windows,visualstudiocode
 
-secrets.json
+
