@@ -20,7 +20,7 @@ from django.core.exceptions import ImproperlyConfigured
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-with open("secrets.json") as f:
+with open('secrets.json') as f:
     secrets = json.loads(f.read())
 
 
@@ -28,11 +28,11 @@ def get_secret(setting, secrets=secrets):
     try:
         return secrets[setting]
     except KeyError:
-        error_msg = "Set the {0} environment variable".format(setting)
+        error_msg = 'Set the {0} environment variable'.format(setting)
         raise ImproperlyConfigured(error_msg)
  
 
-SECRET_KEY = get_secret("SECRET_KEY")
+SECRET_KEY = get_secret('SECRET_KEY')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -141,7 +141,7 @@ STATIC_ROOT = [os.path.join(BASE_DIR, 'static'),]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-MEDIA_URL = "/media/"
+MEDIA_URL = '/media/'
 
 
 REST_FRAMEWORK = {
@@ -166,3 +166,5 @@ JWT_AUTH = {
 
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+
