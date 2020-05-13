@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'mainapp',
     'rest_framework', 
     'corsheaders' , 
     'drf_yasg',  
