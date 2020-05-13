@@ -44,6 +44,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'accounts',
     'mainapp',
     'rest_framework', 
     'corsheaders' , 
@@ -168,3 +169,4 @@ JWT_AUTH = {
 CORS_ORIGIN_ALLOW_ALL = True
 
 
+AUTH_USER_MODEL = "accounts.User" 

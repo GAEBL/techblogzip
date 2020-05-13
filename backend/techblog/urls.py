@@ -20,6 +20,7 @@ from techblog import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('auth/', include('accounts.urls')),
     path('home/', include('mainapp.urls')),
 ]
 urlpatterns += staticfiles_urlpatterns()
