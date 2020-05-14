@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse, HttpResponse
 from rest_framework.response import Response
+from django.db.models import Q
 from .models import *
 from .serializers import *
 from django.contrib.auth import get_user_model
@@ -29,7 +30,7 @@ def like(request, id):
     else:
         posts.is_liked.remove(user)
         on_like = False
-    return JsonResponse({"result":"true","count_like":posts.is_liked.all().count(),"on_like":on_like})
+    return JsonResponse({'result':'true','count_like':posts.is_liked.all().count(),'on_like':on_like})
 
 
 @api_view(['GET']) 
@@ -46,7 +47,9 @@ def search(request):
     posts = Post.objects.all()
     query = request.POST['query']
     if query: 
-        posts = posts.filter(title__icontains=query) 
+        posts = posts.filter(
+            Q(title__icontains=query) | Q(tags__name__icontains=query)).distinct() 
         serializer = PostSerializer(posts, many=True)
         return JsonResponse({'result':'true', 'data' : serializer.data})
+    # 수정해야함
     return JsonResponse({'result':'false'})
