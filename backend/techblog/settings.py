@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
-import datetime 
+import datetime
 import sys
 import json
 from django.core.exceptions import ImproperlyConfigured
@@ -30,7 +30,7 @@ def get_secret(setting, secrets=secrets):
     except KeyError:
         error_msg = 'Set the {0} environment variable'.format(setting)
         raise ImproperlyConfigured(error_msg)
- 
+
 
 SECRET_KEY = get_secret('SECRET_KEY')
 
@@ -46,9 +46,10 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [ 
     'accounts',
     'mainapp',
-    'rest_framework', 
-    'corsheaders' , 
-    'drf_yasg',  
+    'crawling',
+    'rest_framework',
+    'corsheaders',
+    'drf_yasg',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -138,7 +139,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = [os.path.join(BASE_DIR, 'static'),]
+STATIC_ROOT = [os.path.join(BASE_DIR, 'static'), ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -158,11 +159,11 @@ REST_FRAMEWORK = {
 
 
 JWT_AUTH = {
-    'JWT_SECRET_KEY': SECRET_KEY, 
-    'JWT_ALGORITHM': 'HS256',  
-    'JWT_ALLOW_REFRESH': True, 
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7), 
-    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=28), 
+    'JWT_SECRET_KEY': SECRET_KEY,
+    'JWT_ALGORITHM': 'HS256',
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=28),
 }
 
 
