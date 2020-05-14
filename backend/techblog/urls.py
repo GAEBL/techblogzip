@@ -23,7 +23,7 @@ from . import settings
 
 schema_view = get_schema_view(
    openapi.Info(
-      title="TechBlog.zip API",
+      title='TechBlog.zip API',
       default_version='v1',
    ),
 )
