@@ -38,3 +38,9 @@ def company(request, id):
     company = Company.objects.get(id=id)
     serializer = CompanySerializer(company)
     return JsonResponse({'data' : serializer.data})
+
+
+@api_view(['POST']) 
+@permission_classes([AllowAny, ])
+def search(request):
+    return
