@@ -4,16 +4,16 @@ from tqdm import tqdm
 import json
 
 driver_selector = driver.find_elements_by_css_selector
-naver = Company.objects.get(name='네이버')
+kakao = Company.objects.get(name='카카오')
 
 
 def get_contents():
-    posts = Post.objects.filter(company=naver, contents='')
+    posts = Post.objects.filter(company=kakao, contents='')
     for post in tqdm(posts):
         driver.get(post.url)
         driver.implicitly_wait(10)
 
-        contents = driver_selector('div.con_view')[0]
+        contents = driver_selector('div.post-content')[0]
         articles = contents.find_elements_by_css_selector('p')
 
         contents = ''
@@ -25,9 +25,7 @@ def get_contents():
 
 
 def get_posts(url):
-    global driver_selector, naver
-
-    cnt = 0
+    cnt = 1
     while True:
         try:
             driver.get(url)
@@ -35,28 +33,32 @@ def get_posts(url):
         except:
             return {'status': 500, 'message': 'Crawling을 할 수 없습니다. 해당 페이지의 주소와 서버 상태를 확인하세요.'}
         else:
-            posts = driver_selector('div.cont_post')
+            posts = driver_selector('ul.list_post')
+            posts = posts[0].find_elements_by_css_selector('li')
             for post in posts:
                 element_selector = post.find_element_by_css_selector
 
-                title = element_selector('a').text
-                if len(Post.objects.filter(company=naver, title=title)) > 0:
+                title = element_selector('strong.tit_post').text
+                if len(Post.objects.filter(company=kakao, title=title)) > 0:
                     get_contents()
-                    return {'status': 200, 'message': 'Naver D2에 대한 Crawling을 완료했습니다.'}
+                    return {'status': 200, 'message': '카카오에 대한 Crawling을 완료했습니다.'}
 
-                date = element_selector('dd').text
-                image = element_selector('img').get_attribute('src')
-                url = element_selector('a').get_attribute('href')
+                date = element_selector('span.txt_date').text
+                url = element_selector('a.link_post').get_attribute('href')
+                try:
+                    image = element_selector('img').get_attribute('src')
+                except:
+                    image = ''
 
                 _, is_created = Post.objects.get_or_create(
-                    company=naver, title=title, contents='', date=date,
+                    company=kakao, title=title, contents='', date=date,
                     image=image, url=url
                 )
 
-            is_ended = len(driver_selector('a.btn_next')) == 0
+            is_ended = len(driver_selector('a.next.page-numbers')) == 0
             if is_ended == False:
                 cnt += 1
-                url = f'https://d2.naver.com/home?page={cnt}'
+                url = f'https://tech.kakao.com/blog/page/{cnt}/'
             else:
                 get_contents()
-                return {'status': 200, 'message': 'Naver D2에 대한 Crawling을 완료했습니다.'}
+                return {'status': 200, 'message': '카카오에 대한 Crawling을 완료했습니다.'}
