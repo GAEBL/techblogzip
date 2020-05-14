@@ -14,7 +14,7 @@ class PostSerializer(serializers.ModelSerializer):
         fields = ['company', 'title', 'date', 'contents', 'image', 'url']
 
 class CompanySerializer(serializers.ModelSerializer):
-    post = PostSerializer(source='company_post', many=True)
+    post = PostSerializer(source='posts', many=True)
     class Meta:
         model = Company
         fields = ['name', 'url', 'logo', 'description', 'post']
