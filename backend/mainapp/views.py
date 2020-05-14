@@ -30,3 +30,11 @@ def like(request, id):
         posts.is_liked.remove(user)
         on_like = False
     return JsonResponse({"result":"true","count_like":posts.is_liked.all().count(),"on_like":on_like})
+
+
+@api_view(['GET']) 
+@permission_classes([AllowAny, ])
+def company(request, id):
+    company = Company.objects.get(id=id)
+    serializer = CompanySerializer(company)
+    return JsonResponse({'data' : serializer.data})
