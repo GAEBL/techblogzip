@@ -17,4 +17,16 @@ def posts(request):
     serializer = PostSerializer(posts, many=True)
     return JsonResponse({'data' : serializer.data})
 
-# def post
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated, ])
+def like(request, id):
+    posts = Post.objects.get(id=id)
+    user = request.user
+    if user not in posts.is_liked.all():
+        posts.is_liked.add(user)
+        on_like = True
+    else:
+        posts.is_liked.remove(user)
+        on_like = False
+    return JsonResponse({"result":"true","count_like":posts.is_liked.all().count(),"on_like":on_like})
