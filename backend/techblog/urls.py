@@ -15,15 +15,27 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns, static
 from . import settings
+
+
+schema_view = get_schema_view(
+   openapi.Info(
+      title="TechBlog.zip API",
+      default_version='v1',
+   ),
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('accounts.urls')),
-    path('home/', include('mainapp.urls')),
+    path('techblog/', include('mainapp.urls')),
     # 오프라인 상태에서 테스트용, 추후 crontab으로 변경
     path('crawling/', include('crawling.urls')),
+    path('swagger/', schema_view.with_ui('swagger')),
+    path('redoc/', schema_view.with_ui('redoc')),
 ]
 
 urlpatterns += staticfiles_urlpatterns()
