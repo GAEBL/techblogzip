@@ -18,3 +18,7 @@ $ python manage.py migrate
 $ python manage.py runserver
 ```
 
+
+
+"" 사용하지말고 '' 사용하기!
+
