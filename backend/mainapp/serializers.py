@@ -9,14 +9,12 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['username', 'password', 'email', 'is_subscribed']
 
 class PostSerializer(serializers.ModelSerializer):
-    # company = CompanySerializer(source='company_post', many=True)
-    # company_post = 
     class Meta:
         model = Post
         fields = ['company', 'title', 'date', 'contents', 'image', 'url']
 
 class CompanySerializer(serializers.ModelSerializer):
-    post = PostSerializer(source='company_post', many=True)
+    post = PostSerializer(source='posts', many=True)
     class Meta:
         model = Company
         fields = ['name', 'url', 'logo', 'description', 'post']
