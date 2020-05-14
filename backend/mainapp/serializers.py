@@ -8,13 +8,21 @@ class UserSerializer(serializers.ModelSerializer):
         model = get_user_model()
         fields = ['username', 'password', 'email', 'is_subscribed']
 
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ['name',]
+
 class PostSerializer(serializers.ModelSerializer):
+    tags = TagSerializer(many=True)
     class Meta:
         model = Post
-        fields = ['company', 'title', 'date', 'contents', 'image', 'url']
+        fields = ['company', 'title', 'date', 'contents', 'image', 'url', 'tags']
 
 class CompanySerializer(serializers.ModelSerializer):
     post = PostSerializer(source='posts', many=True)
     class Meta:
         model = Company
         fields = ['name', 'url', 'logo', 'description', 'post']
+
+
