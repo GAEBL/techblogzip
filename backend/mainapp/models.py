@@ -6,7 +6,8 @@ class Company(models.Model):
     name = models.CharField(max_length=100)
     url = models.CharField(max_length=100)
     logo = models.CharField(max_length=100, blank=True, null=True)
-    description = models.TextField(null=True)  
+    description = models.TextField(null=True)
+    
     def __str__(self):
         return self.name
 
@@ -19,6 +20,7 @@ class Post(models.Model):
     image = models.CharField(max_length=100)
     url = models.CharField(max_length=100)
     is_liked = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='user_post', blank=True, null=True)
+    
     def __str__(self):
         return self.title
 
@@ -26,6 +28,7 @@ class Post(models.Model):
 class Tag(models.Model):
     name = models.CharField(max_length=100)
     tag_post = models.ManyToManyField(Post, related_name="post_tag", blank=True, null=True)
+    
     def __str__(self):
         return self.name
 
