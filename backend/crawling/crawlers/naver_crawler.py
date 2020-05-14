@@ -1,12 +1,32 @@
 from .config import options, driver
 from mainapp.models import Company, Post
+from tqdm import tqdm
 import json
 
 driver_selector = driver.find_elements_by_css_selector
 naver = Company.objects.get(name='네이버')
 
 
+def get_contents():
+    posts = Post.objects.filter(company=naver, contents='')
+    for post in tqdm(posts):
+        driver.get(post.url)
+        driver.implicitly_wait(10)
+
+        contents = driver_selector('div.con_view')[0]
+        articles = contents.find_elements_by_css_selector('p')
+
+        contents = ''
+        for article in articles:
+            contents += article.text + '\n'
+
+        post.contents = contents
+        post.save()
+
+
 def get_posts(url):
+    global driver_selector, naver
+
     cnt = 0
     while True:
         try:
@@ -20,13 +40,16 @@ def get_posts(url):
                 element_selector = post.find_element_by_css_selector
 
                 title = element_selector('a').text
+                if len(Post.objects.filter(company=naver, title=title)) > 0:
+                    get_contents()
+                    return {'status': 200, 'message': 'Naver D2에 대한 Crawling을 완료했습니다.'}
+
                 date = element_selector('dd').text
-                contents = element_selector('div.post_txt').text
                 image = element_selector('img').get_attribute('src')
                 url = element_selector('a').get_attribute('href')
 
                 _, is_created = Post.objects.get_or_create(
-                    company=naver, title=title, contents=contents, date=date,
+                    company=naver, title=title, contents='', date=date,
                     image=image, url=url
                 )
 
@@ -35,4 +58,5 @@ def get_posts(url):
                 cnt += 1
                 url = f'https://d2.naver.com/home?page={cnt}'
             else:
+                get_contents()
                 return {'status': 200, 'message': 'Naver D2에 대한 Crawling을 완료했습니다.'}
