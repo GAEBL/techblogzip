@@ -20,6 +20,7 @@ from . import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('auth/', include('accounts.urls')),
     path('home/', include('mainapp.urls')),
     # 오프라인 상태에서 테스트용, 추후 crontab으로 변경
     path('crawling/', include('crawling.urls')),

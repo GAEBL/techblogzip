@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import Company, Post, Tag
 
-# Register your models here.
+admin.site.register(Company)
+admin.site.register(Post)
+admin.site.register(Tag)
