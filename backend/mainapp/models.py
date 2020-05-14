@@ -15,8 +15,8 @@ class Company(models.Model):
 class Post(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='company_post', blank=True, null=True,)
     title = models.CharField(max_length=100)
-    data = models.CharField(max_length=100)
-    contents = models.CharField(max_length=100)  # 나중에 AI 요약
+    date = models.CharField(max_length=100)
+    contents = models.TextField(null=True)  # 나중에 AI 요약
     image = models.CharField(max_length=100)
     url = models.CharField(max_length=100)
     is_liked = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='user_post', blank=True, null=True)
