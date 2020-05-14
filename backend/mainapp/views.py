@@ -43,4 +43,10 @@ def company(request, id):
 @api_view(['POST']) 
 @permission_classes([AllowAny, ])
 def search(request):
-    return
+    posts = Post.objects.all()
+    query = request.POST['query']
+    if query: 
+        posts = posts.filter(title__icontains=query) 
+        serializer = PostSerializer(posts, many=True)
+        return JsonResponse({'result':'true', 'data' : serializer.data})
+    return JsonResponse({'result':'false'})
