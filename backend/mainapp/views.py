@@ -15,6 +15,6 @@ from rest_framework_jwt.settings import api_settings
 def posts(request):
     posts = Post.objects.order_by('-date')
     serializer = PostSerializer(posts, many=True)
-    return Response(serializer.data)
+    return JsonResponse({'data' : serializer.data})
 
 # def post
