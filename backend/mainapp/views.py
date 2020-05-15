@@ -26,7 +26,7 @@ def sort(request):
     if sort == 'likes':
         posts = Post.objects.annotate(like_count=Count('is_liked')).order_by('-like_count', '-date')
         serializer = LikePostSerializer(posts, many=True)
-    elif sort == 'user_recommendation':
+    elif sort == 'user_recommendation':  # IsAuthenticated
         pass
     else:
         posts = Post.objects.all()
