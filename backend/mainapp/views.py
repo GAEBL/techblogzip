@@ -18,24 +18,24 @@ def posts(request):
     company = request.POST['company']  # ex) 삼성SDS
     sort = request.POST['sort']
     try:
-        companyid = Company.objects.get(name=company)
-        companyid = companyid.id
+        company_id = Company.objects.get(name=company)
+        company_id = company_id.id
     except:
-        companyid = 0
+        company_id = 0
 
     if sort == 'likes':
-        if companyid == 0:
+        if company_id == 0:
             posts = Post.objects.annotate(like_count=Count('is_liked')).order_by('-like_count', '-date')
         else:
-            posts = Post.objects.filter(company=companyid)
+            posts = Post.objects.filter(company=company_id)
             posts = posts.annotate(like_count=Count('is_liked')).order_by('-like_count', '-date')
     elif sort == 'user_recommendation':  # IsAuthenticated
         pass
     else:
-        if companyid == 0:
+        if company_id == 0:
             posts = Post.objects.all()
         else:
-            posts = Post.objects.filter(company=companyid)
+            posts = Post.objects.filter(company=company_id)
     serializer = PostSerializer(posts, many=True)
     return JsonResponse({'data' : serializer.data})
 
