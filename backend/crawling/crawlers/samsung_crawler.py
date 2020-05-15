@@ -2,13 +2,10 @@ from .config import options, driver
 from mainapp.models import Company, Post
 from tqdm import tqdm
 import json
-from selenium import webdriver
-import os
 
-
-# driver = webdriver.Chrome('.//chromedriver')
 driver_selector = driver.find_elements_by_css_selector
 samsung = Company.objects.get(name='삼성SDS')
+
 
 def get_contents():
     posts = Post.objects.filter(company=samsung, contents='')

@@ -14,8 +14,7 @@ with open('./crawling/datas/techblog_list.json', 'r', encoding='utf-8') as f:
 def crawling(request):
     global companies
 
-    # company = request.GET.get('company')
-    company = '삼성SDS'
+    company = request.GET.get('company')
     if company in companies.keys():
         data, url = {}, companies.get(company)
         if company == '네이버':
