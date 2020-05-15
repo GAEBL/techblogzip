@@ -11,10 +11,9 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_jwt.settings import api_settings
 
 
-
-@api_view(['GET', 'POST']) 
+@api_view(['GET', 'POST'])
 @permission_classes([AllowAny, ])
-def posts(request): 
+def posts(request):
     company = request.POST['company']  # ex) 삼성SDS
     sort = request.POST['sort']
     try:
@@ -25,10 +24,12 @@ def posts(request):
 
     if sort == 'likes':
         if company_id == 0:
-            posts = Post.objects.annotate(like_count=Count('is_liked')).order_by('-like_count', '-date')
+            posts = Post.objects.annotate(like_count=Count(
+                'is_liked')).order_by('-like_count', '-date')
         else:
             posts = Post.objects.filter(company=company_id)
-            posts = posts.annotate(like_count=Count('is_liked')).order_by('-like_count', '-date')
+            posts = posts.annotate(like_count=Count(
+                'is_liked')).order_by('-like_count', '-date')
     elif sort == 'user_recommendation':  # IsAuthenticated
         pass
     else:
@@ -37,7 +38,7 @@ def posts(request):
         else:
             posts = Post.objects.filter(company=company_id)
     serializer = PostSerializer(posts, many=True)
-    return JsonResponse({'data' : serializer.data})
+    return JsonResponse({'data': serializer.data})
 
 
 @api_view(['GET'])
@@ -51,28 +52,28 @@ def like(request, id):
     else:
         posts.is_liked.remove(user)
         on_like = False
-    return JsonResponse({'result':'true','count_like':posts.is_liked.all().count(),'on_like':on_like})
+    return JsonResponse({'result': 'true', 'count_like': posts.is_liked.all().count(), 'on_like': on_like})
 
 
-@api_view(['GET']) 
+@api_view(['GET'])
 @permission_classes([AllowAny, ])
 def company(request, id):  # 기업 블로그
     company = Company.objects.get(id=id)
     serializer = CompanySerializer(company)
-    return JsonResponse({'data' : serializer.data})
+    return JsonResponse({'data': serializer.data})
 
 
-@api_view(['POST']) 
+@api_view(['POST'])
 @permission_classes([AllowAny, ])
 def search(request):
     posts = Post.objects.all()
     query = request.POST['query']
     if query:
         posts = posts.filter(
-            Q(title__icontains=query) | Q(tags__name__icontains=query)).distinct() 
+            Q(title__icontains=query) | Q(tags__name__icontains=query)).distinct()
         serializer = PostSerializer(posts, many=True)
-        return JsonResponse({'result':'true', 'data' : serializer.data})
-    return JsonResponse({'result':'false'})
+        return JsonResponse({'result': 'true', 'data': serializer.data})
+    return JsonResponse({'result': 'false'})
 
 
 # def tag_filter(request):
