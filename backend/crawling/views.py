@@ -2,7 +2,7 @@
 from django.http import JsonResponse, HttpResponse
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
-from .crawlers import naver_crawler, kakao_crawler
+from .crawlers import naver_crawler, kakao_crawler, samsung_crawler
 import json
 
 with open('./crawling/datas/techblog_list.json', 'r', encoding='utf-8') as f:
@@ -14,7 +14,8 @@ with open('./crawling/datas/techblog_list.json', 'r', encoding='utf-8') as f:
 def crawling(request):
     global companies
 
-    company = request.GET.get('company')
+    # company = request.GET.get('company')
+    company = '삼성SDS'
     if company in companies.keys():
         data, url = {}, companies.get(company)
         if company == '네이버':
@@ -36,7 +37,7 @@ def crawling(request):
         elif company == '야놀자':
             pass
         elif company == '삼성SDS':
-            pass
+            data = samsung_crawler.get_posts(url)
         return JsonResponse(data)
 
     return HttpResponse(status=400)
