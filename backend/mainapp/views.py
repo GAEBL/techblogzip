@@ -22,15 +22,30 @@ def posts(request):  # 최신 포스트 글
 @api_view(['GET', 'POST']) 
 @permission_classes([AllowAny, ])
 def sort(request):  
+    company = request.POST['company']  # ex) 삼성SDS
     sort = request.POST['sort']
+    try:
+        companyid = Company.objects.get(name=company)
+        companyid = companyid.id
+    except:
+        companyid = 0
+    print(companyid)
     if sort == 'likes':
-        posts = Post.objects.annotate(like_count=Count('is_liked')).order_by('-like_count', '-date')
-        serializer = LikePostSerializer(posts, many=True)
+        if companyid == 0:
+            posts = Post.objects.annotate(like_count=Count('is_liked')).order_by('-like_count', '-date')
+        else:
+            print(companyid)
+            posts = Post.objects.filter(company=companyid)
+            print(posts)
+            posts = posts.annotate(like_count=Count('is_liked')).order_by('-like_count', '-date')
     elif sort == 'user_recommendation':  # IsAuthenticated
         pass
     else:
-        posts = Post.objects.all()
-        serializer = PostSerializer(posts, many=True)
+        if companyid == 0:
+            posts = Post.objects.all()
+        else:
+            posts = Post.objects.filter(company=companyid)
+    serializer = PostSerializer(posts, many=True)
     return JsonResponse({'data' : serializer.data})
 
 
