@@ -1,8 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse, HttpResponse
 from rest_framework.response import Response
-from django.db.models import Q
-from django.db.models import F, Sum, Count, Case, When
+from django.db.models import Q, F, Sum, Count, Case, When
 from .models import *
 from .serializers import *
 from django.contrib.auth import get_user_model
