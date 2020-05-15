@@ -11,17 +11,10 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_jwt.settings import api_settings
 
 
-@api_view(['GET']) 
-@permission_classes([AllowAny, ])
-def posts(request):  # 최신 포스트 글
-    posts = Post.objects.all()
-    serializer = PostSerializer(posts, many=True)
-    return JsonResponse({'data' : serializer.data})
-
 
 @api_view(['GET', 'POST']) 
 @permission_classes([AllowAny, ])
-def sort(request):  
+def posts(request): 
     company = request.POST['company']  # ex) 삼성SDS
     sort = request.POST['sort']
     try:
@@ -29,14 +22,12 @@ def sort(request):
         companyid = companyid.id
     except:
         companyid = 0
-    print(companyid)
+
     if sort == 'likes':
         if companyid == 0:
             posts = Post.objects.annotate(like_count=Count('is_liked')).order_by('-like_count', '-date')
         else:
-            print(companyid)
             posts = Post.objects.filter(company=companyid)
-            print(posts)
             posts = posts.annotate(like_count=Count('is_liked')).order_by('-like_count', '-date')
     elif sort == 'user_recommendation':  # IsAuthenticated
         pass
