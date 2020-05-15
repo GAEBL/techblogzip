@@ -24,6 +24,9 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        ordering = ['-date']
+
 
 class Tag(models.Model):
     name = models.CharField(max_length=100)

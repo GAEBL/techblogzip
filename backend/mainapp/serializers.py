@@ -19,6 +19,12 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = ['company', 'title', 'date', 'contents', 'image', 'url', 'tags']
 
+class LikePostSerializer(serializers.ModelSerializer):
+    tags = TagSerializer(many=True)
+    class Meta:
+        model = Post
+        fields = ['company', 'title', 'date', 'image', 'url', 'tags', 'is_liked']
+
 class CompanySerializer(serializers.ModelSerializer):
     post = PostSerializer(source='posts', many=True)
     class Meta:
