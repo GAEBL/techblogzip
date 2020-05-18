@@ -11,7 +11,7 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_jwt.settings import api_settings
 
 
-@api_view(['GET', 'POST'])
+@api_view(['POST'])
 @permission_classes([AllowAny, ])
 def posts(request):
     company = request.POST['company']  # ex) 삼성SDS
