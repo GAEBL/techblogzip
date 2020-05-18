@@ -2,7 +2,7 @@ from .config import options, driver
 from mainapp.models import Company, Post
 from datetime import datetime
 from tqdm import tqdm
-import json
+import time
 
 driver_selector = driver.find_elements_by_css_selector
 baemin = Company.objects.get(name='우아한형제들')
@@ -12,7 +12,7 @@ def get_contents():
     posts = Post.objects.filter(company=baemin, contents='')
     for post in tqdm(posts):
         driver.get(post.url)
-        driver.implicitly_wait(10)
+        time.sleep(10)
 
         contents = driver_selector('div.post-content')[0]
         articles = contents.find_elements_by_css_selector('p')
@@ -40,7 +40,7 @@ def get_posts(url):
     while True:
         try:
             driver.get(url)
-            driver.implicitly_wait(10)
+            time.sleep(10)
         except:
             return {'status': 500, 'message': 'Crawling을 할 수 없습니다. 해당 페이지의 주소와 서버 상태를 확인하세요.'}
         else:
