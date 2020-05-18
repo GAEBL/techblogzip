@@ -79,4 +79,9 @@ def search(request):
 @api_view(['GET'])
 @permission_classes([AllowAny, ])
 def main(request):
-   return
+    company_count = Company.objects.count()
+    posts_count = Post.objects.count()
+    posts = Post.objects.all()[:5]
+    serializer = MainPostSerializer(posts, many=True)
+    return JsonResponse({'company_count': company_count,
+                         'posts_count': posts_count, 'data': serializer.data})
