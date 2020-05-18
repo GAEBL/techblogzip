@@ -4,6 +4,8 @@ import SimpleButton from './Material/SimpleButton';
 import SimpleTextField from './Material/SimpleTextField';
 import Logo from './Logo';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { changeInput } from '../reducers/auth';
 
 const AuthTemplateWrapper = styled.div`
   width: 100%;
@@ -32,24 +34,52 @@ const StyledLink = styled(Link)`
 `;
 
 function AuthTemplate({ type }) {
+  const { form } = useSelector(({ auth }) => ({
+    form: auth[type],
+  }));
+
+  const dispatch = useDispatch();
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    dispatch(changeInput({ type, name, value }));
+  };
   return (
     <AuthTemplateWrapper>
       <Logo />
       <AuthForm>
-        <SimpleTextField type="text" name="username" label="유저명" required />
-        <SimpleTextField type="text" name="email" label="이메일" required />
         <SimpleTextField
+          value={form.username}
           type="text"
+          name="username"
+          label="유저명"
+          onChange={handleChange}
+          required
+        />
+
+        <SimpleTextField
+          value={form.password}
+          type="password"
           name="password"
           label="비밀번호"
+          onChange={handleChange}
           required
         />
         {type === 'register' && (
           <>
             <SimpleTextField
-              type="text"
+              value={form.passwordConfirm}
+              type="password"
               name="passwordConfirm"
               label="비밀번호 확인"
+              onChange={handleChange}
+              required
+            />
+            <SimpleTextField
+              value={form.email}
+              type="text"
+              name="email"
+              label="이메일"
+              onChange={handleChange}
               required
             />
           </>
