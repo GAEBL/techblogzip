@@ -76,4 +76,7 @@ def search(request):
     return JsonResponse({'result': 'false'})
 
 
-# def tag_filter(request):
+@api_view(['GET'])
+@permission_classes([AllowAny, ])
+def main(request):
+   return

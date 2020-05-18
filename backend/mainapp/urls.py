@@ -6,4 +6,5 @@ urlpatterns = [
     path('posts/like/<int:id>/', views.like),
     path('company/<int:id>/', views.company),
     path('search/', views.search),
+    path('main/', views.main),
 ]
