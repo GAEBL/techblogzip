@@ -13,12 +13,25 @@ class TagSerializer(serializers.ModelSerializer):
         model = Tag
         fields = ['name',]
 
+class TempCompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Company
+        fields = ['name',]
+
 class PostSerializer(serializers.ModelSerializer):
+    company = TempCompanySerializer()
     tags = TagSerializer(many=True)
     class Meta:
         model = Post
         # fields = ['company', 'title', 'date', 'image', 'url', 'tags', 'is_liked']
         fields = ['company', 'title', 'date', 'contents', 'image', 'url', 'tags', 'is_liked']
+
+class MainPostSerializer(serializers.ModelSerializer):
+    company = TempCompanySerializer()
+    tags = TagSerializer(many=True)
+    class Meta:
+        model = Post
+        fields = ['company', 'title', 'date', 'url', 'tags']
 
 class CompanySerializer(serializers.ModelSerializer):
     post = PostSerializer(source='posts', many=True)
