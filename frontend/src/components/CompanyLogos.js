@@ -12,6 +12,10 @@ const CompanyLogos = () => {
             background-color: ${color};
             border: solid black 1px;
             margin-right: 0.5vh;
+            margin-bottom: 0.5vh;
+            :hover {
+                cursor: pointer;
+            }
         `
         
         return (
