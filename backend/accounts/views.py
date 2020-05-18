@@ -15,7 +15,6 @@ from .models import User
 @api_view(['POST'])
 @permission_classes([AllowAny,])
 def signup(request):
-    print(request.POST)
     serializer = UserSerializer(data=request.POST)  
     # 1.입력받은 password를 암호화하기 위해 
     if serializer.is_valid(raise_exception=True):
