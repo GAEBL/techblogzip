@@ -1,11 +1,24 @@
 import React from 'react';
+import styled from 'styled-components';
+import Companylogo from '../../components/CompanyLogos'
 
-function RecentPostsPage(props) {
+const GridWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 4fr 1fr;
+`
+
+function TrendPage(props) {
   return (
-    <div>
-      <h1>최신글 페이지</h1>
-    </div>
+    <GridWrapper>
+      <div></div>
+      <div>
+        <h1>기업의 기술블로그에서 원하는 주제를 찾아보세요</h1>
+        <br/>
+        <Companylogo/>
+      </div>
+      <div></div>
+    </GridWrapper>
   );
 }
 
-export default RecentPostsPage;
+export default TrendPage;
