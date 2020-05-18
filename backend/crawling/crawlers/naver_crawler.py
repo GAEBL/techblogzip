@@ -4,7 +4,7 @@ from tqdm import tqdm
 import time
 
 driver_selector = driver.find_elements_by_css_selector
-naver = Company.objects.get(name='네이버')
+naver = Company.objects.get(name='NAVER D2')
 
 
 def get_contents():
@@ -42,7 +42,7 @@ def get_posts(url):
                 title = element_selector('a').text
                 if len(Post.objects.filter(company=naver, title=title)) > 0:
                     get_contents()
-                    return {'status': 200, 'message': 'Naver D2에 대한 Crawling을 완료했습니다.'}
+                    return {'status': 200, 'message': 'NAVER D2에 대한 Crawling을 완료했습니다.'}
 
                 date = element_selector('dd').text
                 image = element_selector('img').get_attribute('src')
@@ -59,4 +59,4 @@ def get_posts(url):
                 url = f'https://d2.naver.com/home?page={cnt}'
             else:
                 get_contents()
-                return {'status': 200, 'message': 'Naver D2에 대한 Crawling을 완료했습니다.'}
+                return {'status': 200, 'message': 'NAVER D2에 대한 Crawling을 완료했습니다.'}
