@@ -2,7 +2,7 @@
 from django.http import JsonResponse, HttpResponse
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
-from .crawlers import naver_crawler, kakao_crawler, toast_crawler, baemin_crawler, line_crawler
+from .crawlers import naver_crawler, kakao_crawler, toast_crawler, woowabros_crawler, line_crawler
 import json
 
 with open('./crawling/datas/techblog_list.json', 'r', encoding='utf-8') as f:
@@ -17,25 +17,25 @@ def crawling(request):
     company = request.GET.get('company')
     if company in companies.keys():
         data, url = {}, companies.get(company)
-        if company == '네이버':
+        if company == 'NAVER D2':
             data = naver_crawler.get_posts(url)
-        elif company == '카카오':
+        elif company == 'KAKAO TECH':
             data = kakao_crawler.get_posts(url)
         elif company == 'TOAST':
             data = toast_crawler.get_posts(url)
-        elif company == '우아한형제들':
-            data = baemin_crawler.get_posts(url)
-        elif company == 'LINE':
+        elif company == 'WOOWABROS':
+            data = woowabros_crawler.get_posts(url)
+        elif company == 'LINE ENGINEERING':
             data = line_crawler.get_posts(url)
-        elif company == '쿠팡':
+        elif company == 'COUPANG TECH':
             pass
-        elif company == '티몬':
+        elif company == 'TMON DEV':
             pass
-        elif company == 'spoqa':
+        elif company == 'SPOQA':
             pass
-        elif company == '야놀자':
+        elif company == 'YANOLJA':
             pass
-        elif company == '삼성SDS':
+        elif company == 'SAMSUNG SDS':
             pass
         return JsonResponse(data)
 

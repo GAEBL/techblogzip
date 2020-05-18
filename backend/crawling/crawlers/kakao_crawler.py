@@ -4,7 +4,7 @@ from tqdm import tqdm
 import time
 
 driver_selector = driver.find_elements_by_css_selector
-kakao = Company.objects.get(name='카카오')
+kakao = Company.objects.get(name='KAKAO TECH')
 
 
 def get_contents():
@@ -41,7 +41,7 @@ def get_posts(url):
                 title = element_selector('strong.tit_post').text
                 if len(Post.objects.filter(company=kakao, title=title)) > 0:
                     get_contents()
-                    return {'status': 200, 'message': '카카오에 대한 Crawling을 완료했습니다.'}
+                    return {'status': 200, 'message': 'KAKAO TECH에 대한 Crawling을 완료했습니다.'}
 
                 date = element_selector('span.txt_date').text
                 url = element_selector('a.link_post').get_attribute('href')
@@ -61,4 +61,4 @@ def get_posts(url):
                 url = f'https://tech.kakao.com/blog/page/{cnt}/'
             else:
                 get_contents()
-                return {'status': 200, 'message': '카카오에 대한 Crawling을 완료했습니다.'}
+                return {'status': 200, 'message': 'KAKAO TECH에 대한 Crawling을 완료했습니다.'}

@@ -4,7 +4,7 @@ from tqdm import tqdm
 import time
 
 driver_selector = driver.find_elements_by_css_selector
-line = Company.objects.get(name='LINE')
+line = Company.objects.get(name='LINE ENGINEERING')
 
 
 def get_contents():
@@ -49,7 +49,7 @@ def get_posts(url):
                 title = element_selector('a.plain').text
                 if len(Post.objects.filter(company=line, title=title)) > 0:
                     get_contents()
-                    return {'status': 200, 'message': 'LINE에 대한 Crawling을 완료했습니다.'}
+                    return {'status': 200, 'message': 'LINE ENGINEERING에 대한 Crawling을 완료했습니다.'}
 
                 date = element_selector('span.byline').text
                 url = element_selector('a.plain').get_attribute('href')
@@ -65,4 +65,4 @@ def get_posts(url):
                 url = f'https://engineering.linecorp.com/ko/blog/page/{cnt}/'
             else:
                 get_contents()
-                return {'status': 200, 'message': 'LINE에 대한 Crawling을 완료했습니다.'}
+                return {'status': 200, 'message': 'LINE ENGINEERING에 대한 Crawling을 완료했습니다.'}

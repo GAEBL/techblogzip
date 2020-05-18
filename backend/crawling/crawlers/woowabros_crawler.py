@@ -5,7 +5,7 @@ from tqdm import tqdm
 import time
 
 driver_selector = driver.find_elements_by_css_selector
-baemin = Company.objects.get(name='우아한형제들')
+baemin = Company.objects.get(name='WOOWABROS')
 
 
 def get_contents():
@@ -51,7 +51,7 @@ def get_posts(url):
                 title = element_selector('h2.post-link').text
                 if len(Post.objects.filter(company=baemin, title=title)) > 0:
                     get_contents()
-                    return {'status': 200, 'message': '우아한형제들에 대한 Crawling을 완료했습니다.'}
+                    return {'status': 200, 'message': 'WOOWABROS에 대한 Crawling을 완료했습니다.'}
 
                 date = element_selector('span.post-meta').text.split(' , ')[0]
                 date = datetime.strftime(
@@ -65,4 +65,4 @@ def get_posts(url):
                 )
 
             get_contents()
-            return {'status': 200, 'message': '우아한형제들에 대한 Crawling을 완료했습니다.'}
+            return {'status': 200, 'message': 'WOOWABROS에 대한 Crawling을 완료했습니다.'}

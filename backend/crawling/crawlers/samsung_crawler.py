@@ -4,7 +4,7 @@ from tqdm import tqdm
 import time
 
 driver_selector = driver.find_elements_by_css_selector
-# samsung = Company.objects.get(name='삼성SDS')
+# samsung = Company.objects.get(name='SAMSUNG SDS')
 
 
 def get_contents():
@@ -42,7 +42,7 @@ def get_posts(url):
                 title = element_selector('a').text
                 if len(Post.objects.filter(company='', title=title)) > 0:
                     get_contents()
-                    return {'status': 200, 'message': '삼성SDS에 대한 Crawling을 완료했습니다.'}
+                    return {'status': 200, 'message': 'SAMSUNG SDS에 대한 Crawling을 완료했습니다.'}
 
                 date = element_selector('span.thumb_date').text
                 image = element_selector('a').get_attribute('style')
@@ -61,10 +61,8 @@ def get_posts(url):
             is_ended = driver.find_element_by_css_selector(
                 'button.button'
             ).get_attribute('style')
-            # is_ended = is_ended.lstrip('visibility: ')
-            # print(is_ended)
             if is_ended == 'visibility: visible;':
                 driver.find_element_by_css_selector('#btnLoadMore').click()
             else:
                 get_contents()
-                return {'status': 200, 'message': '삼성SDS에 대한 Crawling을 완료했습니다.'}
+                return {'status': 200, 'message': 'SAMSUNG SDS에 대한 Crawling을 완료했습니다.'}
