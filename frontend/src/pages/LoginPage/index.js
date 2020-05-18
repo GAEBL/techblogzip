@@ -1,11 +1,8 @@
 import React from 'react';
+import AuthTemplate from '../../components/AuthTemplate';
 
 function LoginPage(props) {
-  return (
-    <div>
-      <h1>로그인 페이지</h1>
-    </div>
-  );
+  return <AuthTemplate type="login" />;
 }
 
 export default LoginPage;
