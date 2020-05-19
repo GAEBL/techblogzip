@@ -20,3 +20,10 @@ $ pip install -r requirements.txt
 
   > 추후 수정 예정입니다.
 
+
+
+
+
+backend > crawling > crawlers > chromedriver.exe
+
+backend > secrets.json
