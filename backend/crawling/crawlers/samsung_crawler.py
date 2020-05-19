@@ -1,17 +1,14 @@
-from .config import options, driver
+from .config import driver
 from mainapp.models import Company, Post
 from tqdm import tqdm
-import json
-
-driver_selector = driver.find_elements_by_css_selector
-samsung = Company.objects.get(name='삼성SDS')
+import time
 
 
-def get_contents():
-    posts = Post.objects.filter(company=samsung, contents='')
+def get_contents(driver_selector, samsung):
+    posts = Post.objects.filter(company='', contents='')
     for post in tqdm(posts):
         driver.get(post.url)
-        driver.implicitly_wait(10)
+        time.sleep(10)
 
         contents = driver_selector('div.txt_wrap')[0]
         articles = contents.find_elements_by_css_selector('p')  # h3미포함
@@ -25,13 +22,14 @@ def get_contents():
 
 
 def get_posts(url):
-    global driver_selector, samsung
+    driver_selector = driver.find_elements_by_css_selector
+    samsung = Company.objects.get(name='SAMSUNG SDS')
 
     cnt = 0
     while True:
         try:
             driver.get(url)
-            driver.implicitly_wait(10)
+            time.sleep(10)
         except:
             return {'status': 500, 'message': 'Crawling을 할 수 없습니다. 해당 페이지의 주소와 서버 상태를 확인하세요.'}
         else:
@@ -40,9 +38,9 @@ def get_posts(url):
                 element_selector = post.find_element_by_css_selector
 
                 title = element_selector('a').text
-                if len(Post.objects.filter(company=samsung, title=title)) > 0:
-                    get_contents()
-                    return {'status': 200, 'message': '삼성SDS에 대한 Crawling을 완료했습니다.'}
+                if len(Post.objects.filter(company='', title=title)) > 0:
+                    get_contents(driver_selector, samsung)
+                    return {'status': 200, 'message': 'SAMSUNG SDS에 대한 Crawling을 완료했습니다.'}
 
                 date = element_selector('span.thumb_date').text
                 image = element_selector('a').get_attribute('style')
@@ -54,15 +52,15 @@ def get_posts(url):
                 url = 'https://www.samsungsds.com/' + tempurl
 
                 _, is_created = Post.objects.get_or_create(
-                    company=samsung, title=title, contents='', date=date,
+                    company='', title=title, contents='', date=date,
                     image=image, url=url
                 )
 
-            is_ended = driver.find_element_by_css_selector('button.button').get_attribute('style')
-            # is_ended = is_ended.lstrip('visibility: ') 
-            # print(is_ended)
+            is_ended = driver.find_element_by_css_selector(
+                'button.button'
+            ).get_attribute('style')
             if is_ended == 'visibility: visible;':
                 driver.find_element_by_css_selector('#btnLoadMore').click()
             else:
-                get_contents()
-                return {'status': 200, 'message': '삼성SDS에 대한 Crawling을 완료했습니다.'}
+                get_contents(driver_selector, samsung)
+                return {'status': 200, 'message': 'SAMSUNG SDS에 대한 Crawling을 완료했습니다.'}

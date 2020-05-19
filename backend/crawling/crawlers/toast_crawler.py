@@ -1,17 +1,14 @@
-from .config import options, driver
+from .config import driver
 from mainapp.models import Company, Post
 from tqdm import tqdm
-import json
-
-driver_selector = driver.find_elements_by_css_selector
-toast = Company.objects.get(name='TOAST')
+import time
 
 
-def get_contents():
+def get_contents(driver_selector, toast):
     posts = Post.objects.filter(company=toast, contents='')
     for post in tqdm(posts):
         driver.get(post.url)
-        driver.implicitly_wait(10)
+        time.sleep(10)
 
         contents = driver_selector('div.tui-editor-contents')[0]
         articles = contents.find_elements_by_css_selector('p')
@@ -25,13 +22,14 @@ def get_contents():
 
 
 def get_posts(url):
-    global driver_selector, toast
+    driver_selector = driver.find_elements_by_css_selector
+    toast = Company.objects.get(name='TOAST')
 
     cnt = 1
     while True:
         try:
             driver.get(url)
-            driver.implicitly_wait(10)
+            time.sleep(10)
         except:
             return {'status': 500, 'message': 'Crawling을 할 수 없습니다. 해당 페이지의 주소와 서버 상태를 확인하세요.'}
         else:
@@ -41,7 +39,7 @@ def get_posts(url):
 
                 title = element_selector('h3.tit.ng-binding').text
                 if len(Post.objects.filter(company=toast, title=title)) > 0:
-                    get_contents()
+                    get_contents(driver_selector, toast)
                     return {'status': 200, 'message': 'TOAST에 대한 Crawling을 완료했습니다.'}
 
                 date = element_selector(
@@ -62,5 +60,5 @@ def get_posts(url):
                 cnt += 1
                 url = f'https://meetup.toast.com/?page={cnt}'
             else:
-                get_contents()
+                get_contents(driver_selector, toast)
                 return {'status': 200, 'message': 'TOAST에 대한 Crawling을 완료했습니다.'}
