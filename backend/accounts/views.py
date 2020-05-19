@@ -17,9 +17,8 @@ jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 def signup(request):
     username = request.data.get('username')
 
-    try:
-        user = User.objects.filter(username=username)
-    except:
+    user = User.objects.filter(username=username)
+    if user:
         return HttpResponse(status=409)
 
     serializer = UserSerializer(data=request.data)  
