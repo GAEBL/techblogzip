@@ -6,6 +6,7 @@ from .serializers import *
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
+
 @api_view(['GET'])
 @permission_classes([AllowAny, ])
 def posts(request):
@@ -112,7 +113,7 @@ def main(request):
 
 @api_view(['POST'])
 def trend(request):
-    company = request.data.get('company')  
+    company = request.data.get('company')
     start_date = request.data.get('start_date')
     end_date = request.data.get('end_date')
     # target_data = request.data.get('target_data')
@@ -124,7 +125,8 @@ def trend(request):
     except:
         company_id = 0
 
-    posts = Post.objects.filter(company=company_id, date__range=[start_date, end_date])
+    posts = Post.objects.filter(
+        company=company_id, date__range=[start_date, end_date])
     serializer = PostSerializer(posts, many=True)
 
-    return JsonResponse({'company':company, 'start_date':start_date,'end_date':end_date, 'data':serializer.data})
+    return JsonResponse({'company': company, 'start_date': start_date, 'end_date': end_date, 'data': serializer.data})
