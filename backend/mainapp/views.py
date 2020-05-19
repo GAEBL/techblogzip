@@ -5,13 +5,15 @@ from .models import *
 from .serializers import *
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
+import json
 
-
-@api_view(['POST'])
+@api_view(['GET'])
 @permission_classes([AllowAny, ])
 def posts(request):
-    company = request.POST.get(['company'], None)  # ex) 삼성SDS
-    sort = request.POST.get(['sort'], None)
+    # request.GET == request.query_params
+    company = request.query_params.get('company')  # ex) 삼성SDS
+    sort = request.query_params.get('sort')
+
     try:
         company_id = get_object_or_404(Company, name=company)
         company_id = company_id.id
@@ -63,7 +65,7 @@ def company(request, id):  # 기업 블로그
 @permission_classes([AllowAny, ])
 def search(request):
     posts = Post.objects.all()
-    query = request.POST.get(['query'], None)
+    query = request.POST.get('query')
     if query:
         posts = posts.filter(
             Q(title__icontains=query) | Q(tags__name__icontains=query)).distinct()
