@@ -1,10 +1,9 @@
 from django.http import JsonResponse, HttpResponse
-from django.shortcuts import get_object_or_404
-from django.contrib import auth
+from django.shortcuts import get_object_or_404  
 from django.contrib.auth.hashers import check_password
 
-from rest_framework.decorators import api_view, permission_classes, authentication_classes
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 from rest_framework_jwt.settings import api_settings
 
 from .serializers import UserSerializer
@@ -31,15 +30,15 @@ def signup(request):
 @api_view(['POST'])
 @permission_classes([AllowAny, ])
 def login(request):
-    username = request.POST['username']
-    password = request.POST['password']
+    username = request.POST.get(['username'], None)
+    password = request.POST.get(['password'], None)
     user = get_object_or_404(User, username=username)
     if check_password(password, user.password) == True:
         jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
         jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER   
         payload = jwt_payload_handler(user)
         token = jwt_encode_handler(payload)
-        return JsonResponse({'result': 'ture', 'token': token})
+        return JsonResponse({'result': 'true', 'token': token})
     else:
         return HttpResponse(status=400)
     

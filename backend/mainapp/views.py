@@ -14,10 +14,11 @@ from rest_framework_jwt.settings import api_settings
 @api_view(['POST'])
 @permission_classes([AllowAny, ])
 def posts(request):
+    request.data.get()
     company = request.POST['company']  # ex) 삼성SDS
     sort = request.POST['sort']
     try:
-        company_id = Company.objects.get(name=company)
+        company_id = Company.objects.get_object_or_404(name=company)
         company_id = company_id.id
     except:
         company_id = 0
@@ -41,7 +42,7 @@ def posts(request):
     return JsonResponse({'data': serializer.data})
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated, ])
 def like(request, id):
     posts = Post.objects.get(id=id)
@@ -101,13 +102,13 @@ def main(request):
     kakao_posts_count = Post.objects.filter(company=kakao).count()
     naver_posts_count = Post.objects.filter(company=naver).count()
 
-    company_post_count = [samsung_posts_count, yanolja_posts_count, spoqa_posts_count, tmon_posts_count, \
-        coupang_posts_count, line_posts_count, woowabro_posts_count, \
-        toast_posts_count, kakao_posts_count, naver_posts_count]
+    company_post_count = [samsung_posts_count, yanolja_posts_count, spoqa_posts_count, tmon_posts_count,
+                          coupang_posts_count, line_posts_count, woowabro_posts_count,
+                          toast_posts_count, kakao_posts_count, naver_posts_count]
 
     company_count = Company.objects.count()
     posts_count = Post.objects.count()
     posts = Post.objects.all()[:5]
     serializer = MainPostSerializer(posts, many=True)
     return JsonResponse({'company_count': company_count,
-                         'posts_count': posts_count,'company_post_count':company_post_count ,'data': serializer.data})
+                         'posts_count': posts_count, 'company_post_count': company_post_count, 'data': serializer.data})
