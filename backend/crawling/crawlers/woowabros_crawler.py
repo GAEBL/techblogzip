@@ -34,7 +34,6 @@ def get_posts(url):
     driver_selector = driver.find_elements_by_css_selector
     baemin = Company.objects.get(name='WOOWABROS')
 
-    cnt = 0
     while True:
         try:
             driver.get(url)
