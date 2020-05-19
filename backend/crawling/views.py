@@ -29,8 +29,6 @@ def crawling(request):
             data = line_crawler.get_posts(url)
         elif company == 'COUPANG TECH':
             data = coupang_crawler.get_posts(url)
-        elif company == 'TMON DEV':
-            pass
         elif company == 'SPOQA':
             pass
         elif company == 'YANOLJA':
