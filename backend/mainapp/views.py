@@ -10,7 +10,6 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 @api_view(['POST'])
 @permission_classes([AllowAny, ])
 def posts(request):
-    request.data.get()
     company = request.POST.get(['company'], None)  # ex) 삼성SDS
     sort = request.POST.get(['sort'], None)
     try:
