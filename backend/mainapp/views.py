@@ -5,7 +5,6 @@ from .models import *
 from .serializers import *
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
-import json
 
 @api_view(['GET'])
 @permission_classes([AllowAny, ])
