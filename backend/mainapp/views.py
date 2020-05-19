@@ -64,7 +64,7 @@ def company(request, id):  # 기업 블로그
 @permission_classes([AllowAny, ])
 def search(request):
     posts = Post.objects.all()
-    query = request.POST.get('query')
+    query = request.data.get('query')
     if query:
         posts = posts.filter(
             Q(title__icontains=query) | Q(tags__name__icontains=query)).distinct()

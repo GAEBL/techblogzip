@@ -30,8 +30,9 @@ def signup(request):
 @api_view(['POST'])
 @permission_classes([AllowAny, ])
 def login(request):
-    username = request.POST.get('username')
-    password = request.POST.get('password')
+    username = request.data.get('username')
+    password = request.data.get('password')
+
     user = get_object_or_404(User, username=username)
     if check_password(password, user.password) == True:
         jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
