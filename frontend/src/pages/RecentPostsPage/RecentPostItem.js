@@ -23,13 +23,13 @@ const Summary = styled.p`
 const CostomA = styled.a`
   text-decoration: none;
 `;
-const Datep = styled.p`
+const FormatDate = styled.p`
   display: flex;
   justify-content: flex-end;
   margin-right: 1rem;
 `;
 
-const TrendPost = ({ post }) => {
+const RecentPostItem = ({ post }) => {
   const postday = new Date(post.postPublishedAt);
   const formatday =
     postday.getFullYear() + '.' + postday.getMonth() + '.' + postday.getDate();
@@ -41,7 +41,7 @@ const TrendPost = ({ post }) => {
           <CardContent>
             <h3>{post.postTitle}</h3>
             <Summary>{post.postHtml}</Summary>
-            <Datep>{formatday}</Datep>
+            <FormatDate>{formatday}</FormatDate>
           </CardContent>
         </CostomCard>
       </CostomA>
@@ -49,4 +49,4 @@ const TrendPost = ({ post }) => {
   );
 };
 
-export default TrendPost;
+export default RecentPostItem;
