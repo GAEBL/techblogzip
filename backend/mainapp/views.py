@@ -13,7 +13,7 @@ def posts(request):
     company = request.POST.get(['company'], None)  # ex) 삼성SDS
     sort = request.POST.get(['sort'], None)
     try:
-        company_id = Company.objects.get_object_or_404(name=company)
+        company_id = get_object_or_404(Company, name=company)
         company_id = company_id.id
     except:
         company_id = 0
@@ -40,7 +40,7 @@ def posts(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated, ])
 def like(request, id):
-    posts = Post.objects.get_object_or_404(id=id)
+    posts = get_object_or_404(Post, id=id)
     user = request.user
     if user not in posts.is_liked.all():
         posts.is_liked.add(user)
@@ -54,7 +54,7 @@ def like(request, id):
 @api_view(['GET'])
 @permission_classes([AllowAny, ])
 def company(request, id):  # 기업 블로그
-    company = Company.objects.get_object_or_404(id=id)
+    company = get_object_or_404(Company, id=id)
     serializer = CompanySerializer(company)
     return JsonResponse({'data': serializer.data})
 
@@ -75,16 +75,16 @@ def search(request):
 @api_view(['GET'])
 @permission_classes([AllowAny, ])
 def main(request):
-    samsung = Company.objects.get_object_or_404(name='SAMSUNG SDS')
-    yanolja = Company.objects.get_object_or_404(name='YANOLJA')
-    spoqa = Company.objects.get_object_or_404(name='SPOQA')
-    tmon = Company.objects.get_object_or_404(name='TMON DEV')
-    coupang = Company.objects.get_object_or_404(name='COUPANG TECH')
-    line = Company.objects.get_object_or_404(name='LINE ENGINEERING')
-    woowabro = Company.objects.get_object_or_404(name='WOOWABROS')
-    toast = Company.objects.get_object_or_404(name='TOAST')
-    kakao = Company.objects.get_object_or_404(name='KAKAO TECH')
-    naver = Company.objects.get_object_or_404(name='NAVER D2')
+    samsung = get_object_or_404(Company, name='SAMSUNG SDS')
+    yanolja = get_object_or_404(Company, name='YANOLJA')
+    spoqa = get_object_or_404(Company, name='SPOQA')
+    tmon = get_object_or_404(Company, name='TMON DEV')
+    coupang = get_object_or_404(Company, name='COUPANG TECH')
+    line = get_object_or_404(Company, name='LINE ENGINEERING')
+    woowabro = get_object_or_404(Company, name='WOOWABROS')
+    toast = get_object_or_404(Company, name='TOAST')
+    kakao = get_object_or_404(Company, name='KAKAO TECH')
+    naver = get_object_or_404(Company, name='NAVER D2')
 
     samsung_posts_count = Post.objects.filter(company=samsung).count()
     yanolja_posts_count = Post.objects.filter(company=yanolja).count()
