@@ -108,3 +108,23 @@ def main(request):
     serializer = MainPostSerializer(posts, many=True)
     return JsonResponse({'company_count': company_count,
                          'posts_count': posts_count, 'company_post_count': company_post_count, 'data': serializer.data})
+
+
+@api_view(['POST'])
+def trend(request):
+    company = request.data.get('company')  
+    start_date = request.data.get('start_date')
+    end_date = request.data.get('end_date')
+    # target_data = request.data.get('target_data')
+    # tag_count = request.data.get('tag_count')
+
+    try:
+        company_id = get_object_or_404(Company, name=company)
+        company_id = company_id.id
+    except:
+        company_id = 0
+
+    posts = Post.objects.filter(company=company_id, date__range=[start_date, end_date])
+    serializer = PostSerializer(posts, many=True)
+
+    return JsonResponse({'company':company, 'start_date':start_date,'end_date':end_date, 'data':serializer.data})
