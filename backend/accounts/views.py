@@ -1,5 +1,5 @@
 from django.http import JsonResponse, HttpResponse
-from django.shortcuts import get_object_or_404  
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.hashers import check_password
 
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
@@ -12,11 +12,11 @@ from .serializers import UserSerializer
 from .models import User
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
-jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER  
+jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
 
 @api_view(['POST'])
-@permission_classes([AllowAny,])
+@permission_classes([AllowAny, ])
 def signup(request):
     global jwt_payload_handler, jwt_encode_handler
 
@@ -26,7 +26,7 @@ def signup(request):
     if user:
         return HttpResponse(status=409)
 
-    serializer = UserSerializer(data=request.data)  
+    serializer = UserSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
         password = request.data.get('password')
         user = serializer.save()
@@ -36,7 +36,7 @@ def signup(request):
         payload = jwt_payload_handler(user)
         token = jwt_encode_handler(payload)
 
-        return JsonResponse({'token':token, 'user':{'id':user.id,'username':user.username}})
+        return JsonResponse({'token': token, 'user': {'id': user.id, 'username': user.username}})
     return HttpResponse(status=400)
 
 
@@ -49,10 +49,10 @@ def login(request):
     password = request.data.get('password')
 
     user = get_object_or_404(User, username=username)
-    if check_password(password, user.password) == True: 
+    if check_password(password, user.password) == True:
         payload = jwt_payload_handler(user)
         token = jwt_encode_handler(payload)
-        return JsonResponse({'token': token, 'user':{'id':user.id,'username':user.username}})
+        return JsonResponse({'token': token, 'user': {'id': user.id, 'username': user.username}})
     else:
         return HttpResponse(status=400)
 
@@ -68,4 +68,4 @@ def check(request):
         return HttpResponse(status=401)
 
     user = jwt_decode_handler(token.split(' ')[1])
-    return JsonResponse({'user':{'id': user.get('user_id'), 'username': user.get('username')}})
+    return JsonResponse({'user': {'id': user.get('user_id'), 'username': user.get('username')}})
