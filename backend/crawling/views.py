@@ -2,8 +2,8 @@
 from django.http import JsonResponse, HttpResponse
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
-from .crawlers import naver_crawler, kakao_crawler, toast_crawler, woowabros_crawler, line_crawler, coupang_crawler, spoqa_crawler
-from mainapp.models import Post
+from .crawlers import naver_crawler, kakao_crawler, toast_crawler, woowabros_crawler, line_crawler, coupang_crawler, spoqa_crawler, yanolja_crawler
+from mainapp.models import Company, Post
 import json
 
 with open('./crawling/datas/techblog_list.json', 'r', encoding='utf-8') as f:
@@ -33,9 +33,20 @@ def crawling(request):
         elif company == 'SPOQA':
             data = spoqa_crawler.get_posts(url)
         elif company == 'YANOLJA':
-            pass
+            data = yanolja_crawler.get_posts(url)
         elif company == 'SAMSUNG SDS':
             pass
         return JsonResponse(data)
 
     return HttpResponse(status=400)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny, ])
+def check(request):
+    posts = Post.objects.filter(company__name='YANOLJA')
+    cnt = 0
+    for post in posts:
+        cnt += 1
+        post.delete()
+    return JsonResponse({'cnt': cnt})

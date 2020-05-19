@@ -34,9 +34,6 @@ def get_posts(url):
     driver_selector = driver.find_elements_by_css_selector
     spoqa = Company.objects.get(name='SPOQA')
 
-    get_contents(driver_selector, spoqa)
-    return {'status': 200, 'message': 'SPOQA에 대한 Crawling을 완료했습니다.'}
-
     cnt = 1
     while True:
         driver.get(url)
