@@ -2,8 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const LogoImg = styled.img`
-  width: ${(props) => props.width};
-  height: ${(props) => props.height};
+  height: 25px;
 `;
 
 const LogoButton = styled.button`
@@ -16,7 +15,7 @@ const LogoButton = styled.button`
   }
 `;
 
-const CompanyLogos = () => {
+function CompanyLogos() {
   const companys = [
     ['brother_logo.png', 'white'],
     ['coupang_logo.png', 'black'],
@@ -31,18 +30,17 @@ const CompanyLogos = () => {
   ];
   return (
     <div>
-      {companys.map((company, index) => (
-        <LogoButton key={index} color={company[1]}>
-          <LogoImg
-            width={'auto'}
-            height={'20px'}
-            src={process.env.PUBLIC_URL + '/images/' + company[0]}
-            alt=""
-          />
-        </LogoButton>
-      ))}
+      {companys.map((company, index) => {
+        const [fileName, color] = company;
+        const imageUrl = process.env.PUBLIC_URL + '/images/' + fileName;
+        return (
+          <LogoButton key={index} color={color}>
+            <LogoImg src={imageUrl} alt="logo" />
+          </LogoButton>
+        );
+      })}
     </div>
   );
-};
+}
 
 export default CompanyLogos;
