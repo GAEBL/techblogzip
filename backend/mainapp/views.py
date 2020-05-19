@@ -79,9 +79,35 @@ def search(request):
 @api_view(['GET'])
 @permission_classes([AllowAny, ])
 def main(request):
+    samsung = Company.objects.get(name='SAMSUNG SDS')
+    yanolja = Company.objects.get(name='YANOLJA')
+    spoqa = Company.objects.get(name='SPOQA')
+    tmon = Company.objects.get(name='TMON DEV')
+    coupang = Company.objects.get(name='COUPANG TECH')
+    line = Company.objects.get(name='LINE ENGINEERING')
+    woowabro = Company.objects.get(name='WOOWABROS')
+    toast = Company.objects.get(name='TOAST')
+    kakao = Company.objects.get(name='KAKAO TECH')
+    naver = Company.objects.get(name='NAVER D2')
+
+    samsung_posts_count = Post.objects.filter(company=samsung).count()
+    yanolja_posts_count = Post.objects.filter(company=yanolja).count()
+    spoqa_posts_count = Post.objects.filter(company=spoqa).count()
+    tmon_posts_count = Post.objects.filter(company=tmon).count()
+    coupang_posts_count = Post.objects.filter(company=coupang).count()
+    line_posts_count = Post.objects.filter(company=line).count()
+    woowabro_posts_count = Post.objects.filter(company=woowabro).count()
+    toast_posts_count = Post.objects.filter(company=toast).count()
+    kakao_posts_count = Post.objects.filter(company=kakao).count()
+    naver_posts_count = Post.objects.filter(company=naver).count()
+
+    company_post_count = [samsung_posts_count, yanolja_posts_count, spoqa_posts_count, tmon_posts_count, \
+        coupang_posts_count, line_posts_count, woowabro_posts_count, \
+        toast_posts_count, kakao_posts_count, naver_posts_count]
+
     company_count = Company.objects.count()
     posts_count = Post.objects.count()
     posts = Post.objects.all()[:5]
     serializer = MainPostSerializer(posts, many=True)
     return JsonResponse({'company_count': company_count,
-                         'posts_count': posts_count, 'data': serializer.data})
+                         'posts_count': posts_count,'company_post_count':company_post_count ,'data': serializer.data})

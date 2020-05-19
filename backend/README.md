@@ -22,3 +22,10 @@ $ python manage.py runserver
 
 "" 사용하지말고 '' 사용하기!
 
+
+
+
+
+backend > crawling > crawlers > chromedriver.exe
+
+backend > secrets.json
