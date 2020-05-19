@@ -1,13 +1,10 @@
-from .config import options, driver
+from .config import driver
 from mainapp.models import Company, Post
 from tqdm import tqdm
 import time
 
-driver_selector = driver.find_elements_by_css_selector
-line = Company.objects.get(name='LINE ENGINEERING')
 
-
-def get_contents():
+def get_contents(driver_selector, line):
     posts = Post.objects.filter(company=line)
     for post in tqdm(posts):
         driver.get(post.url)
@@ -32,7 +29,8 @@ def get_contents():
 
 
 def get_posts(url):
-    global driver_selector, line
+    driver_selector = driver.find_elements_by_css_selector
+    line = Company.objects.get(name='LINE ENGINEERING')
 
     cnt = 1
     while True:
@@ -48,7 +46,7 @@ def get_posts(url):
 
                 title = element_selector('a.plain').text
                 if len(Post.objects.filter(company=line, title=title)) > 0:
-                    get_contents()
+                    get_contents(driver_selector, line)
                     return {'status': 200, 'message': 'LINE ENGINEERING에 대한 Crawling을 완료했습니다.'}
 
                 date = element_selector('span.byline').text
@@ -64,5 +62,5 @@ def get_posts(url):
                 cnt += 1
                 url = f'https://engineering.linecorp.com/ko/blog/page/{cnt}/'
             else:
-                get_contents()
+                get_contents(driver_selector, line)
                 return {'status': 200, 'message': 'LINE ENGINEERING에 대한 Crawling을 완료했습니다.'}

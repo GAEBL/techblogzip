@@ -1,14 +1,11 @@
-from .config import options, driver
+from .config import driver
 from mainapp.models import Company, Post
 from datetime import datetime
 from tqdm import tqdm
 import time
 
-driver_selector = driver.find_elements_by_css_selector
-baemin = Company.objects.get(name='WOOWABROS')
 
-
-def get_contents():
+def get_contents(driver_selector, baemin):
     posts = Post.objects.filter(company=baemin, contents='')
     for post in tqdm(posts):
         driver.get(post.url)
@@ -34,7 +31,8 @@ def get_contents():
 
 
 def get_posts(url):
-    global driver_selector, baemin
+    driver_selector = driver.find_elements_by_css_selector
+    baemin = Company.objects.get(name='WOOWABROS')
 
     cnt = 0
     while True:
@@ -50,7 +48,7 @@ def get_posts(url):
 
                 title = element_selector('h2.post-link').text
                 if len(Post.objects.filter(company=baemin, title=title)) > 0:
-                    get_contents()
+                    get_contents(driver_selector, baemin)
                     return {'status': 200, 'message': 'WOOWABROS에 대한 Crawling을 완료했습니다.'}
 
                 date = element_selector('span.post-meta').text.split(' , ')[0]
@@ -64,5 +62,5 @@ def get_posts(url):
                     image='', url=url
                 )
 
-            get_contents()
+            get_contents(driver_selector, baemin)
             return {'status': 200, 'message': 'WOOWABROS에 대한 Crawling을 완료했습니다.'}

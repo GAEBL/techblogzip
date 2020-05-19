@@ -1,13 +1,10 @@
-from .config import options, driver
+from .config import driver
 from mainapp.models import Company, Post
 from tqdm import tqdm
 import time
 
-driver_selector = driver.find_elements_by_css_selector
-kakao = Company.objects.get(name='KAKAO TECH')
 
-
-def get_contents():
+def get_contents(driver_selector, kakao):
     posts = Post.objects.filter(company=kakao, contents='')
     for post in tqdm(posts):
         driver.get(post.url)
@@ -25,6 +22,9 @@ def get_contents():
 
 
 def get_posts(url):
+    driver_selector = driver.find_elements_by_css_selector
+    kakao = Company.objects.get(name='KAKAO TECH')
+
     cnt = 1
     while True:
         try:
@@ -40,7 +40,7 @@ def get_posts(url):
 
                 title = element_selector('strong.tit_post').text
                 if len(Post.objects.filter(company=kakao, title=title)) > 0:
-                    get_contents()
+                    get_contents(driver_selector, kakao)
                     return {'status': 200, 'message': 'KAKAO TECH에 대한 Crawling을 완료했습니다.'}
 
                 date = element_selector('span.txt_date').text
@@ -60,5 +60,5 @@ def get_posts(url):
                 cnt += 1
                 url = f'https://tech.kakao.com/blog/page/{cnt}/'
             else:
-                get_contents()
+                get_contents(driver_selector, kakao)
                 return {'status': 200, 'message': 'KAKAO TECH에 대한 Crawling을 완료했습니다.'}
