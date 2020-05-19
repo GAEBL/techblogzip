@@ -1,22 +1,18 @@
-from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse, HttpResponse
-from rest_framework.response import Response
-from django.db.models import Q, F, Sum, Count, Case, When
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+from django.db.models import Q, Count
 from .models import *
 from .serializers import *
-from django.contrib.auth import get_user_model
-from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework_jwt.authentication import JSONWebTokenAuthentication
-from rest_framework_jwt.settings import api_settings
 
 
 @api_view(['POST'])
 @permission_classes([AllowAny, ])
 def posts(request):
     request.data.get()
-    company = request.POST['company']  # ex) 삼성SDS
-    sort = request.POST['sort']
+    company = request.POST.get(['company'], None)  # ex) 삼성SDS
+    sort = request.POST.get(['sort'], None)
     try:
         company_id = Company.objects.get_object_or_404(name=company)
         company_id = company_id.id
@@ -45,7 +41,7 @@ def posts(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated, ])
 def like(request, id):
-    posts = Post.objects.get(id=id)
+    posts = Post.objects.get_object_or_404(id=id)
     user = request.user
     if user not in posts.is_liked.all():
         posts.is_liked.add(user)
@@ -59,7 +55,7 @@ def like(request, id):
 @api_view(['GET'])
 @permission_classes([AllowAny, ])
 def company(request, id):  # 기업 블로그
-    company = Company.objects.get(id=id)
+    company = Company.objects.get_object_or_404(id=id)
     serializer = CompanySerializer(company)
     return JsonResponse({'data': serializer.data})
 
@@ -68,7 +64,7 @@ def company(request, id):  # 기업 블로그
 @permission_classes([AllowAny, ])
 def search(request):
     posts = Post.objects.all()
-    query = request.POST['query']
+    query = request.POST.get(['query'], None)
     if query:
         posts = posts.filter(
             Q(title__icontains=query) | Q(tags__name__icontains=query)).distinct()
@@ -80,16 +76,16 @@ def search(request):
 @api_view(['GET'])
 @permission_classes([AllowAny, ])
 def main(request):
-    samsung = Company.objects.get(name='SAMSUNG SDS')
-    yanolja = Company.objects.get(name='YANOLJA')
-    spoqa = Company.objects.get(name='SPOQA')
-    tmon = Company.objects.get(name='TMON DEV')
-    coupang = Company.objects.get(name='COUPANG TECH')
-    line = Company.objects.get(name='LINE ENGINEERING')
-    woowabro = Company.objects.get(name='WOOWABROS')
-    toast = Company.objects.get(name='TOAST')
-    kakao = Company.objects.get(name='KAKAO TECH')
-    naver = Company.objects.get(name='NAVER D2')
+    samsung = Company.objects.get_object_or_404(name='SAMSUNG SDS')
+    yanolja = Company.objects.get_object_or_404(name='YANOLJA')
+    spoqa = Company.objects.get_object_or_404(name='SPOQA')
+    tmon = Company.objects.get_object_or_404(name='TMON DEV')
+    coupang = Company.objects.get_object_or_404(name='COUPANG TECH')
+    line = Company.objects.get_object_or_404(name='LINE ENGINEERING')
+    woowabro = Company.objects.get_object_or_404(name='WOOWABROS')
+    toast = Company.objects.get_object_or_404(name='TOAST')
+    kakao = Company.objects.get_object_or_404(name='KAKAO TECH')
+    naver = Company.objects.get_object_or_404(name='NAVER D2')
 
     samsung_posts_count = Post.objects.filter(company=samsung).count()
     yanolja_posts_count = Post.objects.filter(company=yanolja).count()
