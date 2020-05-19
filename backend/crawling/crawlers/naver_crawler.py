@@ -1,13 +1,10 @@
-from .config import options, driver
+from .config import driver
 from mainapp.models import Company, Post
 from tqdm import tqdm
 import time
 
-driver_selector = driver.find_elements_by_css_selector
-naver = Company.objects.get(name='NAVER D2')
 
-
-def get_contents():
+def get_contents(driver_selector, naver):
     posts = Post.objects.filter(company=naver, contents='')
     for post in tqdm(posts):
         driver.get(post.url)
@@ -25,7 +22,8 @@ def get_contents():
 
 
 def get_posts(url):
-    global driver_selector, naver
+    driver_selector = driver.find_elements_by_css_selector
+    naver = Company.objects.get(name='NAVER D2')
 
     cnt = 0
     while True:
@@ -41,7 +39,7 @@ def get_posts(url):
 
                 title = element_selector('a').text
                 if len(Post.objects.filter(company=naver, title=title)) > 0:
-                    get_contents()
+                    get_contents(driver_selector, naver)
                     return {'status': 200, 'message': 'NAVER D2에 대한 Crawling을 완료했습니다.'}
 
                 date = element_selector('dd').text
@@ -58,5 +56,5 @@ def get_posts(url):
                 cnt += 1
                 url = f'https://d2.naver.com/home?page={cnt}'
             else:
-                get_contents()
+                get_contents(driver_selector, naver)
                 return {'status': 200, 'message': 'NAVER D2에 대한 Crawling을 완료했습니다.'}

@@ -1,13 +1,10 @@
-from .config import options, driver
+from .config import driver
 from mainapp.models import Company, Post
 from tqdm import tqdm
 import time
 
-driver_selector = driver.find_elements_by_css_selector
-# samsung = Company.objects.get(name='SAMSUNG SDS')
 
-
-def get_contents():
+def get_contents(driver_selector, samsung):
     posts = Post.objects.filter(company='', contents='')
     for post in tqdm(posts):
         driver.get(post.url)
@@ -25,7 +22,8 @@ def get_contents():
 
 
 def get_posts(url):
-    global driver_selector
+    driver_selector = driver.find_elements_by_css_selector
+    samsung = Company.objects.get(name='SAMSUNG SDS')
 
     cnt = 0
     while True:
@@ -41,7 +39,7 @@ def get_posts(url):
 
                 title = element_selector('a').text
                 if len(Post.objects.filter(company='', title=title)) > 0:
-                    get_contents()
+                    get_contents(driver_selector, samsung)
                     return {'status': 200, 'message': 'SAMSUNG SDS에 대한 Crawling을 완료했습니다.'}
 
                 date = element_selector('span.thumb_date').text
@@ -64,5 +62,5 @@ def get_posts(url):
             if is_ended == 'visibility: visible;':
                 driver.find_element_by_css_selector('#btnLoadMore').click()
             else:
-                get_contents()
+                get_contents(driver_selector, samsung)
                 return {'status': 200, 'message': 'SAMSUNG SDS에 대한 Crawling을 완료했습니다.'}
