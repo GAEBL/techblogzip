@@ -30,18 +30,17 @@ const FormatDate = styled.p`
 `;
 
 const RecentPostItem = ({ post }) => {
-  const postday = new Date(post.postPublishedAt);
-  const formatday =
-    postday.getFullYear() + '.' + postday.getMonth() + '.' + postday.getDate();
+  const { company, title, date, contents, image, url, tags, is_liked } = post;
   return (
     <StylesProvider injectFirst>
-      <CostomA href={'https://d2.naver.com' + post.url}>
+      <CostomA href={url}>
         <CostomCard>
-          <PostImg src={'https://d2.naver.com' + post.postImage} alt="" />
+          <PostImg src={image} alt="" />
           <CardContent>
-            <h3>{post.postTitle}</h3>
-            <Summary>{post.postHtml}</Summary>
-            <FormatDate>{formatday}</FormatDate>
+            <h5>{company.name}</h5>
+            <h3>{title}</h3>
+            <Summary>{contents}</Summary>
+            <FormatDate>{date}</FormatDate>
           </CardContent>
         </CostomCard>
       </CostomA>
