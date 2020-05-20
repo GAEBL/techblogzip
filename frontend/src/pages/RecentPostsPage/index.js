@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Companylogos from './CompanyLogos';
 import RecentPostItem from './RecentPostItem';
 import { NativeSelect, FormControl } from '@material-ui/core';
-import posts from './dummy';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllPosts, clearPosts } from '../../reducers/post';
 
 const CompanySelector = styled.div`
   h1 {
@@ -24,6 +25,20 @@ const PostsDropdown = styled.div`
 const PostsWrapper = styled.div``;
 
 function RecentPostsPage(props) {
+  const dispatch = useDispatch();
+  const { posts, loading } = useSelector(({ post, loading, user }) => ({
+    posts: post.posts,
+    loading: loading['post/GET_ALL_POSTS'],
+  }));
+
+  useEffect(() => {
+    dispatch(getAllPosts({ company: '', sort: '' }));
+
+    return () => {
+      dispatch(clearPosts());
+    };
+  }, [dispatch]);
+
   const [state, setState] = useState({
     age: '',
     name: 'hai',
@@ -60,9 +75,13 @@ function RecentPostsPage(props) {
         </FormControl>
       </PostsDropdown>
       <PostsWrapper>
-        {posts.map((post, index) => (
-          <RecentPostItem key={index} post={post} />
-        ))}
+        {loading ? <div>로딩</div> : null}
+        {!loading &&
+          posts.length > 0 &&
+          // TODO: ID 고쳐지면 post.id로 넣기
+          posts.map((post, index) => (
+            <RecentPostItem key={index} post={post} />
+          ))}
       </PostsWrapper>
     </RecentPostsPageWrapper>
   );
