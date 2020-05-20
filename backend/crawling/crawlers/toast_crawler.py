@@ -1,17 +1,20 @@
-from .config import driver
+from .config import driver, ERROR_MESSAGE, SUCESS_MESSAGE, CSS_SELECTOR
 from mainapp.models import Company, Post
 from tqdm import tqdm
-import time
 
 
-def get_contents(driver_selector, toast):
-    posts = Post.objects.filter(company=toast, contents='')
+def get_contents(company):
+    posts = Post.objects.filter(company=company, contents='')
     for post in tqdm(posts):
-        driver.get(post.url)
-        time.sleep(10)
+        try:
+            driver.get(post.url)
+            driver.implicitly_wait(30)
+        except:
+            ERROR_MESSAGE['company'] = company.name
+            return ERROR_MESSAGE
 
-        contents = driver_selector('div.tui-editor-contents')[0]
-        articles = contents.find_elements_by_css_selector('p')
+        div = CSS_SELECTOR('div.tui-editor-contents')[0]
+        articles = div.find_elements_by_css_selector('p')
 
         contents = ''
         for article in articles:
@@ -20,45 +23,43 @@ def get_contents(driver_selector, toast):
         post.contents = contents
         post.save()
 
+    SUCESS_MESSAGE['company'] = company.name
+    return SUCESS_MESSAGE
+
 
 def get_posts(url):
-    driver_selector = driver.find_elements_by_css_selector
     toast = Company.objects.get(name='TOAST')
 
     cnt = 1
     while True:
         try:
             driver.get(url)
-            time.sleep(10)
+            driver.implicitly_wait(30)
         except:
-            return {'status': 500, 'message': 'Crawling을 할 수 없습니다. 해당 페이지의 주소와 서버 상태를 확인하세요.'}
+            ERROR_MESSAGE['company'] = toast.name
+            return ERROR_MESSAGE
+
+        posts = CSS_SELECTOR('a.lst_link')
+        for post in posts:
+            element_selector = post.find_element_by_css_selector
+
+            title = element_selector('h3.tit.ng-binding').text
+            if len(Post.objects.filter(company=toast, title=title)) > 0:
+                return get_contents(toast)
+
+            date = element_selector('span.date.ng-binding').text.split(' ')[1]
+            image = element_selector(
+                'span.img_area.ng-scope').get_attribute('style').split('("')[1][:-3]
+            url = post.get_attribute('href')
+
+            _, is_created = Post.objects.get_or_create(
+                company=toast, title=title, contents='', date=date,
+                image=image, url=url
+            )
+
+        is_ended = CSS_SELECTOR('a.tui-page-btn.tui-next')
+        if CSS_SELECTOR:
+            cnt += 1
+            url = f'https://meetup.toast.com/?page={cnt}'
         else:
-            posts = driver_selector('a.lst_link')
-            for post in posts:
-                element_selector = post.find_element_by_css_selector
-
-                title = element_selector('h3.tit.ng-binding').text
-                if len(Post.objects.filter(company=toast, title=title)) > 0:
-                    get_contents(driver_selector, toast)
-                    return {'status': 200, 'message': 'TOAST에 대한 Crawling을 완료했습니다.'}
-
-                date = element_selector(
-                    'span.date.ng-binding'
-                ).text.split(' ')[1]
-                image = element_selector(
-                    'span.img_area.ng-scope'
-                ).get_attribute('style').split('("')[1][:-3]
-                url = post.get_attribute('href')
-
-                _, is_created = Post.objects.get_or_create(
-                    company=toast, title=title, contents='', date=date,
-                    image=image, url=url
-                )
-
-            is_ended = len(driver_selector('a.tui-page-btn.tui-next')) == 0
-            if is_ended == False:
-                cnt += 1
-                url = f'https://meetup.toast.com/?page={cnt}'
-            else:
-                get_contents(driver_selector, toast)
-                return {'status': 200, 'message': 'TOAST에 대한 Crawling을 완료했습니다.'}
+            return get_contents(toast)
