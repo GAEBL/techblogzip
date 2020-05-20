@@ -26,6 +26,7 @@ const initialState = {
   posts: [],
   post: null,
   error: null,
+  pageData: null, // mainpage의 포스트 제외 기타 데이터들
 };
 
 const post = handleActions(
@@ -43,15 +44,24 @@ const post = handleActions(
     [CLEAR_POSTS]: (state) => ({
       ...state,
       posts: [],
+      pageData: null,
     }),
-    [GET_MAINPAGE_DATA_SUCCESS]: (state, action) => ({
+    [GET_MAINPAGE_DATA_SUCCESS]: (
+      state,
+      { payload: { data, company_count, posts_count } },
+    ) => ({
       ...state,
-      posts: [], // FIXME: 나중에 오는 데이터 보고 수정할것
+      posts: data,
+      pageData: {
+        companyCount: company_count,
+        postsCount: posts_count,
+      },
       error: null,
     }),
     [GET_MAINPAGE_DATA_FAILURE]: (state, { payload: error }) => ({
       ...state,
       posts: [],
+      pageData: null,
       error,
     }),
   },
