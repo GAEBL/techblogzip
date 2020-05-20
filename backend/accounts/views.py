@@ -80,8 +80,10 @@ def mypage(request):
     global jwt_decode_handler
 
     token = request.headers.get('Authorization', None)
+    print(token)
     if token == None:
         return HttpResponse(status=401)
+    
 
     user = jwt_decode_handler(token.split(' ')[1])
     user_id = user.get('user_id')
@@ -90,6 +92,13 @@ def mypage(request):
     if request.method == 'GET':
         serializer = UserSerializer(user)
         return JsonResponse(serializer.data)
+    elif request.method == 'PUT':
+        user.username = request.data.get('username')
+        password = request.data.get('password')
+        user.email = request.data.get('email')
+        user.is_subscribed = request.data.get('is_subscribed')
+        user.save()
+        return JsonResponse({'username':user.username, 'password':user.password, 'email':user.email, 'subscribed':user.is_subscribed})
     elif request.method == 'DELETE':
         user.delete()
         return JsonResponse({'result':'삭제되었습니다.'})
