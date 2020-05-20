@@ -115,7 +115,7 @@ def trend(request):
     start_date = request.data.get('start_date')
     end_date = request.data.get('end_date')
     # target_data = request.data.get('target_data')
-    # tag_count = request.data.get('tag_count')
+    tag_count = request.data.get('tag_count')
 
     try:
         company_id = get_object_or_404(Company, name=company)
@@ -123,8 +123,12 @@ def trend(request):
     except:
         company_id = 0
 
-    posts = Post.objects.filter(
-        company=company_id, date__range=[start_date, end_date])
-    serializer = PostSerializer(posts, many=True)
+    if company_id == 0:
+        posts = Post.objects.annotate(tags_count=Count(
+            'tags')).filter(date__range=[start_date, end_date], tags_count__range=[tag_count, 10]).order_by('-date')
+    else:
+        posts = Post.objects.annotate(tags_count=Count(
+            'tags')).filter(company=company_id, date__range=[start_date, end_date], tags_count__range=[tag_count, 10]).order_by('-date')
 
-    return JsonResponse({'company': company, 'start_date': start_date, 'end_date': end_date, 'data': serializer.data})
+    serializer = PostSerializer(posts, many=True)
+    return JsonResponse({'company': company, 'data': serializer.data})
