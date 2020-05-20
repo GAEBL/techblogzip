@@ -90,4 +90,3 @@ def mypage(request):
     if request.method == 'GET':
         serializer = UserSerializer(user)
         return JsonResponse(serializer.data)
-
