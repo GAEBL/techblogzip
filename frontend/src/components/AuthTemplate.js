@@ -33,6 +33,15 @@ const StyledLink = styled(Link)`
   color: black;
 `;
 
+const StyledCheckBox = styled.div`
+  justify-self: center;
+  align-self: center;
+  padding: 0.5rem 0;
+  input {
+    margin-right: 0.5rem;
+  }
+`;
+
 function AuthTemplate({ type, history }) {
   const { form, isLoggedIn } = useSelector(({ auth, user }) => ({
     form: auth[type],
@@ -45,6 +54,13 @@ function AuthTemplate({ type, history }) {
     dispatch(changeInput({ type, name, value }));
   };
 
+  const handleCheckBox = (e) => {
+    const { name, value } = e.target;
+    dispatch(
+      changeInput({ type, name, value: value === 'false' ? true : false }),
+    );
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (type === 'login') {
@@ -55,7 +71,7 @@ function AuthTemplate({ type, history }) {
           username: form.username,
           password: form.password,
           email: form.email,
-          is_subscribed: true,
+          is_subscribed: form.is_subscribed,
         }),
       );
     }
@@ -106,6 +122,15 @@ function AuthTemplate({ type, history }) {
               onChange={handleChange}
               required
             />
+            <StyledCheckBox>
+              <input
+                type="checkbox"
+                name="is_subscribed"
+                value={form.is_subscribed}
+                onChange={handleCheckBox}
+              />
+              <label htmlFor="is_subscribed">이메일 구독에 동의합니다.</label>
+            </StyledCheckBox>
           </>
         )}
         <ButtonContainer>

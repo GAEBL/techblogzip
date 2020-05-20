@@ -31,7 +31,7 @@ const initialState = {
     email: '',
     password: '',
     passwordConfirm: '',
-    is_subscribed: true,
+    is_subscribed: false,
   },
   error: null,
 };
