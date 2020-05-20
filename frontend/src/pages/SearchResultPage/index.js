@@ -20,9 +20,9 @@ function SearchResultPage(props) {
         "{}"검색 결과({}건)
       </ResultText>
       <SearchInput />
-      {dummy.map((dum, index) => (
+      {/* {dummy.map((dum, index) => (
         <SearchPostItem key={index} post={dum} />
-      ))}
+      ))} */}
     </SearchResultPageWraaper>
   );
 }
