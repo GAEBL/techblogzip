@@ -90,3 +90,6 @@ def mypage(request):
     if request.method == 'GET':
         serializer = UserSerializer(user)
         return JsonResponse(serializer.data)
+    elif request.method == 'DELETE':
+        user.delete()
+        return JsonResponse({'result':'삭제되었습니다.'})
