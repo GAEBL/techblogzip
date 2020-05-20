@@ -34,6 +34,7 @@ const setAuthInfo = (store) => (next) => (action) => {
   // 토큰 인증 실패 & 로그아웃
   if (action.type === 'user/CHECK_FAILURE' || action.type === 'user/LOGOUT') {
     sessionStorage.removeItem('jwt'); // 토큰 설정 후
+    localStorage.removeItem('user');
   }
   return next(action);
 };
