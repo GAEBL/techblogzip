@@ -22,10 +22,10 @@ function CompanyLogos() {
     ['d2_logo.gif', 'white'],
     ['kakao_logo.jpg', 'black'],
     ['line_logo.png', 'black'],
-    ['sds_logo.png'],
-    ['spoqa_logo.png'],
-    ['tmon_logo.png'],
-    ['toast_logo.png'],
+    ['sds_logo.png', 'white'],
+    ['spoqa_logo.png', 'white'],
+    ['tmon_logo.png', 'black'],
+    ['toast_logo.png', 'white'],
     ['yanolja_logo.png', 'black'],
   ];
   return (
