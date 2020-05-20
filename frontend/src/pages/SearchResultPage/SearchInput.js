@@ -8,20 +8,14 @@ const CostomInputBase = styled(InputBase)`
 `;
 
 const CostomPaper = styled(Paper)`
-  width: fit-content;
-  max-width: 1200px;
-  display: grid;
-  grid-template-columns: 24fr 1fr;
+  display: flex;
   margin-bottom: 1rem;
 `;
 
 function SearchInput() {
   return (
     <CostomPaper>
-      <CostomInputBase
-        placeholder="Search"
-        inputProps={{ 'aria-label': 'search google maps' }}
-      />
+      <CostomInputBase placeholder="검색해보세요" fullWidth />
       <IconButton type="submit" aria-label="search">
         <SearchIcon />
       </IconButton>
