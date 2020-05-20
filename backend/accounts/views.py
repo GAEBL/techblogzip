@@ -11,8 +11,10 @@ from rest_framework_jwt.serializers import VerifyJSONWebTokenSerializer
 from .serializers import UserSerializer
 from .models import User
 
+
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+jwt_decode_handler = api_settings.JWT_DECODE_HANDLER
 
 
 @api_view(['POST'])
@@ -61,7 +63,7 @@ def login(request):
 @permission_classes([IsAuthenticated, ])
 @authentication_classes([JSONWebTokenAuthentication, ])
 def check(request):
-    jwt_decode_handler = api_settings.JWT_DECODE_HANDLER
+    global jwt_decode_handler
 
     token = request.headers.get('Authorization', None)
     if token == None:
@@ -69,3 +71,23 @@ def check(request):
 
     user = jwt_decode_handler(token.split(' ')[1])
     return JsonResponse({'user': {'id': user.get('user_id'), 'username': user.get('username')}})
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated, ])
+@authentication_classes([JSONWebTokenAuthentication, ])
+def mypage(request):
+    global jwt_decode_handler
+
+    token = request.headers.get('Authorization', None)
+    if token == None:
+        return HttpResponse(status=401)
+
+    user = jwt_decode_handler(token.split(' ')[1])
+    user_id = user.get('user_id')
+    user = get_object_or_404(User, id=user_id)
+
+    if request.method == 'GET':
+        serializer = UserSerializer(user)
+        return JsonResponse(serializer.data)
+
