@@ -1,11 +1,8 @@
 import React from 'react';
+import AuthTemplate from '../../components/AuthTemplate';
 
 function RegisterPage(props) {
-  return (
-    <div>
-      <h1>회원가입 페이지</h1>
-    </div>
-  );
+  return <AuthTemplate type="register" />;
 }
 
 export default RegisterPage;

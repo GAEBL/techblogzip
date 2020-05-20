@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import MainPage from './pages/MainPage';
 import RecentPostsPage from './pages/RecentPostsPage';
@@ -10,6 +10,8 @@ import NotFoundPage from './pages/NotFoundPage';
 import styled from 'styled-components';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import { useDispatch } from 'react-redux';
+import { check, tempSetUser } from './reducers/user';
 
 const AppGridWrapper = styled.div`
   height: 100%;
@@ -24,6 +26,18 @@ const Contents = styled.section`
 `;
 
 function App() {
+  const dispatch = useDispatch();
+  // 로그인 유지 로직
+  useEffect(() => {
+    const user = localStorage.getItem('user');
+    if (!user) {
+      sessionStorage.removeItem('jwt');
+      return;
+    }
+    dispatch(tempSetUser(JSON.parse(user)));
+    dispatch(check());
+  }, [dispatch]);
+
   return (
     <AppGridWrapper>
       <Header />

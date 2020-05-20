@@ -1,105 +1,65 @@
 import { createAction, handleActions } from 'redux-actions';
 import produce from 'immer';
-import createRequestSaga, {
-  createRequestActionTypes,
-} from '../lib/createRequestSaga';
-import { takeLatest } from 'redux-saga/effects';
+import createRequestThunk from '../lib/createRequestThunk';
 import { Auth } from '../api/auth';
+import createActionTypes from '../lib/createActionTypes';
 
-const CHANGE_FIELD = 'auth/CHANGE_FIELD';
-const INITIALIZE_FORM = 'auth/INITIALIZE_FORM';
-const [REGISTER, REGISTER_SUCCESS, REGISTER_FAILURE] = createRequestActionTypes(
+const CHANGE_INPUT = 'auth/CHANGE_INPUT';
+const [LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE] = createActionTypes('auth/LOGIN');
+const [REGISTER, REGISTER_SUCCESS, REGISTER_FAILURE] = createActionTypes(
   'auth/REGISTER',
 );
-const [LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE] = createRequestActionTypes(
-  'auth/LOGIN',
-);
 
-const AUTH_LOGOUT = 'auth/AUTH_LOGOUT';
-
-export const changeField = createAction(
-  CHANGE_FIELD,
-  ({ form, key, value }) => ({
-    form, // register ? login ? 무슨 폼인가 ?
-    key, // username, password, passwordConfirm
-    value, // 실제 바꾸려는 값
+export const changeInput = createAction(
+  CHANGE_INPUT,
+  ({ type, name, value }) => ({
+    type,
+    name,
+    value,
   }),
 );
-
-export const initializeForm = createAction(INITIALIZE_FORM, (form) => form);
-
-export const register = createAction(
-  REGISTER,
-  ({ username, password, company }) => ({
-    username,
-    password,
-    company,
-  }),
-);
-export const login = createAction(LOGIN, ({ username, password }) => ({
-  username,
-  password,
-}));
-
-export const authLogout = createAction(AUTH_LOGOUT);
-
-// 사가 생성
-const registerSaga = createRequestSaga(REGISTER, Auth.register);
-const loginSaga = createRequestSaga(LOGIN, Auth.login);
-
-export function* authSaga() {
-  yield takeLatest(REGISTER, registerSaga);
-  yield takeLatest(LOGIN, loginSaga);
-}
+export const login = createRequestThunk(LOGIN, Auth.login);
+export const register = createRequestThunk(REGISTER, Auth.register);
 
 const initialState = {
-  register: {
-    username: '',
-    password: '',
-    passwordConfirm: '',
-    company: '',
-  },
   login: {
     username: '',
     password: '',
   },
-  auth: null,
-  authError: null,
+  register: {
+    username: '',
+    email: '',
+    password: '',
+    passwordConfirm: '',
+    is_subscribed: false,
+  },
+  error: null,
 };
 
 const auth = handleActions(
   {
-    [CHANGE_FIELD]: (state, { payload: { form, key, value } }) =>
+    [CHANGE_INPUT]: (state, { payload: form }) =>
       produce(state, (draft) => {
-        draft[form][key] = value;
+        const { type, name, value } = form;
+        draft[type][name] = value;
       }),
-    [INITIALIZE_FORM]: (state, { payload: form }) => ({
+    [LOGIN_SUCCESS]: (state, { payload: { user } }) => ({
       ...state,
-      [form]: initialState[form],
-      authError: null,
-    }),
-    // 회원가입 성공
-    [REGISTER_SUCCESS]: (state, { payload: auth }) => ({
-      ...state,
-      auth,
-      authError: null,
-    }),
-    [REGISTER_FAILURE]: (state, { payload: error }) => ({
-      ...state,
-      authError: error,
-    }),
-    [LOGIN_SUCCESS]: (state, { payload: auth }) => ({
-      ...state,
-      auth,
-      authError: null,
+      error: null,
+      login: initialState.login,
     }),
     [LOGIN_FAILURE]: (state, { payload: error }) => ({
       ...state,
-      authError: error,
+      error,
     }),
-    [AUTH_LOGOUT]: (state) => ({
+    [REGISTER_SUCCESS]: (state, { payload: { user } }) => ({
       ...state,
-      auth: null,
+      error: null,
+      register: initialState.register,
+    }),
+    [REGISTER_FAILURE]: (state, { payload: error }) => ({
+      ...state,
+      error,
     }),
   },
   initialState,
