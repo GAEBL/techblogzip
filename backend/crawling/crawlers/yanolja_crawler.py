@@ -43,6 +43,7 @@ def get_posts(url):
             driver.get(url)
             driver.implicitly_wait(30)
         except:
+            ERROR_MESSAGE['company'] = yanolja.name
             return ERROR_MESSAGE
 
         posts = CSS_SELECTOR('article.post')
