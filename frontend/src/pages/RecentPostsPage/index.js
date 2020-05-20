@@ -39,17 +39,16 @@ function RecentPostsPage(props) {
     };
   }, [dispatch]);
 
-  const [state, setState] = useState({
-    age: '',
-    name: 'hai',
-  });
-
-  const handleChange = (event) => {
-    const name = event.target.name;
-    setState({
-      ...state,
-      [name]: event.target.value,
-    });
+  const [age, setAge] = useState('');
+  const handleChange = (e) => {
+    setAge(e.target.value);
+    if (e.target.value === 10) {
+      dispatch(getAllPosts({ company: '', sort: '' }));
+    } else if (e.target.value === 20) {
+      dispatch(getAllPosts({ company: '', sort: 'likes' }));
+    } else {
+      dispatch(getAllPosts({ company: '', sort: 'user_recommedation' }));
+    }
   };
 
   return (
@@ -62,11 +61,12 @@ function RecentPostsPage(props) {
         <h1>포스트</h1>
         <FormControl>
           <NativeSelect
-            value={state.age}
+            value={age}
             onChange={handleChange}
-            inputProps={{
-              name: 'age',
-            }}
+            // inputProps={{
+            //   name: 'age',
+            // }}
+            inputProps={age}
           >
             <option value={10}>최신순</option>
             <option value={20}>좋아요순</option>
