@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import Companylogos from './CompanyLogos';
+import Companylogo from './CompanyLogo';
 import RecentPostItem from './RecentPostItem';
 import { NativeSelect, FormControl } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
@@ -31,46 +31,74 @@ function RecentPostsPage(props) {
     loading: loading['post/GET_ALL_POSTS'],
   }));
 
-  useEffect(() => {
-    dispatch(getAllPosts({ company: '', sort: '' }));
+  const [company, setCompany] = useState('');
+  const [sort, setSort] = useState('');
 
+  useEffect(() => {
+    dispatch(getAllPosts({ company, sort }));
     return () => {
       dispatch(clearPosts());
     };
-  }, [dispatch]);
+  }, [dispatch, company, sort]);
 
-  const [age, setAge] = useState('');
   const handleChange = (e) => {
-    setAge(e.target.value);
-    if (e.target.value === 10) {
-      dispatch(getAllPosts({ company: '', sort: '' }));
-    } else if (e.target.value === 20) {
-      dispatch(getAllPosts({ company: '', sort: 'likes' }));
-    } else {
-      dispatch(getAllPosts({ company: '', sort: 'user_recommedation' }));
-    }
+    setSort(e.target.value);
+  };
+
+  const companys = [
+    ['brother_logo.png', 'white'],
+    ['coupang_logo.png', 'black'],
+    ['d2_logo.gif', 'white'],
+    ['kakao_logo.jpg', 'black'],
+    ['line_logo.png', 'black'],
+    ['sds_logo.png', 'white'],
+    ['spoqa_logo.png', 'white'],
+    ['toast_logo.png', 'white'],
+    ['yanolja_logo.png', 'black'],
+  ];
+
+  const companyhash = {
+    'brother_logo.png': 'WOOWABROS',
+    'coupang_logo.png': 'COUPANG TECH',
+    'd2_logo.gif': 'NAVER D2',
+    'kakao_logo.jpg': 'KAKAO TECH',
+    'line_logo.png': 'LINE ENGINEERING',
+    'sds_logo.png': 'SAMSUNG SDS',
+    'spoqa_logo.png': 'SPOQA',
+    'toast_logo.png': 'TOAST',
+    'yanolja_logo.png': 'YANOLJA',
+  };
+
+  const handleClick = (company) => {
+    setCompany(companyhash[company]);
   };
 
   return (
     <RecentPostsPageWrapper>
       <CompanySelector>
         <h1>기업의 기술블로그에서 원하는 주제를 찾아보세요</h1>
-        <Companylogos />
+        {companys.map((company, index) => (
+          <Companylogo
+            key={index}
+            fileName={company[0]}
+            color={company[1]}
+            handleClick={() => {
+              handleClick(company[0]);
+            }}
+          />
+        ))}
       </CompanySelector>
       <PostsDropdown>
         <h1>포스트</h1>
         <FormControl>
           <NativeSelect
-            value={age}
+            value={sort}
             onChange={handleChange}
-            // inputProps={{
-            //   name: 'age',
-            // }}
-            inputProps={age}
+            inputProps={{ sort }}
           >
-            <option value={10}>최신순</option>
-            <option value={20}>좋아요순</option>
-            <option value={30}>매칭순</option>
+            <option value={''}>최신순</option>
+            <option value={'likes'}>좋아요순</option>
+            <option value={'user_recommendation'}>매칭순</option>
           </NativeSelect>
         </FormControl>
       </PostsDropdown>
