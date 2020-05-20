@@ -14,6 +14,5 @@ driver = webdriver.Chrome(
 
 CSS_SELECTOR = driver.find_elements_by_css_selector
 
-COMPANY = 'matcher'
 ERROR_MESSAGE = {'status': 400, 'message': 'URL을 불러올 수 없습니다. 나중에 다시 시도해주세요.'}
 SUCESS_MESSAGE = {'status': 200, 'message': f'정상적으로 게시물을 수집했습니다.'}
