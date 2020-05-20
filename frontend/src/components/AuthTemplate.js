@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import SimpleButton from './Material/SimpleButton';
 import SimpleTextField from './Material/SimpleTextField';
 import Logo from './Logo';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeInput } from '../reducers/auth';
+import { changeInput, login, register } from '../reducers/auth';
 
 const AuthTemplateWrapper = styled.div`
   width: 100%;
@@ -33,9 +33,10 @@ const StyledLink = styled(Link)`
   color: black;
 `;
 
-function AuthTemplate({ type }) {
-  const { form } = useSelector(({ auth }) => ({
+function AuthTemplate({ type, history }) {
+  const { form, isLoggedIn } = useSelector(({ auth, user }) => ({
     form: auth[type],
+    isLoggedIn: user.isLoggedIn,
   }));
 
   const dispatch = useDispatch();
@@ -43,10 +44,33 @@ function AuthTemplate({ type }) {
     const { name, value } = e.target;
     dispatch(changeInput({ type, name, value }));
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (type === 'login') {
+      dispatch(login({ username: form.username, password: form.password }));
+    } else {
+      dispatch(
+        register({
+          username: form.username,
+          password: form.password,
+          email: form.email,
+          is_subscribed: true,
+        }),
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      history.push('/');
+    }
+  }, [isLoggedIn, history, dispatch]);
+
   return (
     <AuthTemplateWrapper>
       <Logo />
-      <AuthForm>
+      <AuthForm onSubmit={handleSubmit}>
         <SimpleTextField
           value={form.username}
           type="text"
@@ -97,4 +121,4 @@ function AuthTemplate({ type }) {
   );
 }
 
-export default AuthTemplate;
+export default withRouter(AuthTemplate);
