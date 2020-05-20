@@ -92,11 +92,24 @@ def mypage(request):
         serializer = UserSerializer(user)
         return JsonResponse(serializer.data)
     elif request.method == 'PUT':
-        user.username = request.data.get('username')
-        user.email = request.data.get('email')
-        user.is_subscribed = request.data.get('is_subscribed')
+        username = request.data.get('username')
+        if username != '':
+            user.username = username
+
+        password = request.data.get('password')
+        if password != '':
+            user.set_password(raw_password=password)
+
+        email = request.data.get('email')
+        if email != '':
+            user.email = email
+
+        is_subscribed = request.data.get('is_subscribed')
+        if is_subscribed != '':
+            user.is_subscribed = is_subscribed
+
         user.save()
-        return JsonResponse({'username': user.username, 'email': user.email, 'subscribed': user.is_subscribed})
+        return JsonResponse({'username': user.username, 'email': user.email})
     elif request.method == 'DELETE':
         user.delete()
         return JsonResponse({'result': '삭제되었습니다.'})
