@@ -1,22 +1,24 @@
-from .config import driver
+from .config import driver, ERROR_MESSAGE, SUCESS_MESSAGE, CSS_SELECTOR
 from mainapp.models import Company, Post
 from tqdm import tqdm
-import time
 
 
-def get_contents(driver_selector, yanolja):
-    posts = Post.objects.filter(company=yanolja, contents='')
+def get_contents(company):
+    posts = Post.objects.filter(company=company)
     for post in tqdm(posts):
-        driver.get(post.url)
-        time.sleep(10)
-
-        contents = driver_selector('section.post-content')[0]
-        articles = contents.find_elements_by_css_selector('p')
-
         try:
-            image = contents.find_element_by_css_selector(
-                'img'
-            ).get_attribute('src')
+            driver.get(post.url)
+            driver.implicitly_wait(30)
+        except:
+            ERROR_MESSAGE['company'] = company.name
+            return ERROR_MESSAGE
+
+        div = CSS_SELECTOR('section.post-content')[0]
+        articles = div.find_elements_by_css_selector('p')
+        try:
+            image = CSS_SELECTOR(
+                'header.post-head')[0].get_attribute('style').split('url("')[1][:-3]
+            image = 'https://yanolja.github.io' + image
         except:
             image = ''
 
@@ -28,41 +30,41 @@ def get_contents(driver_selector, yanolja):
         post.image = image
         post.save()
 
+    SUCESS_MESSAGE['company'] = company.name
+    return SUCESS_MESSAGE
+
 
 def get_posts(url):
-    driver_selector = driver.find_elements_by_css_selector
     yanolja = Company.objects.get(name='YANOLJA')
 
     cnt = 1
     while True:
-        driver.get(url)
-        time.sleep(10)
+        try:
+            driver.get(url)
+            driver.implicitly_wait(30)
+        except:
+            return ERROR_MESSAGE
 
-        posts = driver_selector('article.post')
+        posts = CSS_SELECTOR('article.post')
         for post in posts:
             element_selector = post.find_element_by_css_selector
 
             title = element_selector('h2.post-title').text
-            if len(Post.objects.filter(company=yanolja, title=title)) > 0:
-                get_contents(driver_selector, yanolja)
-                return {'status': 200, 'message': 'YANOLJA에 대한 Crawling을 완료했습니다.'}
+            if Post.objects.filter(company=yanolja, title=title):
+                return get_contents(yanolja)
 
             date = element_selector(
-                'time.post-date'
-            ).get_attribute('datetime').replace('-', '.')
-            url = element_selector('a').get_attribute('href')
+                'time.post-date').get_attribute('datetime').replace('-', '.')
+            post_url = element_selector('a').get_attribute('href')
 
-            _, is_created = Post.objects.get_or_create(
-                company=yanolja, title=title, contents='', date=date,
-                image='', url=url
-            )
+            Post.objects.get_or_create(
+                company=yanolja, title=title, contents='', date=date, image='', url=post_url)
 
-        is_ended = len(driver_selector('a.older-posts')) == 0
-        if is_ended == False:
+        get_next = CSS_SELECTOR('a.older-posts')
+        if get_next:
             cnt += 1
-            url = f'https://yanolja.github.io/page{cnt}/'
+            url = f'{url}page{cnt}/'
         else:
             break
 
-    get_contents(driver_selector, yanolja)
-    return {'status': 200, 'message': 'YANOLJA에 대한 Crawling을 완료했습니다.'}
+    return get_contents(yanolja)
