@@ -57,8 +57,8 @@ def get_posts(url):
             Post.objects.get_or_create(
                 company=toast, title=title, contents='', date=date, image=image, url=post_url)
 
-        is_ended = CSS_SELECTOR('a.tui-page-btn.tui-next')
-        if CSS_SELECTOR:
+        get_next = CSS_SELECTOR('a.tui-page-btn.tui-next')
+        if get_next:
             cnt += 1
             url = f'https://meetup.toast.com/?page={cnt}'
         else:
