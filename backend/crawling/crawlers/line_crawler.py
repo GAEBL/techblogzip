@@ -54,10 +54,10 @@ def get_posts(url):
                 return get_contents(line)
 
             date = element_selector('span.byline').text.lstrip(' | ')
-            url = element_selector('a.plain').get_attribute('href')
+            post_url = element_selector('a.plain').get_attribute('href')
 
             Post.objects.get_or_create(
-                company=line, title=title, contents='', date=date, image='', url=url)
+                company=line, title=title, contents='', date=date, image='', url=post_url)
 
         get_next = CSS_SELECTOR('a.next.page-number')
         if get_next:
