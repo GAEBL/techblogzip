@@ -109,10 +109,10 @@ def trend(request):
 
     if company_id == 0:
         posts = Post.objects.annotate(tags_count=Count(
-            'tags')).filter(date__range=[start_date, end_date], tags_count__range=[tag_count, 10]).order_by('-date')
+            'tags')).filter(date__range=[start_date, end_date], tags_count__range=[0, tag_count]).order_by('-date')
     else:
         posts = Post.objects.annotate(tags_count=Count(
-            'tags')).filter(company=company_id, date__range=[start_date, end_date], tags_count__range=[tag_count, 10]).order_by('-date')
+            'tags')).filter(company=company_id, date__range=[start_date, end_date], tags_count__range=[0, tag_count]).order_by('-date')
 
     serializer = PostSerializer(posts, many=True)
     return JsonResponse({'company': company, 'data': serializer.data})
