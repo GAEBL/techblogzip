@@ -54,8 +54,8 @@ def get_posts(url):
             Post.objects.get_or_create(
                 company=naver, title=title, contents='', date=date, image=image, url=post_url)
 
-        is_ended = CSS_SELECTOR('a.btn_next')
-        if is_ended:
+        get_next = CSS_SELECTOR('a.btn_next')
+        if get_next:
             cnt += 1
             url = f'https://d2.naver.com/home?page={cnt}'
         else:

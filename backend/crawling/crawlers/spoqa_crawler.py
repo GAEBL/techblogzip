@@ -68,7 +68,7 @@ def get_posts(url):
             Post.objects.get_or_create(
                 company=spoqa, title=title, contents='', date=date, image='', url=post_url)
 
-        is_ended = CSS_SELECTOR('p.next')
-        if is_ended:
+        get_next = CSS_SELECTOR('p.next')
+        if get_next:
             cnt += 1
             url = f'https://spoqa.github.io/page{cnt}/'
