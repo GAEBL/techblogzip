@@ -77,32 +77,16 @@ def search(request):
 @api_view(['GET'])
 @permission_classes([AllowAny, ])
 def main(request):
-    samsung = get_object_or_404(Company, name='SAMSUNG SDS')
-    yanolja = get_object_or_404(Company, name='YANOLJA')
-    spoqa = get_object_or_404(Company, name='SPOQA')
-    coupang = get_object_or_404(Company, name='COUPANG TECH')
-    line = get_object_or_404(Company, name='LINE ENGINEERING')
-    woowabro = get_object_or_404(Company, name='WOOWABROS')
-    toast = get_object_or_404(Company, name='TOAST')
-    kakao = get_object_or_404(Company, name='KAKAO TECH')
-    naver = get_object_or_404(Company, name='NAVER D2')
+    name = ['SAMSUNG SDS', 'YANOLJA', 'SPOQA', 'COUPANG TECH',
+            'LINE ENGINEERING', 'WOOWABROS', 'TOAST', 'KAKAO TECH', 'NAVER D2']
+    company_count = len(name)
 
-    samsung_posts_count = Post.objects.filter(company=samsung).count()
-    yanolja_posts_count = Post.objects.filter(company=yanolja).count()
-    spoqa_posts_count = Post.objects.filter(company=spoqa).count()
-    coupang_posts_count = Post.objects.filter(company=coupang).count()
-    line_posts_count = Post.objects.filter(company=line).count()
-    woowabro_posts_count = Post.objects.filter(company=woowabro).count()
-    toast_posts_count = Post.objects.filter(company=toast).count()
-    kakao_posts_count = Post.objects.filter(company=kakao).count()
-    naver_posts_count = Post.objects.filter(company=naver).count()
+    company_post_count = []
+    for idx in range(company_count):
+        company = get_object_or_404(Company, name=name[idx])
+        company_post_count.append(Post.objects.filter(company=company).count())
 
-    company_post_count = [samsung_posts_count, yanolja_posts_count, spoqa_posts_count,
-                          coupang_posts_count, line_posts_count, woowabro_posts_count,
-                          toast_posts_count, kakao_posts_count, naver_posts_count]
-
-    company_count = Company.objects.count()
-    posts_count = Post.objects.count()
+    posts_count = sum(company_post_count)
     posts = Post.objects.all()[:5]
     serializer = MainPostSerializer(posts, many=True)
     return JsonResponse({'company_count': company_count,
