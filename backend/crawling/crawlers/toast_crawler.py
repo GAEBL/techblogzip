@@ -50,12 +50,10 @@ def get_posts(url):
             date = element_selector('span.date.ng-binding').text.split(' ')[1]
             image = element_selector(
                 'span.img_area.ng-scope').get_attribute('style').split('("')[1][:-3]
-            url = post.get_attribute('href')
+            post_url = post.get_attribute('href')
 
-            _, is_created = Post.objects.get_or_create(
-                company=toast, title=title, contents='', date=date,
-                image=image, url=url
-            )
+            Post.objects.get_or_create(
+                company=toast, title=title, contents='', date=date, image=image, url=post_url)
 
         is_ended = CSS_SELECTOR('a.tui-page-btn.tui-next')
         if CSS_SELECTOR:
