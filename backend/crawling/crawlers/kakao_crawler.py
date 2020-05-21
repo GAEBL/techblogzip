@@ -49,14 +49,16 @@ def get_posts(url):
                 return get_contents(kakao)
 
             date = element_selector('span.txt_date').text
-            url = element_selector('a.link_post').get_attribute('href')
+            print(date)
+            raise
+            post_url = element_selector('a.link_post').get_attribute('href')
             try:
                 image = element_selector('img').get_attribute('src')
             except:
                 image = ''
 
             Post.objects.get_or_create(
-                company=kakao, title=title, contents='', date=date, image=image, url=url)
+                company=kakao, title=title, contents='', date=date, image=image, url=post_url)
 
         get_next = CSS_SELECTOR('a.next.page-numbers')
         if get_next:
