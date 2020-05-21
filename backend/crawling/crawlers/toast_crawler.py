@@ -48,8 +48,10 @@ def get_posts(url):
                 return get_contents(toast)
 
             date = element_selector('span.date.ng-binding').text.split(' ')[1]
+
             image = element_selector(
-                'span.img_area.ng-scope').get_attribute('style').split('("')[1][:-3]
+                'span.img_area.ng-scope').get_attribute('style')
+            image = image.lstip('background-image: url("').rstrip('");')
             post_url = post.get_attribute('href')
 
             Post.objects.get_or_create(
