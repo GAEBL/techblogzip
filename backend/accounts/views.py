@@ -89,8 +89,7 @@ def mypage(request):
     user = get_object_or_404(User, id=user_id)
 
     if request.method == 'GET':
-        serializer = UserSerializer(user)
-        return JsonResponse(serializer.data)
+        return JsonResponse({'username': user.username, 'email': user.email, 'is_subscribed':user.is_subscribed})
     elif request.method == 'PUT':
         username = request.data.get('username')
         if username != '':
