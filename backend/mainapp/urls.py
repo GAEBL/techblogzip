@@ -8,4 +8,5 @@ urlpatterns = [
     path('search/', views.search),
     path('main/', views.main),
     path('trend/', views.trend),
+    path('temp/', views.temp)
 ]

@@ -33,7 +33,7 @@ class Tag(models.Model):
     tag_post = models.ManyToManyField(Post, related_name="tags", blank=True, null=True)
     
     def __str__(self):
-        return self.name
+        return f'{self.id} {self.name}'
 
 
 # class Log(models.Model):

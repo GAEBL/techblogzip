@@ -94,6 +94,7 @@ def main(request):
 
 
 @api_view(['POST'])
+@permission_classes([AllowAny, ])
 def trend(request):
     company = request.data.get('company')
     start_date = request.data.get('start_date')
@@ -109,6 +110,34 @@ def trend(request):
         company_id = 0
         posts = Post.objects.annotate(tags_count=Count(
             'tags')).filter(date__range=[start_date, end_date], tags_count__range=[0, tag_count])
-        
+
     serializer = PostSerializer(posts, many=True)
     return JsonResponse({'company': company, 'data': serializer.data})
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny, ])
+def temp(request):
+    company = request.data.get('company')
+
+    try:
+        company_id = get_object_or_404(Company, name=company).id
+        posts = Post.objects.filter(company=company_id)
+    except:
+        company_id = 0
+        posts = Post.objects.all()
+
+    tag_dict = {}
+    if posts.exists():
+        for post in posts.iterator():
+            tags = post.tags
+            if tags.exists():
+                for tag in tags.values():
+                    tag_id = tag['name']  # id, name
+                    if tag_id in tag_dict:
+                        tag_dict[tag_id] += 1
+                    else:
+                        tag_dict[tag_id] = 1
+
+    tag_dict = sorted(tag_dict.items(), key=lambda x: x[1], reverse=True)
+    return JsonResponse({'company': company, 'data': tag_dict})
