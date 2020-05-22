@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../reducers/user';
 import cs from 'classnames';
 import _ from 'lodash';
+import Logo from './Logo';
 
 const HeaderWrapper = styled.header`
   width: 100%;
@@ -41,6 +42,7 @@ function Header({ history }) {
   console.log();
   const header = useRef(null);
   const [headerScroll, setheaderScroll] = useState(false);
+  const [logoReverse, setLogoReverse] = useState(false);
 
   // URL 위치 따라 바디에 네비게이션 높이만큼 패딩주기.
   useEffect(() => {
@@ -59,8 +61,10 @@ function Header({ history }) {
         document.body.scrollTop || document.documentElement.scrollTop;
       if (scrollTop === 0) {
         setheaderScroll(false);
+        setLogoReverse(false);
       } else {
         setheaderScroll(true);
+        setLogoReverse(true);
       }
     });
   }, []);
@@ -80,7 +84,9 @@ function Header({ history }) {
     <HeaderWrapper className={cs({ headerScroll })}>
       <ul ref={header}>
         <li>
-          <NavLink to="/">홈</NavLink>
+          <NavLink to="/">
+            <Logo size="1rem" reverse={logoReverse} />
+          </NavLink>
         </li>
         <li>
           <NavLink to="/posts">최신글들</NavLink>
