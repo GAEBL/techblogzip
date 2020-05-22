@@ -4,7 +4,6 @@ import { Link, withRouter } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../reducers/user';
 import cs from 'classnames';
-import _ from 'lodash';
 import Logo from './Logo';
 
 const HeaderWrapper = styled.header`

@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const LogoWrapper = styled.h1`
+const LogoWrapper = styled.span`
   font-family: 'Bungee Shade', cursive;
   font-size: ${(props) => props.size};
+  font-weight: bold;
   color: ${({ theme, reverse }) =>
     reverse ? theme.mainColor : theme.logoColor};
 `;
