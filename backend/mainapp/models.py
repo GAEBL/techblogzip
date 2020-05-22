@@ -19,6 +19,7 @@ class Post(models.Model):
     contents = models.TextField(null=True)  # 나중에 AI 요약
     image = models.TextField(null=True)
     url = models.TextField(null=True)
+    is_taged = models.BooleanField(default=False)
     is_liked = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='posts', blank=True, null=True)
     
     def __str__(self):
