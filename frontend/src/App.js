@@ -22,7 +22,7 @@ const AppGridWrapper = styled.div`
 `;
 
 const Contents = styled.section`
-  padding: 1rem;
+  /* padding: 1rem; */
 `;
 
 function App() {
