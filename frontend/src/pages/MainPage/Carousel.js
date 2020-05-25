@@ -7,8 +7,11 @@ import logos from '../../lib/logos';
 import { colors } from '@material-ui/core';
 
 const CarouselWrapper = styled.div`
-  height: 50vh;
+  height: 400px;
   position: relative;
+  @media all and (max-width: ${({ theme }) => theme.sm}) {
+    height: 100vh;
+  }
 `;
 
 const CarouselBtn = styled.button`
@@ -50,7 +53,10 @@ const CarouselItem = styled.div`
   }
 
   .item__contents {
-    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    flex-wrap: wrap;
   }
 
   .item__link {
@@ -61,14 +67,26 @@ const CarouselItem = styled.div`
     text-decoration: none;
     padding: 0.5rem 0;
   }
+
+  .item__logo {
+    height: 25px;
+    align-self: flex-start;
+  }
+
   /* 
   .item__date {
     color: grey;
     font-size: 0.8rem;
   } */
 
-  .item__logo {
-    height: 25px;
+  @media all and (max-width: ${({ theme }) => theme.sm}) {
+    .item__contents {
+      width: 250px;
+      flex-wrap: wrap;
+    }
+    .item__link {
+      font-size: 1.3rem;
+    }
   }
 `;
 
@@ -89,7 +107,7 @@ const Tag = styled.span`
 const DotWrapper = styled.div`
   position: absolute;
   z-index: 2;
-  bottom: 3%;
+  bottom: 20%;
   left: 50%;
   transform: translateX(-50%);
 `;

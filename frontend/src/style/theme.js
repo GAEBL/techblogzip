@@ -7,6 +7,7 @@ const theme = {
   mainColor__hover: MAIN_COLOR[500],
   logoColor: colors.indigo[500],
   maxPageWidth: '1024px',
+  sm: '600px',
 };
 
 export default theme;
