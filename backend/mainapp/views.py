@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from django.db.models import Q, Count
 from .models import *
 from .serializers import *
+from .pagination import PostPageNumberPagination
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
@@ -13,6 +14,7 @@ def posts(request):
     # request.GET == request.query_params
     company = request.query_params.get('company')  # ex) 삼성SDS
     sort = request.query_params.get('sort')
+    page = request.query_params.get('page')
 
     try:
         company_id = get_object_or_404(Company, name=company)
@@ -35,8 +37,10 @@ def posts(request):
             posts = Post.objects.all()
         else:
             posts = Post.objects.filter(company=company_id)
+
     serializer = PostSerializer(posts, many=True)
-    return JsonResponse({'data': serializer.data})
+
+    return JsonResponse({'lastPage': 0, 'data': serializer.data})
 
 
 @api_view(['POST'])
@@ -61,11 +65,11 @@ def company(request, id):  # 기업 블로그
     return JsonResponse({'data': serializer.data})
 
 
-@api_view(['POST'])
+@api_view(['GET'])
 @permission_classes([AllowAny, ])
 def search(request):
     posts = Post.objects.all()
-    query = request.data.get('query')
+    query = request.query_params.get('query')
     if query:
         posts = posts.filter(
             Q(title__icontains=query) | Q(tags__name__icontains=query)).distinct()
