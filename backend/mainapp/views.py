@@ -77,20 +77,12 @@ def search(request):
 @api_view(['GET'])
 @permission_classes([AllowAny, ])
 def main(request):
-    name = ['SAMSUNG SDS', 'YANOLJA', 'SPOQA', 'COUPANG TECH',
-            'LINE ENGINEERING', 'WOOWABROS', 'TOAST', 'KAKAO TECH', 'NAVER D2']
-    company_count = len(name)
-
-    company_post_count = []
-    for idx in range(company_count):
-        company = get_object_or_404(Company, name=name[idx])
-        company_post_count.append(Post.objects.filter(company=company).count())
-
-    posts_count = sum(company_post_count)
+    company_count = Company.objects.all().count()
+    posts_count = Post.objects.all().count()
     posts = Post.objects.all()[:5]
     serializer = MainPostSerializer(posts, many=True)
     return JsonResponse({'company_count': company_count,
-                         'posts_count': posts_count, 'company_post_count': company_post_count, 'data': serializer.data})
+                         'posts_count': posts_count, 'data': serializer.data})
 
 
 @api_view(['POST'])

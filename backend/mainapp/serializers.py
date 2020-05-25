@@ -31,7 +31,7 @@ class MainPostSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True)
     class Meta:
         model = Post
-        fields = ['company', 'title', 'date', 'url', 'tags']
+        fields = ['id', 'company', 'title', 'date', 'url', 'tags']
 
 class CompanySerializer(serializers.ModelSerializer):
     post = PostSerializer(source='posts', many=True)
