@@ -38,7 +38,6 @@ const NavLink = styled(Link)`
 `;
 
 function Header({ history }) {
-  console.log();
   const header = useRef(null);
   const [headerScroll, setheaderScroll] = useState(false);
   const [logoReverse, setLogoReverse] = useState(false);
@@ -106,12 +105,10 @@ function Header({ history }) {
             </li>
           </>
         ) : (
-          <>
-            <h3>{user.username}</h3>
-            <li>
-              <button onClick={onLogout}>로그아웃</button>
-            </li>
-          </>
+          <li>
+            <span>{user.username}</span>
+            <button onClick={onLogout}>로그아웃</button>
+          </li>
         )}
       </ul>
     </HeaderWrapper>
