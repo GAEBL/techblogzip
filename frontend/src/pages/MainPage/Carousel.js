@@ -4,6 +4,7 @@ import cs from 'classnames';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import logos from '../../lib/logos';
+import { colors } from '@material-ui/core';
 
 const CarouselWrapper = styled.div`
   height: 50vh;
@@ -85,9 +86,48 @@ const Tag = styled.span`
   }
 `;
 
+const DotWrapper = styled.div`
+  position: absolute;
+  z-index: 2;
+  bottom: 3%;
+  left: 50%;
+  transform: translateX(-50%);
+`;
+
+const Dot = styled.span`
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  background-color: ${colors.grey[300]};
+  display: inline-block;
+  transition: width 0.5s;
+
+  cursor: pointer;
+  &.showing {
+    color: red;
+    width: 30px;
+    border-radius: 30px;
+  }
+
+  & + & {
+    margin-left: 0.3rem;
+  }
+`;
+
 function Carousel({ posts }) {
   const [itemNumber, setitemNumber] = useState(0);
+  const [globalInterval, setGlobalInterval] = useState(null);
+
+  // 그냥 흐름
+  const autoFlow = () => {
+    setitemNumber((itemNumber) => {
+      return itemNumber === posts.length - 1 ? 0 : itemNumber + 1;
+    });
+  };
+
+  // 좌/우 버튼 클릭시 세팅
   const handleItemNumber = (direction = 'right') => {
+    clearInterval(globalInterval);
     setitemNumber((itemNumber) => {
       if (direction === 'right') {
         if (itemNumber === posts.length - 1) {
@@ -103,18 +143,33 @@ function Carousel({ posts }) {
         }
       }
     });
+    const interval = setInterval(() => {
+      autoFlow();
+    }, 4000);
+    setGlobalInterval(interval);
   };
 
+  // 점 클릭시 세팅
+  const onDotClick = (number) => {
+    clearInterval(globalInterval);
+    setitemNumber(number);
+    const interval = setInterval(() => {
+      autoFlow();
+    }, 4000);
+    setGlobalInterval(interval);
+  };
+
+  // 돌아가는 인터벌 설정
   useEffect(() => {
     const interval = setInterval(() => {
-      handleItemNumber();
+      autoFlow();
     }, 4000);
+    setGlobalInterval(interval);
     return () => {
       clearInterval(interval);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [posts]);
-
   return (
     <CarouselWrapper>
       <CarouselBtn
@@ -131,6 +186,16 @@ function Carousel({ posts }) {
       >
         <ArrowForwardIosIcon />
       </CarouselBtn>
+
+      <DotWrapper>
+        {posts.map((_, idx) => (
+          <Dot
+            key={idx}
+            onClick={() => onDotClick(idx)}
+            className={cs({ showing: itemNumber === idx })}
+          ></Dot>
+        ))}
+      </DotWrapper>
 
       {posts.map((post, idx) => {
         const { company, title, url } = post; // TODO {tags, date} 처리좀
@@ -151,8 +216,8 @@ function Carousel({ posts }) {
               {/* <div className="item__date">{date}</div> */}
               {/* TODO: 태그 받으면 어떻게 보여줄꺼야 ? */}
               <TagWrapper>
-                {['리액트', '문화', '프로세스'].map((tag) => (
-                  <Tag>{tag}</Tag>
+                {['리액트', '문화', '프로세스'].map((tag, i) => (
+                  <Tag key={i}>{tag}</Tag>
                 ))}
               </TagWrapper>
             </div>
