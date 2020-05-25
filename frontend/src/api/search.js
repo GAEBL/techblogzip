@@ -2,7 +2,7 @@ import client from '../client';
 
 export const Search = {
   getSearchResults: ({ query }) =>
-    client.post('/techblog/search/', {
+    client.get('/techblog/search/', {
       params: {
         query,
       },

@@ -12,11 +12,19 @@ const CostomPaper = styled(Paper)`
   margin-bottom: 1rem;
 `;
 
-function SearchInput() {
+function SearchInput({ query, setQuery, handleSearch }) {
+  const handleChange = (e) => {
+    setQuery(e.target.value);
+  };
   return (
     <CostomPaper>
-      <CostomInputBase placeholder="검색해보세요" fullWidth />
-      <IconButton type="submit" aria-label="search">
+      <CostomInputBase
+        placeholder="검색해보세요"
+        fullWidth
+        value={query}
+        onChange={handleChange}
+      />
+      <IconButton type="submit" aria-label="search" onClick={handleSearch}>
         <SearchIcon />
       </IconButton>
     </CostomPaper>
