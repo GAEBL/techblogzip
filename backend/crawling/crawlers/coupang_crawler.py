@@ -25,7 +25,8 @@ def get_contents(company):
 
 
 def get_posts(url):
-    coupang = Company.objects.get(name='COUPANG TECH')
+    coupang = Company.objects.get_or_create(
+        name='COUPANG TECH', url=url, description='COUPANG TECH')[0]
 
     try:
         driver.get(url)

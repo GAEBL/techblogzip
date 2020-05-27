@@ -28,7 +28,8 @@ def get_contents(company):
 
 
 def get_posts(url):
-    naver = Company.objects.get(name='NAVER D2')
+    naver = Company.objects.get_or_create(
+        name='NAVER D2', url=url, description='NAVER D2')[0]
 
     cnt = 0
     while True:

@@ -36,7 +36,8 @@ def get_contents(company):
 
 
 def get_posts(url):
-    spoqa = Company.objects.get(name='SPOQA')
+    spoqa = Company.objects.get_or_create(
+        name='SPOQA', url=url, description='SPOQA')[0]
 
     cnt = 1
     while True:
