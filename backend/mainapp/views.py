@@ -125,7 +125,11 @@ def trend(request):
         posts = Post.objects.annotate(tags_count=Count(
             'tags')).filter(date__range=[start_date, end_date], tags_count__range=[0, tag_count])
 
-    serializer = PostSerializer(posts, many=True)
+    post_count = posts.count() / 10
+    lastPage = math.ceil(post_count)
+    paginator = PageNumberPagination()
+    results = paginator.paginate_queryset(posts, request)
+    serializer = PostSerializer(results, many=True)
     return JsonResponse({'company': company, 'data': serializer.data})
 
 
