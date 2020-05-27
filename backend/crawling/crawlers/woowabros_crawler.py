@@ -35,7 +35,8 @@ def get_contents(company):
 
 
 def get_posts(url):
-    baemin = Company.objects.get(name='WOOWABROS')
+    baemin = Company.objects.get_or_create(
+        name='WOOWABROS', url=url, description='WOOWABROS')[0]
 
     try:
         driver.get(url)

@@ -28,7 +28,8 @@ def get_contents(company):
 
 
 def get_posts(url):
-    kakao = Company.objects.get(name='KAKAO TECH')
+    kakao = Company.objects.get_or_create(
+        name='KAKAO TECH', url=url, description='KAKAO TECH')[0]
 
     cnt = 1
     while True:

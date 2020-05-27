@@ -35,7 +35,8 @@ def get_contents(company):
 
 
 def get_posts(url):
-    yanolja = Company.objects.get(name='YANOLJA')
+    yanolja = Company.objects.get_or_create(
+        name='YANOLJA', url=url, description='YANOLJA')[0]
 
     cnt = 1
     while True:
