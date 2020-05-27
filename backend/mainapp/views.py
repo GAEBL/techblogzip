@@ -4,9 +4,7 @@ from django.db.models import Q, Count
 
 from .models import *
 from .serializers import *
-from .pagination import CustomPagination
 
-from rest_framework import generics
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
