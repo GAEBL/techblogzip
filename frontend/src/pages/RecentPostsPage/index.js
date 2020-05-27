@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Companylogo from './CompanyLogo';
 import RecentPostItem from './RecentPostItem';
 import { NativeSelect, FormControl } from '@material-ui/core';
+import Pagination from '@material-ui/lab/Pagination';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllPosts, clearPosts } from '../../reducers/post';
 
@@ -24,24 +25,35 @@ const PostsDropdown = styled.div`
 
 const PostsWrapper = styled.div``;
 
+const PaginationWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+`;
+
 function RecentPostsPage(props) {
   const dispatch = useDispatch();
-  const { posts, loading } = useSelector(({ post, loading, user }) => ({
-    posts: post.posts,
-    loading: loading['post/GET_ALL_POSTS'],
-  }));
+  const { posts, loading, lastpage } = useSelector(
+    ({ post, loading, user }) => ({
+      posts: post.posts,
+      loading: loading['post/GET_ALL_POSTS'],
+      lastpage: post.lastPage,
+    }),
+  );
 
   const [company, setCompany] = useState('');
   const [sort, setSort] = useState('');
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
-    dispatch(getAllPosts({ company, sort }));
+    dispatch(getAllPosts({ company, sort, page }));
     return () => {
       dispatch(clearPosts());
     };
-  }, [dispatch, company, sort]);
+  }, [dispatch, company, sort, page]);
 
   const handleChange = (e) => {
+    setPage(1);
     setSort(e.target.value);
   };
 
@@ -70,7 +82,12 @@ function RecentPostsPage(props) {
   };
 
   const handleClick = (company) => {
+    setPage(1);
     setCompany(companyhash[company]);
+  };
+
+  const handleChangePage = (e, v) => {
+    setPage(v);
   };
 
   return (
@@ -111,6 +128,14 @@ function RecentPostsPage(props) {
             <RecentPostItem key={index} post={post} />
           ))}
       </PostsWrapper>
+      <PaginationWrapper>
+        <Pagination
+          count={lastpage}
+          size="large"
+          onChange={handleChangePage}
+          value={page}
+        />
+      </PaginationWrapper>
     </RecentPostsPageWrapper>
   );
 }

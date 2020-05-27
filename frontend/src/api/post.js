@@ -1,11 +1,12 @@
 import client from '../client';
 
 export const Post = {
-  getAllPosts: ({ company, sort }) =>
+  getAllPosts: ({ company, sort, page }) =>
     client.get('/techblog/posts/', {
       params: {
         company,
         sort,
+        page,
       },
     }),
   getPostLikeCount: (id) => client.get(`/techblog/posts/like/${id}/`),
@@ -17,4 +18,5 @@ export const Post = {
         query,
       },
     }),
+  postLike: ({ id }) => client.post(`/techblog/like/${id}`),
 };
