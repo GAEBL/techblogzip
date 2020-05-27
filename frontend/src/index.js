@@ -9,14 +9,14 @@ import { ThemeProvider } from 'styled-components';
 import theme from './style/theme';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <Router>
-          <App />
-        </Router>
-      </ThemeProvider>
-    </Provider>
-  </React.StrictMode>,
+  // <React.StrictMode>
+  <Provider store={store}>
+    <ThemeProvider theme={theme}>
+      <Router>
+        <App />
+      </Router>
+    </ThemeProvider>
+  </Provider>,
+  //</React.StrictMode>
   document.getElementById('root'),
 );
