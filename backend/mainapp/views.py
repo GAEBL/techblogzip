@@ -1,11 +1,15 @@
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.db.models import Q, Count
+
 from .models import *
 from .serializers import *
-from .pagination import PostPageNumberPagination
+
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
+
+import math
 
 
 @api_view(['GET'])
@@ -21,6 +25,8 @@ def posts(request):
         company_id = company_id.id
     except:
         company_id = 0
+        posts = Post.objects.all()
+        post_count = posts.count() / 10
 
     if sort == 'likes':
         if company_id == 0:
@@ -28,19 +34,21 @@ def posts(request):
                 'is_liked')).order_by('-like_count', '-date')
         else:
             posts = Post.objects.filter(company=company_id)
+            post_count = posts.count() / 10
             posts = posts.annotate(like_count=Count(
                 'is_liked')).order_by('-like_count', '-date')
     elif sort == 'user_recommendation':  # IsAuthenticated
         pass
     else:
-        if company_id == 0:
-            posts = Post.objects.all()
-        else:
+        if company_id != 0:
             posts = Post.objects.filter(company=company_id)
+            post_count = posts.count() / 10
 
-    serializer = PostSerializer(posts, many=True)
-
-    return JsonResponse({'lastPage': 0, 'data': serializer.data})
+    lastPage = math.ceil(post_count)
+    paginator = PageNumberPagination()
+    results = paginator.paginate_queryset(posts, request)
+    serializer = PostSerializer(results, many=True)
+    return JsonResponse({'lastPage': lastPage, 'data': serializer.data})
 
 
 @api_view(['POST'])
