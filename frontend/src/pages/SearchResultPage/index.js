@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import SearchInput from './SearchInput';
 import styled from 'styled-components';
-// import dummy from '../RecentPostsPage/dummy';
 import { useDispatch, useSelector } from 'react-redux';
-import { getSearchResults, clearResults } from '../../reducers/search';
+import { getSearchResults, clearPosts } from '../../reducers/post';
 import RecentPostItem from '../RecentPostsPage/RecentPostItem';
 
 const SearchResultPageWraaper = styled.div`
@@ -20,25 +19,20 @@ const ResultText = styled.p`
 function SearchResultPage(props) {
   const dispatch = useDispatch();
   const [query, setQuery] = useState('');
-  // const { results, loading } = useSelector(({ result, loading }) => ({
-  //   results: result,
-  //   loading: loading['search/GET_SEARCHRESULTS'],
-  // }));
-  const results = useSelector((state) => state.search.results);
+  const results = useSelector((state) => state.post.posts);
   const loading = useSelector(
     (state) => state.loading['search/GET_SEARCHRESULTS'],
   );
 
   const handleSearch = () => {
     dispatch(getSearchResults({ query }));
-    console.log(results, loading);
   };
 
   useEffect(() => {
     return () => {
-      dispatch(clearResults());
+      dispatch(clearPosts());
     };
-  }, [results]);
+  }, [dispatch]);
 
   return (
     <SearchResultPageWraaper>

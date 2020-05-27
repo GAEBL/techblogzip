@@ -1,6 +1,6 @@
 import createActionTypes from '../lib/createActionTypes';
 import createRequestThunk from '../lib/createRequestThunk';
-import { Search } from '../api/search';
+import { Post } from '../api/post';
 import { handleActions, createAction } from 'redux-actions';
 
 const CLEAR_RESULTS = 'search/CLEAR_RESULTS';
@@ -12,7 +12,7 @@ const [
 
 export const getSearchResults = createRequestThunk(
   GET_SEARCHRESULTS,
-  Search.getSearchResults,
+  Post.getSearchResults,
 );
 export const clearResults = createAction(CLEAR_RESULTS);
 

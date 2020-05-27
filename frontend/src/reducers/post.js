@@ -15,11 +15,21 @@ const [
   GET_MAINPAGE_DATA_FAILURE,
 ] = createActionTypes('post/GET_MAINPAGE_DATA');
 
+const [
+  GET_SEARCHRESULTS,
+  GET_SEARCHRESULTS_SUCCEESS,
+  GET_SEARCHRESULTS_FAILURE,
+] = createActionTypes('search/GET_SEARCHRESULTS');
+
 export const getAllPosts = createRequestThunk(GET_ALL_POSTS, Post.getAllPosts);
 export const clearPosts = createAction(CLEAR_POSTS);
 export const getMainpageData = createRequestThunk(
   GET_MAINPAGE_DATA,
   Post.getMainPageData,
+);
+export const getSearchResults = createRequestThunk(
+  GET_SEARCHRESULTS,
+  Post.getSearchResults,
 );
 
 const initialState = {
@@ -50,6 +60,16 @@ const post = handleActions(
       error: null,
     }),
     [GET_MAINPAGE_DATA_FAILURE]: (state, { payload: error }) => ({
+      ...state,
+      posts: [],
+      error,
+    }),
+    [GET_SEARCHRESULTS_SUCCEESS]: (state, { payload: { data } }) => ({
+      ...state,
+      posts: data,
+      error: null,
+    }),
+    [GET_SEARCHRESULTS_FAILURE]: (state, { payload: error }) => ({
       ...state,
       posts: [],
       error,
