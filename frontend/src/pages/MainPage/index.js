@@ -7,8 +7,8 @@ import PageData from './PageData';
 
 const MainPageWrapper = styled.div``;
 
-const MainTitle = styled.div`
-  height: 50vh;
+const Contents = styled.div`
+  height: 100vh;
   font-size: 3rem;
   text-align: center;
 `;
@@ -37,10 +37,16 @@ function MainPage(props) {
     <MainPageWrapper>
       {/* TODO:posts 0개일때? */}
       <Carousel posts={posts} />
+
       <MainContentWrapper>
-        <MainTitle>우리는 그냥 기술블로그만 모아놓은게 아니야</MainTitle>
-        {loading ? <h2>로딩..</h2> : null}
         {!loading && pageData && <PageData pageData={pageData} />}
+        {/* <Contents>
+          <h4>블로그별 포스팅 개수</h4>
+          <h4>블로그별 포스팅 개수</h4>
+          <h4>블로그별 포스팅 개수</h4>
+          <h4>블로그별 포스팅 개수</h4>
+          <h4>블로그별 포스팅 개수</h4>
+        </Contents> */}
       </MainContentWrapper>
     </MainPageWrapper>
   );

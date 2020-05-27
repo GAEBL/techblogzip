@@ -3,12 +3,18 @@ import styled from 'styled-components';
 import CountUp from 'react-countup';
 import cn from 'classnames';
 import _ from 'lodash';
+import Logo from '../../components/Logo';
 
 const PageDataWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 100vh;
+
+  .logo-wrapper {
+    margin-bottom: 2rem;
+  }
 `;
 
 const FadeInTexts = styled.div`
@@ -62,6 +68,9 @@ function PageData({ pageData }) {
 
   return (
     <PageDataWrapper>
+      <div className="logo-wrapper">
+        <Logo />
+      </div>
       <FadeInTexts ref={texts}>
         <div className={cn('text', { fadeIn })}>
           {fadeIn && (

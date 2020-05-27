@@ -7,11 +7,8 @@ import logos from '../../lib/logos';
 import { colors } from '@material-ui/core';
 
 const CarouselWrapper = styled.div`
-  height: 400px;
+  height: 100vh;
   position: relative;
-  @media all and (max-width: ${({ theme }) => theme.sm}) {
-    height: 100vh;
-  }
 `;
 
 const CarouselBtn = styled.button`
@@ -41,10 +38,10 @@ const CarouselItem = styled.div`
   transform: scale(0.98);
   /* transform: */
   :nth-child(odd) {
-    background-color: aliceblue;
+    background-color: antiquewhite;
   }
   :nth-child(even) {
-    background-color: antiquewhite;
+    background-color: aliceblue;
   }
   &.showing {
     z-index: 1;
