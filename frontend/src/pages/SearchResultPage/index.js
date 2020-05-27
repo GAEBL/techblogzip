@@ -19,12 +19,14 @@ const ResultText = styled.p`
 function SearchResultPage(props) {
   const dispatch = useDispatch();
   const [query, setQuery] = useState('');
+  const [queryresult, setQueryResult] = useState('');
   const results = useSelector((state) => state.post.posts);
   const loading = useSelector(
     (state) => state.loading['search/GET_SEARCHRESULTS'],
   );
 
   const handleSearch = () => {
+    setQueryResult(query);
     dispatch(getSearchResults({ query }));
   };
 
@@ -37,7 +39,7 @@ function SearchResultPage(props) {
   return (
     <SearchResultPageWraaper>
       <ResultText>
-        "{query}"검색 결과({results ? results.length : 0}건)
+        "{queryresult}"검색 결과({results ? results.length : 0}건)
       </ResultText>
       <SearchInput
         query={query}

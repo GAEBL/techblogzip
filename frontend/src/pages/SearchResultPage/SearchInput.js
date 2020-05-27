@@ -16,6 +16,11 @@ function SearchInput({ query, setQuery, handleSearch }) {
   const handleChange = (e) => {
     setQuery(e.target.value);
   };
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
   return (
     <CostomPaper>
       <CostomInputBase
@@ -23,6 +28,7 @@ function SearchInput({ query, setQuery, handleSearch }) {
         fullWidth
         value={query}
         onChange={handleChange}
+        onKeyPress={handleKeyPress}
       />
       <IconButton type="submit" aria-label="search" onClick={handleSearch}>
         <SearchIcon />
