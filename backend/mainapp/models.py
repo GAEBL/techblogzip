@@ -27,7 +27,10 @@ class Post(models.Model):
     image = models.TextField(default='')
     url = models.TextField(default='')
     is_taged = models.BooleanField(default=False)
-    is_liked = models.ManyToManyField(get_user_model(), related_name='posts')
+    is_liked = models.ManyToManyField(
+        get_user_model(), related_name='liked_posts')
+    is_viewed = models.ManyToManyField(
+        get_user_model(), related_name='viewed_posts')
     tags = models.ManyToManyField(Tag, related_name='posts')
 
     class Meta:
