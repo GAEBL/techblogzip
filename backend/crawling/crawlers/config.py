@@ -1,4 +1,5 @@
 from selenium import webdriver
+import platform
 import os
 
 options = webdriver.ChromeOptions()
@@ -8,9 +9,15 @@ options.add_argument('lang=ko-KR')
 options.add_argument(
     'user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36')
 
+system_name = platform.system()
+if system_name is 'Windows':
+    driver = 'chromedriver.exe'
+else:
+    driver = 'chromedriver'
+
 PATH = os.getcwd().replace('\\', '/')
 driver = webdriver.Chrome(
-    f'{PATH}/crawling/crawlers/chromedriver.exe', options=options)
+    f'{PATH}/crawling/crawlers/{driver}', options=options)
 
 CSS_SELECTOR = driver.find_elements_by_css_selector
 

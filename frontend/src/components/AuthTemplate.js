@@ -20,6 +20,7 @@ const AuthForm = styled.form`
   display: grid;
   grid-gap: 0.8rem;
   min-width: 300px;
+  margin-top: 2rem;
 `;
 
 const ButtonContainer = styled.div`

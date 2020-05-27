@@ -17,12 +17,12 @@ const AppGridWrapper = styled.div`
   height: 100%;
   display: grid;
   grid-template-columns: 1fr;
-  /* 헤더높이, 컨텐츠 전체, 푸터 높이 */
-  grid-template-rows: 3.5rem auto 3rem;
+  /* 컨텐츠 전체, 푸터 높이 */
+  grid-template-rows: auto 3rem;
 `;
 
 const Contents = styled.section`
-  padding: 1rem;
+  /* padding: 1rem; */
 `;
 
 function App() {

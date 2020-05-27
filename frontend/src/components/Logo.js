@@ -1,15 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const LogoWrapper = styled.h1`
+const LogoWrapper = styled.span`
   font-family: 'Bungee Shade', cursive;
   font-size: ${(props) => props.size};
-  margin-bottom: 2rem;
-  color: ${({ theme }) => theme.logoColor};
+  font-weight: bold;
+  color: ${({ theme, reverse }) =>
+    reverse ? theme.mainColor : theme.logoColor};
 `;
 
-function Logo({ size = '2.5rem' }) {
-  return <LogoWrapper size={size}>TECHBLOG.ZIP</LogoWrapper>;
+function Logo({ size = '2.5rem', reverse = false }) {
+  return (
+    <LogoWrapper size={size} reverse={reverse}>
+      TECHBLOG.ZIP
+    </LogoWrapper>
+  );
 }
 
 export default Logo;
