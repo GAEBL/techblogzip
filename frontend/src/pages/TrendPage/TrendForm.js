@@ -9,6 +9,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import koLocale from 'date-fns/locale/ko';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import companyLogoData from '../../lib/companyLogoData';
+import SimpleSlider from '../../components/Material/SimpleSlider';
 
 const TrendFormWrapper = styled.div`
   max-width: 600px;
@@ -34,13 +35,20 @@ const DateWrapper = styled.div`
   grid-gap: 1rem;
 `;
 
+const SliderWrapper = styled.div`
+  padding: 0.5rem 0.5rem 0 0.5rem;
+  h4 {
+    color: ${colors.grey[500]};
+  }
+`;
+
 function TrendForm(props) {
   const [trendForm, setTrendForm] = useState({
     company: 'WOOWABROS',
     start_date: new Date(),
     end_date: new Date(),
     target_data: 'lib',
-    tag_count: 2,
+    tag_count: 3,
   });
 
   const handleDateChange = (name, date) => {
@@ -68,11 +76,18 @@ function TrendForm(props) {
     });
   };
 
-  const onChange = (e) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setTrendForm({
       ...trendForm,
       [name]: value,
+    });
+  };
+
+  const handleSliderChange = (e, newValue) => {
+    setTrendForm({
+      ...trendForm,
+      tag_count: newValue,
     });
   };
 
@@ -89,7 +104,7 @@ function TrendForm(props) {
         select
         value={trendForm.company}
         name="company"
-        onChange={onChange}
+        onChange={handleChange}
       >
         {companyLogoData.map((data, i) => (
           <MenuItem key={i} value={data.name}>
@@ -116,7 +131,7 @@ function TrendForm(props) {
         select
         value={trendForm.target_data}
         name="target_data"
-        onChange={onChange}
+        onChange={handleChange}
       >
         {targetDatas.map((target, i) => (
           <MenuItem key={i} value={target.code}>
@@ -124,6 +139,18 @@ function TrendForm(props) {
           </MenuItem>
         ))}
       </SimpleTextField>
+      <SliderWrapper>
+        <h4>태그 개수</h4>
+        <SimpleSlider
+          name="tag_count"
+          value={trendForm.tag_count}
+          onChange={handleSliderChange}
+          valueLabelDisplay="auto"
+          min={1}
+          max={20}
+          step={1}
+        />
+      </SliderWrapper>
       <SimpleButton fullWidth>트렌드 분석</SimpleButton>
     </TrendFormWrapper>
   );
