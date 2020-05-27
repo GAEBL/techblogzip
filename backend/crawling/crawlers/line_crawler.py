@@ -34,7 +34,8 @@ def get_contents(company):
 
 
 def get_posts(url):
-    line = Company.objects.get(name='LINE ENGINEERING')
+    line = Company.objects.get_or_create(
+        name='LINE ENGINEERING', url=url, description='LINE ENGINEERING')[0]
 
     cnt = 1
     while True:

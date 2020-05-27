@@ -4,9 +4,8 @@ from django.contrib.auth import get_user_model
 
 class Company(models.Model):
     name = models.CharField(max_length=100)
-    url = models.TextField(null=True)
-    logo = models.CharField(max_length=100, null=True)
-    description = models.TextField(null=True)
+    url = models.TextField(default='')
+    description = models.TextField(default='')
 
     def __str__(self):
         return self.name
@@ -21,12 +20,12 @@ class Tag(models.Model):
 
 class Post(models.Model):
     company = models.ForeignKey(
-        Company, on_delete=models.CASCADE, related_name='posts', null=True)
+        Company, on_delete=models.CASCADE, related_name='posts')
     title = models.CharField(max_length=500)
     date = models.CharField(max_length=100)
-    contents = models.TextField(null=True)  # 나중에 AI 요약
-    image = models.TextField(null=True)
-    url = models.TextField(null=True)
+    contents = models.TextField(default='')
+    image = models.TextField(default='')
+    url = models.TextField(default='')
     is_taged = models.BooleanField(default=False)
     is_liked = models.ManyToManyField(
         get_user_model(), related_name='liked_posts')
