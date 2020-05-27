@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { getAllPosts } from '../../reducers/post';
-import { useDispatch } from 'react-redux';
 
 const LogoImg = styled.img`
   height: 25px;
