@@ -25,25 +25,23 @@ def posts(request):
         company_id = company_id.id
     except:
         company_id = 0
-        posts = Post.objects.all()
-        post_count = posts.count() / 10
 
     if sort == 'likes':
         if company_id == 0:
             posts = Post.objects.annotate(like_count=Count(
                 'is_liked')).order_by('-like_count', '-date')
         else:
-            posts = Post.objects.filter(company=company_id)
-            post_count = posts.count() / 10
             posts = posts.annotate(like_count=Count(
-                'is_liked')).order_by('-like_count', '-date')
+                'is_liked')).filter(company=company_id).order_by('-like_count', '-date')
     elif sort == 'user_recommendation':  # IsAuthenticated
         pass
     else:
-        if company_id != 0:
+        if company_id == 0:
+            posts = Post.objects.all()
+        else:
             posts = Post.objects.filter(company=company_id)
-            post_count = posts.count() / 10
 
+    post_count = posts.count() / 10
     lastPage = math.ceil(post_count)
     paginator = PageNumberPagination()
     results = paginator.paginate_queryset(posts, request)
