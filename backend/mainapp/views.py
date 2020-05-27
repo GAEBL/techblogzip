@@ -130,7 +130,7 @@ def trend(request):
     paginator = PageNumberPagination()
     results = paginator.paginate_queryset(posts, request)
     serializer = PostSerializer(results, many=True)
-    return JsonResponse({'company': company, 'data': serializer.data})
+    return JsonResponse({'lastPage': lastPage, 'company': company, 'data': serializer.data})
 
 
 @api_view(['POST'])
