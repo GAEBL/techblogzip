@@ -1,6 +1,7 @@
 from .config import driver, ERROR_MESSAGE, SUCESS_MESSAGE, CSS_SELECTOR
 from mainapp.models import Company, Post
 from tqdm import tqdm
+from time import sleep
 
 
 def get_contents(company):
@@ -8,7 +9,7 @@ def get_contents(company):
     for post in tqdm(posts):
         try:
             driver.get(post.url)
-            driver.implicitly_wait(30)
+            sleep(10)
         except:
             ERROR_MESSAGE['company'] = company.name
             return ERROR_MESSAGE
@@ -35,7 +36,7 @@ def get_posts(url):
     while True:
         try:
             driver.get(url)
-            driver.implicitly_wait(30)
+            sleep(10)
         except:
             ERROR_MESSAGE['company'] = toast.name
             return ERROR_MESSAGE
@@ -45,14 +46,14 @@ def get_posts(url):
             element_selector = post.find_element_by_css_selector
 
             title = element_selector('h3.tit.ng-binding').text
-            if len(Post.objects.filter(company=toast, title=title)) > 0:
+            if Post.objects.filter(company=toast, title=title):
                 return get_contents(toast)
 
             date = element_selector('span.date.ng-binding').text.split(' ')[1]
 
             image = element_selector(
                 'span.img_area.ng-scope').get_attribute('style')
-            image = image.lstip('background-image: url("').rstrip('");')
+            image = image.lstrip('background-image: url("').rstrip('");')
             post_url = post.get_attribute('href')
 
             Post.objects.get_or_create(
