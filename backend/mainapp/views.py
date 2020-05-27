@@ -76,13 +76,21 @@ def company(request, id):  # 기업 블로그
 @api_view(['GET'])
 @permission_classes([AllowAny, ])
 def search(request):
-    posts = Post.objects.all()
+    company = request.query_params.get('company')
     query = request.query_params.get('query')
+
+    try:
+        company_id = get_object_or_404(Company, name=company).id
+        posts = Post.objects.filter(company=company_id)
+    except:
+        posts = Post.objects.all()
+
     if query:
         posts = posts.filter(
             Q(title__icontains=query) | Q(tags__name__icontains=query)).distinct()
-        serializer = PostSerializer(posts, many=True)
-        return JsonResponse({'result': 'true', 'data': serializer.data})
+
+        serializer = PostSerializer(results, many=True)
+        return JsonResponse({'result': 'true', 'lastPage': lastPage, 'data': serializer.data})
     return JsonResponse({'result': 'false'})
 
 
