@@ -38,12 +38,12 @@ def crawling(request):
 
     sucess, error = 0, 0
     for msg in data:
-        if msg.get('status') is 200:
+        if msg.get('status') == 200:
             sucess += 1
         else:
             error += 1
 
-    if sucess is len(data):
+    if sucess == len(data):
         return JsonResponse(SUCESS_MESSAGE)
     else:
         return JsonResponse(ERROR_MESSAGE)
