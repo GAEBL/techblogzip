@@ -29,7 +29,8 @@ def get_contents(company):
 
 
 def get_posts(url):
-    samsung = Company.objects.get(name='SAMSUNG SDS')
+    samsung = Company.objects.get_or_create(
+        name='SAMSUNG SDS', url=url, description='SAMSUNG SDS')[0]
 
     SCROLL_PAUSE_TIME = 2
     HEIGHT_SCRIPT = 'return document.body.scrollHeight'

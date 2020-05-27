@@ -28,7 +28,8 @@ def get_contents(company):
 
 
 def get_posts(url):
-    toast = Company.objects.get(name='TOAST')
+    toast = Company.objects.get_or_create(
+        name='TOAST', url=url, description='TOAST')[0]
 
     cnt = 1
     while True:
