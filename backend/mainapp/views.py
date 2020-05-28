@@ -60,7 +60,7 @@ def like(request, id):
     else:
         posts.is_liked.remove(user)
         on_like = False
-    return JsonResponse({'id':id, 'result': 'true', 'count_like': posts.is_liked.all().count(), 'on_like': on_like})
+    return JsonResponse({'id': id, 'result': 'true', 'count_like': posts.is_liked.all().count(), 'on_like': on_like})
 
 
 @api_view(['GET'])
@@ -135,7 +135,7 @@ def trend(request):
 
 @api_view(['GET'])
 @permission_classes([AllowAny, ])
-def sort_tag(request):  
+def sort_tag(request):
     company_name = request.query_params.get('company', None)
 
     try:
@@ -161,8 +161,9 @@ def sort_tag(request):
                         else:
                             tag_count[tag_id] = 1
 
-        tag_count = dict(sorted(tag_count.items(), key=lambda x: x[1], reverse=True))
-        result = json.dumps(tag_count, ensure_ascii=False) 
+        tag_count = dict(
+            sorted(tag_count.items(), key=lambda x: x[1], reverse=True))
+        result = json.dumps(tag_count, ensure_ascii=False)
         company.tag_dict = result
         company.save()
     else:  # 업데이트 전
