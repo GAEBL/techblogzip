@@ -18,5 +18,10 @@ export const Post = {
         query,
       },
     }),
-  postLike: ({ id }) => client.post(`/techblog/like/${id}`),
+  postLike: ({ id, user }) =>
+    client.post(`/techblog/posts/like/${id}/`, {
+      params: {
+        user,
+      },
+    }),
 };

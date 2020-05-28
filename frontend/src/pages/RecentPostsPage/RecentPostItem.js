@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Card, CardContent, StylesProvider } from '@material-ui/core';
+import { useDispatch, useSelector } from 'react-redux';
+import { postLike } from '../../reducers/post';
 
 const CostomCard = styled(Card)`
   display: grid;
@@ -22,6 +24,7 @@ const Summary = styled.p`
 `;
 const CostomA = styled.a`
   text-decoration: none;
+  color: black;
 `;
 const FormatDate = styled.p`
   display: flex;
@@ -30,20 +33,67 @@ const FormatDate = styled.p`
 `;
 
 const RecentPostItem = ({ post }) => {
-  const { company, title, date, contents, image, url, tags, is_liked } = post;
+  const {
+    company,
+    title,
+    date,
+    contents,
+    image,
+    url,
+    tags,
+    is_liked,
+    id,
+  } = post;
+  const user = useSelector((user) => user);
+  const dispatch = useDispatch();
+  const [isliked, setIsLiked] = useState(is_liked);
+  const handleLike = () => {
+    dispatch(postLike({ id, user }));
+    // islike에 유저가 있다면 user.user.currentUser.id
+    if (
+      user.user.currentUser.id in isliked ||
+      user.user.currentUser.id == isliked
+    ) {
+      isliked.splice(isliked.indexOf(user.user.currentUser.id), 1);
+      setIsLiked(isliked);
+    } else {
+      // 없다면
+      setIsLiked(isliked.concat(user.user.currentUser.id));
+    }
+  };
+
+  const Heart = ({ isliked, user }) => {
+    if (
+      Array.isArray(isliked) &&
+      (user.user.currentUser.id in isliked ||
+        user.user.currentUser.id == isliked)
+    ) {
+      return `♥ X ${isliked.length}`;
+    } else {
+      return `♡ X ${isliked.length}`;
+    }
+  };
+
   return (
     <StylesProvider injectFirst>
-      <CostomA href={url}>
-        <CostomCard>
+      <CostomCard>
+        <CostomA href={url}>
           <PostImg src={image} alt="" />
-          <CardContent>
+        </CostomA>
+        <CardContent>
+          <CostomA href={url}>
             <h5>{company.name}</h5>
             <h3>{title}</h3>
             <Summary>{contents}</Summary>
+          </CostomA>
+          <div>
+            <p>{tags.map((tag) => tag.name + ' ')}</p>
+            <button onClick={handleLike}>좋아요!</button>
+            <Heart user={user} isliked={isliked} />
             <FormatDate>{date}</FormatDate>
-          </CardContent>
-        </CostomCard>
-      </CostomA>
+          </div>
+        </CardContent>
+      </CostomCard>
     </StylesProvider>
   );
 };

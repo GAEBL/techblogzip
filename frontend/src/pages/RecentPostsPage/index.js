@@ -122,7 +122,7 @@ function RecentPostsPage(props) {
       <PostsWrapper>
         {loading ? <div>로딩</div> : null}
         {!loading &&
-          posts.length > 0 &&
+          Array.isArray(posts) &&
           // TODO: ID 고쳐지면 post.id로 넣기
           posts.map((post, index) => (
             <RecentPostItem key={index} post={post} />
