@@ -87,12 +87,13 @@ def search(request):
         posts = posts.filter(
             Q(title__icontains=query) | Q(tags__name__icontains=query)).distinct()
 
-        post_count = posts.count() / 10
+        real_post_count = posts.count()
+        post_count = real_post_count / 10
         lastPage = math.ceil(post_count)
         paginator = PageNumberPagination()
         results = paginator.paginate_queryset(posts, request)
         serializer = PostSerializer(results, many=True)
-        return JsonResponse({'result': 'true', 'lastPage': lastPage, 'data': serializer.data})
+        return JsonResponse({'result': 'true', 'lastPage': lastPage, 'resultNum': real_post_count, 'data': serializer.data})
     return JsonResponse({'result': 'false'})
 
 
