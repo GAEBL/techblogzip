@@ -1,6 +1,7 @@
 from .config import driver, ERROR_MESSAGE, SUCESS_MESSAGE, CSS_SELECTOR
 from mainapp.models import Company, Post
 from tqdm import tqdm
+from time import sleep
 
 
 def get_contents(company):
@@ -8,7 +9,7 @@ def get_contents(company):
     for post in tqdm(posts):
         try:
             driver.get(post.url)
-            driver.implicitly_wait(30)
+            sleep(10)
         except:
             ERROR_MESSAGE['company'] = company.name
             return ERROR_MESSAGE
@@ -30,7 +31,7 @@ def get_posts(url):
 
     try:
         driver.get(url)
-        driver.implicitly_wait(30)
+        sleep(10)
     except:
         ERROR_MESSAGE['company'] = coupang.name
         return ERROR_MESSAGE
@@ -40,7 +41,7 @@ def get_posts(url):
         element_selector = post.find_element_by_css_selector
 
         title = element_selector('div.u-letterSpacingTight').text
-        if len(Post.objects.filter(company=coupang, title=title)) > 0:
+        if Post.objects.filter(company=coupang, title=title):
             return get_contents(coupang)
 
         date = element_selector('time').get_attribute(

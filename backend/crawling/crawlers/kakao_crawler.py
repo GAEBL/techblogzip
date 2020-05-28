@@ -1,6 +1,7 @@
 from .config import driver, ERROR_MESSAGE, SUCESS_MESSAGE, CSS_SELECTOR
 from mainapp.models import Company, Post
 from tqdm import tqdm
+from time import sleep
 
 
 def get_contents(company):
@@ -8,7 +9,7 @@ def get_contents(company):
     for post in tqdm(posts):
         try:
             driver.get(post.url)
-            driver.implicitly_wait(30)
+            sleep(10)
         except:
             ERROR_MESSAGE['company'] = company.name
             return ERROR_MESSAGE
@@ -35,7 +36,7 @@ def get_posts(url):
     while True:
         try:
             driver.get(url)
-            driver.implicitly_wait(30)
+            sleep(10)
         except:
             ERROR_MESSAGE['company'] = kakao.name
             return ERROR_MESSAGE
@@ -46,12 +47,10 @@ def get_posts(url):
             element_selector = post.find_element_by_css_selector
 
             title = element_selector('strong.tit_post').text
-            if len(Post.objects.filter(company=kakao, title=title)) > 0:
+            if Post.objects.filter(company=kakao, title=title):
                 return get_contents(kakao)
 
             date = element_selector('span.txt_date').text
-            print(date)
-            raise
             post_url = element_selector('a.link_post').get_attribute('href')
             try:
                 image = element_selector('img').get_attribute('src')
