@@ -88,6 +88,7 @@ function RecentPostsPage(props) {
 
   const handleChangePage = (e, v) => {
     setPage(v);
+    window.scrollTo(0, 0);
   };
 
   return (
@@ -134,6 +135,7 @@ function RecentPostsPage(props) {
           size="large"
           onChange={handleChangePage}
           value={page}
+          page={page}
         />
       </PaginationWrapper>
     </RecentPostsPageWrapper>

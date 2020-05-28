@@ -67,6 +67,9 @@ const RecentPostItem = ({ post }) => {
   };
 
   const Heart = ({ isliked, user }) => {
+    if (isliked === undefined) {
+      return <></>;
+    }
     if (
       Array.isArray(isliked) &&
       user.user.isLoggedIn &&
