@@ -48,23 +48,28 @@ const RecentPostItem = ({ post }) => {
   const dispatch = useDispatch();
   const [isliked, setIsLiked] = useState(is_liked);
   const handleLike = () => {
-    dispatch(postLike({ id, user }));
-    // islike에 유저가 있다면 user.user.currentUser.id
-    if (
-      user.user.currentUser.id in isliked ||
-      user.user.currentUser.id == isliked
-    ) {
-      isliked.splice(isliked.indexOf(user.user.currentUser.id), 1);
-      setIsLiked(isliked);
+    if (user.user.isLoggedIn) {
+      dispatch(postLike({ id, user }));
+      // islike에 유저가 있다면 user.user.currentUser.id
+      if (
+        user.user.currentUser.id in isliked ||
+        user.user.currentUser.id == isliked
+      ) {
+        isliked.splice(isliked.indexOf(user.user.currentUser.id), 1);
+        setIsLiked(isliked);
+      } else {
+        // 없다면
+        setIsLiked(isliked.concat(user.user.currentUser.id));
+      }
     } else {
-      // 없다면
-      setIsLiked(isliked.concat(user.user.currentUser.id));
+      alert('회원만 가능한 기능입니다.');
     }
   };
 
   const Heart = ({ isliked, user }) => {
     if (
       Array.isArray(isliked) &&
+      user.user.isLoggedIn &&
       (user.user.currentUser.id in isliked ||
         user.user.currentUser.id == isliked)
     ) {
