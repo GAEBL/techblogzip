@@ -10,6 +10,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
 import math
+import json
 
 
 @api_view(['GET'])
@@ -133,29 +134,39 @@ def trend(request):
     return JsonResponse({'lastPage': lastPage, 'company': company, 'data': serializer.data})
 
 
-@api_view(['POST'])
+@api_view(['GET'])
 @permission_classes([AllowAny, ])
-def sort_tag(request):  # posts 업데이트 전
-    company = request.data.get('company')
+def sort_tag(request):  
+    company_name = request.query_params.get('company', None)
 
     try:
-        company_id = get_object_or_404(Company, name=company).id
+        company = get_object_or_404(Company, name=company_name)
+        company_id = company.id
         posts = Post.objects.filter(company=company_id)
     except:
         company_id = 0
         posts = Post.objects.all()
 
-    tag_dict = {}
-    if posts.exists():
-        for post in posts.iterator():
-            tags = post.tags
-            if tags.exists():
-                for tag in tags.values():
-                    tag_id = tag['name']  # id, name
-                    if tag_id in tag_dict:
-                        tag_dict[tag_id] += 1
-                    else:
-                        tag_dict[tag_id] = 1
+    tag_dict = company.tag_dict
 
-    tag_dict = sorted(tag_dict.items(), key=lambda x: x[1], reverse=True)
-    return JsonResponse({'company': company, 'data': tag_dict})
+    if len(tag_dict) <= 2:  # 업데이트 후(고민필요)
+        tag_count = {}
+        if posts.exists():
+            for post in posts.iterator():
+                tags = post.tags
+                if tags.exists():
+                    for tag in tags.values():
+                        tag_id = tag['name']  # id, name
+                        if tag_id in tag_count:
+                            tag_count[tag_id] += 1
+                        else:
+                            tag_count[tag_id] = 1
+
+        tag_count = dict(sorted(tag_count.items(), key=lambda x: x[1], reverse=True))
+        result = json.dumps(tag_count, ensure_ascii=False) 
+        company.tag_dict = result
+        company.save()
+    else:  # 업데이트 전
+        tag_count = json.loads(tag_dict)
+
+    return JsonResponse({'company': company_name, 'data': tag_count})
