@@ -60,7 +60,7 @@ def like(request, id):
     else:
         posts.is_liked.remove(user)
         on_like = False
-    return JsonResponse({'result': 'true', 'count_like': posts.is_liked.all().count(), 'on_like': on_like})
+    return JsonResponse({'id':id, 'result': 'true', 'count_like': posts.is_liked.all().count(), 'on_like': on_like})
 
 
 @api_view(['GET'])
@@ -135,7 +135,7 @@ def trend(request):
 
 @api_view(['POST'])
 @permission_classes([AllowAny, ])
-def temp(request):
+def sort_tag(request):  # posts 업데이트 전
     company = request.data.get('company')
 
     try:
