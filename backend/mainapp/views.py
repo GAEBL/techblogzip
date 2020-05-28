@@ -19,7 +19,6 @@ def posts(request):
     # request.GET == request.query_params
     company = request.query_params.get('company')  # ex) 삼성SDS
     sort = request.query_params.get('sort')
-    page = request.query_params.get('page')
 
     try:
         company_id = get_object_or_404(Company, name=company)
