@@ -6,7 +6,6 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from .crawlers import naver_crawler, kakao_crawler, toast_crawler, woowabros_crawler, line_crawler, coupang_crawler, spoqa_crawler, yanolja_crawler, samsung_crawler
 from mainapp.models import Company, Post, Tag
 from crawling.textrank.textrank import TextRank
-from .crawlers.config import SUCESS_MESSAGE, ERROR_MESSAGE
 import pandas as pd
 import json
 import re
@@ -34,7 +33,7 @@ def crawling(request):
 
     data = []
     for crawler, company in zip(crawlers, companies):
-        data.append(crawler.get_posts(companies.get(company)))
+        data.append(crawler.get_posts(companies.get(company)).copy())
 
     sucess, error = 0, 0
     for msg in data:
@@ -44,9 +43,9 @@ def crawling(request):
             error += 1
 
     if sucess == len(data):
-        return JsonResponse(SUCESS_MESSAGE)
+        return JsonResponse({'status': 200, 'result': data})
     else:
-        return JsonResponse(ERROR_MESSAGE)
+        return JsonResponse({'status': 500, 'result': data})
 
 
 @api_view(['GET'])
