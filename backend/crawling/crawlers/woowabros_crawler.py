@@ -36,6 +36,7 @@ def get_contents(company):
 
 
 def get_posts(url):
+    print('{:=^100}'.format('START CRAWLING WOOWABROS'))
     baemin = Company.objects.get_or_create(
         name='WOOWABROS', url=url, description='WOOWABROS')[0]
 

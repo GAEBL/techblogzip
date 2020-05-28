@@ -5,7 +5,7 @@ from time import sleep
 
 
 def get_contents(company):
-    posts = Post.objects.filter(company=company)
+    posts = Post.objects.filter(company=company, contents='')
     for post in tqdm(posts):
         try:
             driver.get(post.url)
@@ -35,6 +35,7 @@ def get_contents(company):
 
 
 def get_posts(url):
+    print('{:=^100}'.format('START CRAWLING LINE ENGINEERING'))
     line = Company.objects.get_or_create(
         name='LINE ENGINEERING', url=url, description='LINE ENGINEERING')[0]
 
