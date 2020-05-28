@@ -1,14 +1,15 @@
 from .config import driver, ERROR_MESSAGE, SUCESS_MESSAGE, CSS_SELECTOR
 from mainapp.models import Company, Post
 from tqdm import tqdm
+from time import sleep
 
 
 def get_contents(company):
-    posts = Post.objects.filter(company=company)
+    posts = Post.objects.filter(company=company, contents='')
     for post in tqdm(posts):
         try:
             driver.get(post.url)
-            driver.implicitly_wait(30)
+            sleep(10)
         except:
             ERROR_MESSAGE['company'] = company.name
             return ERROR_MESSAGE
@@ -34,6 +35,7 @@ def get_contents(company):
 
 
 def get_posts(url):
+    print('{:=^100}'.format('START CRAWLING LINE ENGINEERING'))
     line = Company.objects.get_or_create(
         name='LINE ENGINEERING', url=url, description='LINE ENGINEERING')[0]
 
@@ -41,7 +43,7 @@ def get_posts(url):
     while True:
         try:
             driver.get(url)
-            driver.implicitly_wait(30)
+            sleep(10)
         except:
             ERROR_MESSAGE['company'] = line.name
             return ERROR_MESSAGE
@@ -51,7 +53,7 @@ def get_posts(url):
             element_selector = post.find_element_by_css_selector
 
             title = element_selector('a.plain').text
-            if len(Post.objects.filter(company=line, title=title)) > 0:
+            if Post.objects.filter(company=line, title=title):
                 return get_contents(line)
 
             date = element_selector('span.byline').text.lstrip(' | ')

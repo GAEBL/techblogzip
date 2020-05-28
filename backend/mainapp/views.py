@@ -25,25 +25,23 @@ def posts(request):
         company_id = company_id.id
     except:
         company_id = 0
-        posts = Post.objects.all()
-        post_count = posts.count() / 10
 
     if sort == 'likes':
         if company_id == 0:
             posts = Post.objects.annotate(like_count=Count(
                 'is_liked')).order_by('-like_count', '-date')
         else:
-            posts = Post.objects.filter(company=company_id)
-            post_count = posts.count() / 10
             posts = posts.annotate(like_count=Count(
-                'is_liked')).order_by('-like_count', '-date')
+                'is_liked')).filter(company=company_id).order_by('-like_count', '-date')
     elif sort == 'user_recommendation':  # IsAuthenticated
         pass
     else:
-        if company_id != 0:
+        if company_id == 0:
+            posts = Post.objects.all()
+        else:
             posts = Post.objects.filter(company=company_id)
-            post_count = posts.count() / 10
 
+    post_count = posts.count() / 10
     lastPage = math.ceil(post_count)
     paginator = PageNumberPagination()
     results = paginator.paginate_queryset(posts, request)
@@ -76,13 +74,25 @@ def company(request, id):  # 기업 블로그
 @api_view(['GET'])
 @permission_classes([AllowAny, ])
 def search(request):
-    posts = Post.objects.all()
+    company = request.query_params.get('company')
     query = request.query_params.get('query')
+
+    try:
+        company_id = get_object_or_404(Company, name=company).id
+        posts = Post.objects.filter(company=company_id)
+    except:
+        posts = Post.objects.all()
+
     if query:
         posts = posts.filter(
             Q(title__icontains=query) | Q(tags__name__icontains=query)).distinct()
-        serializer = PostSerializer(posts, many=True)
-        return JsonResponse({'result': 'true', 'data': serializer.data})
+
+        post_count = posts.count() / 10
+        lastPage = math.ceil(post_count)
+        paginator = PageNumberPagination()
+        results = paginator.paginate_queryset(posts, request)
+        serializer = PostSerializer(results, many=True)
+        return JsonResponse({'result': 'true', 'lastPage': lastPage, 'data': serializer.data})
     return JsonResponse({'result': 'false'})
 
 
@@ -115,7 +125,11 @@ def trend(request):
         posts = Post.objects.annotate(tags_count=Count(
             'tags')).filter(date__range=[start_date, end_date], tags_count__range=[0, tag_count])
 
-    serializer = PostSerializer(posts, many=True)
+    post_count = posts.count() / 10
+    lastPage = math.ceil(post_count)
+    paginator = PageNumberPagination()
+    results = paginator.paginate_queryset(posts, request)
+    serializer = PostSerializer(results, many=True)
     return JsonResponse({'company': company, 'data': serializer.data})
 
 

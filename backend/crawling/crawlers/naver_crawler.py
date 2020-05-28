@@ -1,6 +1,7 @@
 from .config import driver, ERROR_MESSAGE, SUCESS_MESSAGE, CSS_SELECTOR
 from mainapp.models import Company, Post
 from tqdm import tqdm
+from time import sleep
 
 
 def get_contents(company):
@@ -8,7 +9,7 @@ def get_contents(company):
     for post in tqdm(posts):
         try:
             driver.get(post.url)
-            driver.implicitly_wait(30)
+            sleep(10)
         except:
             ERROR_MESSAGE['company'] = company.name
             return ERROR_MESSAGE
@@ -28,6 +29,7 @@ def get_contents(company):
 
 
 def get_posts(url):
+    print('{:=^100}'.format('START CRAWLING NAVER D2'))
     naver = Company.objects.get_or_create(
         name='NAVER D2', url=url, description='NAVER D2')[0]
 
@@ -35,7 +37,7 @@ def get_posts(url):
     while True:
         try:
             driver.get(url)
-            driver.implicitly_wait(30)
+            sleep(10)
         except:
             ERROR_MESSAGE['company'] = naver.name
             return ERROR_MESSAGE
@@ -45,7 +47,7 @@ def get_posts(url):
             element_selector = post.find_element_by_css_selector
 
             title = element_selector('a').text
-            if len(Post.objects.filter(company=naver, title=title)) > 0:
+            if Post.objects.filter(company=naver, title=title):
                 return get_contents(naver)
 
             date = element_selector('dd').text

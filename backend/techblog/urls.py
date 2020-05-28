@@ -22,10 +22,10 @@ from . import settings
 
 
 schema_view = get_schema_view(
-   openapi.Info(
-      title='TechBlog.zip API',
-      default_version='v1',
-   ),
+    openapi.Info(
+        title='TechBlog.zip API',
+        default_version='v1',
+    ),
 )
 
 urlpatterns = [
@@ -34,6 +34,7 @@ urlpatterns = [
     path('techblog/', include('mainapp.urls')),
     # 오프라인 상태에서 테스트용, 추후 crontab으로 변경
     path('crawling/', include('crawling.urls')),
+    path('recommend/', include('recommend.urls')),
     path('swagger/', schema_view.with_ui('swagger')),
     path('redoc/', schema_view.with_ui('redoc')),
 ]

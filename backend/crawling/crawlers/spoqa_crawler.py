@@ -2,6 +2,7 @@ from .config import driver, ERROR_MESSAGE, SUCESS_MESSAGE, CSS_SELECTOR
 from mainapp.models import Company, Post
 from datetime import datetime
 from tqdm import tqdm
+from time import sleep
 
 
 def get_contents(company):
@@ -9,7 +10,7 @@ def get_contents(company):
     for post in tqdm(posts):
         try:
             driver.get(post.url)
-            driver.implicitly_wait(30)
+            sleep(10)
         except:
             ERROR_MESSAGE['company'] = company.name
             return ERROR_MESSAGE
@@ -36,6 +37,7 @@ def get_contents(company):
 
 
 def get_posts(url):
+    print('{:=^100}'.format('START CRAWLING SPOQA'))
     spoqa = Company.objects.get_or_create(
         name='SPOQA', url=url, description='SPOQA')[0]
 
@@ -43,13 +45,13 @@ def get_posts(url):
     while True:
         try:
             driver.get(url)
-            driver.implicitly_wait(30)
+            sleep(10)
         except:
             ERROR_MESSAGE['company'] = spoqa.name
             return ERROR_MESSAGE
 
         is_errored = CSS_SELECTOR('h1')
-        if len(is_errored) > 0:
+        if is_errored:
             if is_errored[0].text == '404':
                 return get_contents(spoqa)
 
@@ -58,7 +60,7 @@ def get_posts(url):
             element_selector = post.find_element_by_css_selector
 
             title = element_selector('span.post-title-words').text
-            if len(Post.objects.filter(company=spoqa, title=title)) > 0:
+            if Post.objects.filter(company=spoqa, title=title):
                 return get_contents(spoqa)
 
             date = element_selector('span.post-date').text

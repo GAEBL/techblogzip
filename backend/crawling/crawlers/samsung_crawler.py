@@ -1,7 +1,7 @@
 from .config import driver, ERROR_MESSAGE, SUCESS_MESSAGE, CSS_SELECTOR
 from mainapp.models import Company, Post
 from tqdm import tqdm
-import time
+from time import sleep
 
 
 def get_contents(company):
@@ -9,7 +9,7 @@ def get_contents(company):
     for post in tqdm(posts):
         try:
             driver.get(post.url)
-            driver.implicitly_wait(30)
+            sleep(10)
         except:
             ERROR_MESSAGE['company'] = company.name
             return ERROR_MESSAGE
@@ -29,21 +29,22 @@ def get_contents(company):
 
 
 def get_posts(url):
+    print('{:=^100}'.format('START CRAWLING SAMSUNG SDS'))
     samsung = Company.objects.get_or_create(
         name='SAMSUNG SDS', url=url, description='SAMSUNG SDS')[0]
 
-    SCROLL_PAUSE_TIME = 2
     HEIGHT_SCRIPT = 'return document.body.scrollHeight'
     SCROLL_SCRIPT = 'window.scrollTo(0, document.body.scrollHeight);'
 
     try:
         driver.get(url)
-        driver.implicitly_wait(30)
+        sleep(10)
 
         last_height = driver.execute_script(HEIGHT_SCRIPT)
         while True:
             driver.execute_script(SCROLL_SCRIPT)
 
+            sleep(2)
             is_ended = driver.find_element_by_css_selector(
                 'button.button').get_attribute('style')
             if is_ended == 'visibility: visible;':
@@ -62,7 +63,7 @@ def get_posts(url):
         element_selector = post.find_element_by_css_selector
 
         title = element_selector('a').text
-        if len(Post.objects.filter(company=samsung, title=title)) > 0:
+        if Post.objects.filter(company=samsung, title=title):
             return get_contents(samsung)
 
         date = element_selector(
