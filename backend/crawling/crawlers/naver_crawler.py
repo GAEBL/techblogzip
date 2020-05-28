@@ -29,6 +29,7 @@ def get_contents(company):
 
 
 def get_posts(url):
+    print('{:=^100}'.format('START CRAWLING NAVER D2'))
     naver = Company.objects.get_or_create(
         name='NAVER D2', url=url, description='NAVER D2')[0]
 
