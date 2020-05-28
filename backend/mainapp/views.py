@@ -107,14 +107,14 @@ def main(request):
                          'posts_count': posts_count, 'data': serializer.data})
 
 
-@api_view(['POST'])
+@api_view(['GET'])
 @permission_classes([AllowAny, ])
 def trend(request):
-    company = request.data.get('company')
-    start_date = request.data.get('start_date')
-    end_date = request.data.get('end_date')
-    # target_data = request.data.get('target_data')
-    tag_count = request.data.get('tag_count')
+    company = request.query_params.get('company')
+    start_date = request.query_params.get('startdate')
+    end_date = request.query_params.get('enddate')
+    # target_data = request.query_params.get('target_data')
+    tag_count = request.query_params.get('tagcount')
 
     try:
         company_id = get_object_or_404(Company, name=company).id
