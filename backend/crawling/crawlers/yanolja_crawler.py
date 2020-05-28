@@ -5,7 +5,7 @@ from time import sleep
 
 
 def get_contents(company):
-    posts = Post.objects.filter(company=company)
+    posts = Post.objects.filter(company=company, contents='')
     for post in tqdm(posts):
         try:
             driver.get(post.url)

@@ -29,6 +29,7 @@ def get_contents(company):
 
 
 def get_posts(url):
+    print('{:=^100}'.format('START CRAWLING KAKAO TECH'))
     kakao = Company.objects.get_or_create(
         name='KAKAO TECH', url=url, description='KAKAO TECH')[0]
 
