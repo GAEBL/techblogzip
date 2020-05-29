@@ -8,5 +8,5 @@ urlpatterns = [
     path('search/', views.search),
     path('main/', views.main),
     path('trend/', views.trend),
-    path('posts/tag/', views.sort_tag),
+    path('company/tag/<int:id>/', views.sort_tag),  # 0: 업데이틍 전, 1: 업데이트 후
 ]
