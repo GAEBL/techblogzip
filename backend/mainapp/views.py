@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.db.models import Q, Count
 
 from .models import *
@@ -107,6 +107,25 @@ def search(request):
 
 @api_view(['GET'])
 @permission_classes([AllowAny, ])
+def search_tag(request):
+    tag = request.query_params.get('tag')
+
+    posts = Post.objects.filter(Q(tags__name__icontains=tag)).order_by('-date')
+
+    if len(posts) == 0:
+        return HttpResponse(status=204)
+
+    real_post_count = posts.count()
+    post_count = real_post_count / 10
+    lastPage = math.ceil(post_count)
+    paginator = PageNumberPagination()
+    results = paginator.paginate_queryset(posts, request)
+    serializer = PostSerializer(results, many=True)
+    return JsonResponse({'result': 'true', 'lastPage': lastPage, 'resultNum': real_post_count, 'data': serializer.data})
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny, ])
 def main(request):
     company_count = Company.objects.all().count()
     posts_count = Post.objects.all().count()
@@ -126,10 +145,12 @@ def trend(request):
 
     try:
         company_id = get_object_or_404(Company, name=company).id
-        posts = Post.objects.filter(company=company_id, date__range=[start_date, end_date]).order_by('-date')
+        posts = Post.objects.filter(company=company_id, date__range=[
+                                    start_date, end_date]).order_by('-date')
     except:
         company_id = 0
-        posts = Post.objects.filter(date__range=[start_date, end_date]).order_by('-date')
+        posts = Post.objects.filter(
+            date__range=[start_date, end_date]).order_by('-date')
 
     post_count = posts.count() / 10
     lastPage = math.ceil(post_count)
