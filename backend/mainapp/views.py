@@ -18,7 +18,7 @@ from collections import Counter
 @permission_classes([AllowAny, ])
 def posts(request):
     # request.GET == request.query_params
-    company = request.query_params.get('company')  # ex) 삼성SDS
+    company = request.query_params.get('company')
     sort = request.query_params.get('sort')
 
     try:
@@ -66,7 +66,7 @@ def like(request, id):
 
 @api_view(['GET'])
 @permission_classes([AllowAny, ])
-def company(request, id):  # 기업 블로그
+def company(request, id):
     company = get_object_or_404(Company, id=id)
     serializer = CompanySerializer(company)
     return JsonResponse({'data': serializer.data})
@@ -74,9 +74,9 @@ def company(request, id):  # 기업 블로그
 
 @api_view(['GET'])
 @permission_classes([AllowAny, ])
-def search(request):  # 본문으로 검색 가능, 멀티 검색어로 검색 가능
+def search(request):
     company = request.query_params.get('company')
-    querys = request.query_params.get('query').replace(',',' ').split()
+    querys = request.query_params.get('query').replace(',', ' ').split()
 
     try:
         company_id = get_object_or_404(Company, name=company).id
