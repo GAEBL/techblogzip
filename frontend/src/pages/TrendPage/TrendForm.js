@@ -9,9 +9,11 @@ import DateFnsUtils from '@date-io/date-fns';
 import koLocale from 'date-fns/locale/ko';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import companyLogoData from '../../lib/companyLogoData';
-import SimpleSlider from '../../components/Material/SimpleSlider';
+import { useDispatch } from 'react-redux';
+import { getTrendData } from '../../reducers/trend';
+import moment from 'moment';
 
-const TrendFormWrapper = styled.div`
+const TrendFormWrapper = styled.form`
   max-width: 600px;
   margin: 2rem auto;
   display: grid;
@@ -35,37 +37,30 @@ const DateWrapper = styled.div`
   grid-gap: 1rem;
 `;
 
-const SliderWrapper = styled.div`
-  padding: 0.5rem 0.5rem 0 0.5rem;
-  h4 {
-    color: ${colors.grey[500]};
-  }
-`;
-
 function TrendForm(props) {
+  const dispatch = useDispatch();
   const [trendForm, setTrendForm] = useState({
     company: 'WOOWABROS',
-    start_date: new Date(),
-    end_date: new Date(),
-    target_data: 'lib',
-    tag_count: 3,
+    startDate: new Date(),
+    endDate: new Date(),
+    targetData: 'lib',
   });
 
   const handleDateChange = (name, date) => {
     // 바뀌기 이전 값
-    const start = trendForm.start_date.getTime();
-    const end = trendForm.end_date.getTime();
+    const start = trendForm.startDate.getTime();
+    const end = trendForm.endDate.getTime();
 
     // 바뀐 이후 값
     const change_value = date.getTime();
     // 시작일이 바꼈는데, 종료일보다 커버린다? 아웃
-    if (name === 'start_date' && change_value > end) {
+    if (name === 'startDate' && change_value > end) {
       alert('시작일은 종료일보다 이전이어야 합니다.');
       return;
     }
 
     // 종료일이 바꼈는데, 시작일보다 작아버린다? 아웃
-    if (name === 'end_date' && change_value < start) {
+    if (name === 'endDate' && change_value < start) {
       alert('종료일은 시작일보다 이후여야 합니다.');
       return;
     }
@@ -84,15 +79,21 @@ function TrendForm(props) {
     });
   };
 
-  const handleSliderChange = (e, newValue) => {
-    setTrendForm({
-      ...trendForm,
-      tag_count: newValue,
-    });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const startDateStr = moment(trendForm.startDate).format('YYYY.MM.DD');
+    const endDateStr = moment(trendForm.endDate).format('YYYY.MM.DD');
+    dispatch(
+      getTrendData({
+        ...trendForm,
+        startDate: startDateStr,
+        endDate: endDateStr,
+      }),
+    );
   };
 
   return (
-    <TrendFormWrapper>
+    <TrendFormWrapper onSubmit={handleSubmit}>
       <Title>
         <span role="img" aria-label="img">
           👀
@@ -116,21 +117,21 @@ function TrendForm(props) {
         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={koLocale}>
           <SimpleDatePicker
             label="필터링 시작일"
-            value={trendForm.start_date}
-            onChange={(date) => handleDateChange('start_date', date)}
+            value={trendForm.startDate}
+            onChange={(date) => handleDateChange('startDate', date)}
           />
           <SimpleDatePicker
             label="필터링 종료일"
-            value={trendForm.end_date}
-            onChange={(date) => handleDateChange('end_date', date)}
+            value={trendForm.endDate}
+            onChange={(date) => handleDateChange('endDate', date)}
           />
         </MuiPickersUtilsProvider>
       </DateWrapper>
       <SimpleTextField
         label="타겟 데이터"
         select
-        value={trendForm.target_data}
-        name="target_data"
+        value={trendForm.targetData}
+        name="targetData"
         onChange={handleChange}
       >
         {targetDatas.map((target, i) => (
@@ -139,19 +140,9 @@ function TrendForm(props) {
           </MenuItem>
         ))}
       </SimpleTextField>
-      <SliderWrapper>
-        <h4>태그 개수</h4>
-        <SimpleSlider
-          name="tag_count"
-          value={trendForm.tag_count}
-          onChange={handleSliderChange}
-          valueLabelDisplay="auto"
-          min={1}
-          max={20}
-          step={1}
-        />
-      </SliderWrapper>
-      <SimpleButton fullWidth>트렌드 분석</SimpleButton>
+      <SimpleButton fullWidth type="submit">
+        트렌드 분석
+      </SimpleButton>
     </TrendFormWrapper>
   );
 }
