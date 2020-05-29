@@ -38,9 +38,9 @@ def posts(request):
         pass
     else:
         if company_id == 0:
-            posts = Post.objects.all()
+            posts = Post.objects.all().order_by('-date')
         else:
-            posts = Post.objects.filter(company=company_id)
+            posts = Post.objects.filter(company=company_id).order_by('-date')
 
     post_count = posts.count() / 10
     lastPage = math.ceil(post_count)
@@ -74,9 +74,9 @@ def company(request, id):  # 기업 블로그
 
 @api_view(['GET'])
 @permission_classes([AllowAny, ])
-def search(request):
+def search(request):  # 본문으로 검색 가능, 멀티 검색어로 검색 가능
     company = request.query_params.get('company')
-    query = request.query_params.get('query')
+    querys = request.query_params.get('query').replace(',',' ').split()
 
     try:
         company_id = get_object_or_404(Company, name=company).id
@@ -84,15 +84,22 @@ def search(request):
     except:
         posts = Post.objects.all()
 
-    if query:
-        posts = posts.filter(
-            Q(title__icontains=query) | Q(tags__name__icontains=query)).distinct()
+    if len(querys) > 0:
+        for idx, query in enumerate(querys):
+            if idx == 0:
+                post_search = posts.filter(
+                    Q(title__icontains=query) | Q(tags__name__icontains=query) | Q(company__name__icontains=query) | Q(contents__icontains=query)).distinct()
+            else:
+                post_multi_search = posts.filter(
+                    Q(title__icontains=query) | Q(tags__name__icontains=query) | Q(company__name__icontains=query) | Q(contents__icontains=query)).distinct()
+                post_search = post_search.union(post_multi_search)
 
-        real_post_count = posts.count()
+        post_search = post_search.order_by('-date')
+        real_post_count = post_search.count()
         post_count = real_post_count / 10
         lastPage = math.ceil(post_count)
         paginator = PageNumberPagination()
-        results = paginator.paginate_queryset(posts, request)
+        results = paginator.paginate_queryset(post_search, request)
         serializer = PostSerializer(results, many=True)
         return JsonResponse({'result': 'true', 'lastPage': lastPage, 'resultNum': real_post_count, 'data': serializer.data})
     return JsonResponse({'result': 'false'})
@@ -103,7 +110,7 @@ def search(request):
 def main(request):
     company_count = Company.objects.all().count()
     posts_count = Post.objects.all().count()
-    posts = Post.objects.all()[:5]
+    posts = Post.objects.all().order_by('-date')[:5]
     serializer = MainPostSerializer(posts, many=True)
     return JsonResponse({'company_count': company_count,
                          'posts_count': posts_count, 'data': serializer.data})
@@ -121,11 +128,11 @@ def trend(request):
     try:
         company_id = get_object_or_404(Company, name=company).id
         posts = Post.objects.annotate(tags_count=Count(
-            'tags')).filter(company=company_id, date__range=[start_date, end_date], tags_count__range=[0, tag_count])
+            'tags')).filter(company=company_id, date__range=[start_date, end_date], tags_count__range=[0, tag_count]).order_by('-date')
     except:
         company_id = 0
         posts = Post.objects.annotate(tags_count=Count(
-            'tags')).filter(date__range=[start_date, end_date], tags_count__range=[0, tag_count])
+            'tags')).filter(date__range=[start_date, end_date], tags_count__range=[0, tag_count]).order_by('-date')
 
     post_count = posts.count() / 10
     lastPage = math.ceil(post_count)
