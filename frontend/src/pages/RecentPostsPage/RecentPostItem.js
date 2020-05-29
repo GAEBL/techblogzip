@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Card, CardContent, StylesProvider, Button } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { postLike, tagClick, handleQuery } from '../../reducers/post';
-import handleSearch from '../SearchResultPage/index';
+import { postLike } from '../../reducers/post';
+import { withRouter } from 'react-router-dom';
 
 const CostomCard = styled(Card)`
   display: grid;
@@ -85,15 +85,7 @@ const RecentPostItem = ({ post, history }) => {
 
   const BadgeTag = ({ tag }) => {
     const handleTag = () => {
-      if (history.location.pathname === '/search/:query') {
-        // 검색페이지에서 찾아볼 때
-        dispatch(handleQuery(tag.name));
-        handleSearch();
-      } else {
-        history.push('/search/:query');
-        dispatch(tagClick());
-        dispatch(handleQuery(tag.name));
-      }
+      history.push(`/search/${tag.name}`);
     };
     return (
       <Button size="small" color="secondary" onClick={handleTag}>
@@ -129,4 +121,4 @@ const RecentPostItem = ({ post, history }) => {
   );
 };
 
-export default RecentPostItem;
+export default withRouter(RecentPostItem);

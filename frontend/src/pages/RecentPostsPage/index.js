@@ -89,10 +89,8 @@ function RecentPostsPage({ history }) {
     window.scrollTo(0, 0);
   };
 
-  const haha = () => {};
   return (
     <RecentPostsPageWrapper>
-      <button onClick={haha}>show</button>
       <CompanySelector>
         <h1>기업의 기술블로그에서 원하는 주제를 찾아보세요</h1>
         {companys.map((company, index) => (

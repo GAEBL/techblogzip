@@ -24,8 +24,6 @@ const [
 const [POST_LIKE, POST_LIKE_SUCCEESS, POST_LIKE_FAILURE] = createActionTypes(
   'post/POST_LIKE',
 );
-const HANDLE_QUERY = 'search/HANDLE_QUERY';
-const TAG_CLICK = 'search/TAG_CLICK';
 
 export const getAllPosts = createRequestThunk(GET_ALL_POSTS, Post.getAllPosts);
 export const clearPosts = createAction(CLEAR_POSTS);
@@ -38,15 +36,11 @@ export const getSearchResults = createRequestThunk(
   Post.getSearchResults,
 );
 export const postLike = createRequestThunk(POST_LIKE, Post.postLike);
-export const handleQuery = createAction(HANDLE_QUERY);
-export const tagClick = createAction(TAG_CLICK);
 
 const initialState = {
   posts: [],
   lastPage: 1,
   resultNum: 0,
-  query: '',
-  tagClick: false,
   post: null,
   error: null,
   pageData: null, // mainpage의 포스트 제외 기타 데이터들
@@ -110,14 +104,6 @@ const post = handleActions(
     [POST_LIKE_FAILURE]: (state, { payload: error }) => ({
       ...state,
       error,
-    }),
-    [HANDLE_QUERY]: (state, { payload }) => ({
-      ...state,
-      query: payload,
-    }),
-    [TAG_CLICK]: (state, action) => ({
-      ...state,
-      tagClick: !state.tagClick,
     }),
   },
   initialState,

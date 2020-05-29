@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import SearchInput from './SearchInput';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { getSearchResults, clearPosts, tagClick } from '../../reducers/post';
+import { getSearchResults, clearPosts } from '../../reducers/post';
 import RecentPostItem from '../RecentPostsPage/RecentPostItem';
 import Pagination from '@material-ui/lab/Pagination';
 
@@ -23,53 +23,52 @@ const PaginationWrapper = styled.div`
   margin-bottom: 0.5rem;
 `;
 
-function SearchResultPage({ history }) {
+function SearchResultPage({ history, match }) {
+  const [query, setQuery] = useState(match.params.query);
   const dispatch = useDispatch();
-  const { query, results, loading, lastpage, resultNum, tagBool } = useSelector(
-    (state) => ({
-      query: state.post.query,
-      results: state.post.posts,
-      loading: state.loading['search/GET_SEARCHRESULTS'],
-      lastpage: state.post.lastPage,
-      resultNum: state.post.resultNum,
-      tagBool: state.post.tagClick,
-    }),
-  );
-  const [queryresult, setQueryResult] = useState('');
+  const { results, loading, lastpage, resultNum } = useSelector((state) => ({
+    results: state.post.posts,
+    loading: state.loading['search/GET_SEARCHRESULTS'],
+    lastpage: state.post.lastPage,
+    resultNum: state.post.resultNum,
+  }));
   const [page, setPage] = useState(1);
-  const handleSearch = (v) => {
-    setQueryResult(query);
-    dispatch(getSearchResults({ query, page: v }));
+  const handleSearch = (query, page) => {
+    history.push(`/search/${query}`);
+    dispatch(getSearchResults({ query, page }));
   };
 
   useEffect(() => {
-    if (tagBool) {
-      handleSearch();
-      dispatch(tagClick());
-    }
+    console.log('이펙트');
+    handleSearch(match.params.query, page);
+    setQuery(match.params.query);
     return () => {
       dispatch(clearPosts());
     };
-  }, [dispatch, page]);
+  }, [dispatch, page, match.params.query]);
 
   const handleChangePage = (e, v) => {
     setPage(v);
-    handleSearch(v);
+    handleSearch(query, v);
     window.scrollTo(0, 0);
   };
 
   return (
     <SearchResultPageWraaper>
       <ResultText>
-        "{queryresult}"검색 결과({resultNum ? resultNum : 0}건)
+        "{match.params.query}"검색 결과({resultNum ? resultNum : 0}건)
       </ResultText>
-      <SearchInput handleSearch={handleSearch} />
+      <SearchInput
+        handleSearch={handleSearch}
+        query={query}
+        setQuery={setQuery}
+      />
       <ResultsWrapper>
         {loading ? <div>로딩</div> : null}
         {!loading &&
           results &&
           results.map((result, index) => (
-            <RecentPostItem key={index} post={result} history={history} />
+            <RecentPostItem key={index} post={result} />
           ))}
       </ResultsWrapper>
       <PaginationWrapper>
