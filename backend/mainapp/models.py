@@ -34,9 +34,6 @@ class Post(models.Model):
         get_user_model(), related_name='viewed_posts')
     tags = models.ManyToManyField(Tag, related_name='posts')
 
-    class Meta:
-        ordering = ['-date']
-
     def __str__(self):
         return self.title
 
