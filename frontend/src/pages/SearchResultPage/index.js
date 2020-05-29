@@ -3,83 +3,47 @@ import SearchInput from './SearchInput';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSearchResults, clearPosts } from '../../reducers/post';
-import RecentPostItem from '../RecentPostsPage/RecentPostItem';
-import Pagination from '@material-ui/lab/Pagination';
+import PostList from '../../components/PostList';
+import SimplePagination from '../../components/Material/SimplePagination';
 
 const SearchResultPageWraaper = styled.div`
-  max-width: 1200px;
+  max-width: ${({ theme }) => theme.maxPageWidth};
   margin: 0 auto;
+  padding: 1rem;
+
+  .result__text {
+    margin-bottom: 1rem;
+  }
 `;
 
-const ResultsWrapper = styled.div``;
-
-const ResultText = styled.p`
-  font-size: 40px;
-`;
-
-const PaginationWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-bottom: 0.5rem;
-`;
-
-function SearchResultPage({ history, match }) {
-  const [query, setQuery] = useState(match.params.query);
-  const dispatch = useDispatch();
-  const { results, loading, lastpage, resultNum } = useSelector((state) => ({
-    results: state.post.posts,
-    loading: state.loading['search/GET_SEARCHRESULTS'],
-    lastpage: state.post.lastPage,
-    resultNum: state.post.resultNum,
-  }));
+function SearchResultPage({ match }) {
+  const { query } = match.params;
   const [page, setPage] = useState(1);
-  const handleSearch = (query, page) => {
-    history.push(`/search/${query}`);
-    dispatch(getSearchResults({ query, page }));
-  };
+  const { postsCount } = useSelector(({ post }) => ({
+    postsCount: post.resultNum,
+  }));
+
+  const dispatch = useDispatch();
+  const handlePage = (nextPage) => setPage(nextPage);
 
   useEffect(() => {
-    console.log('이펙트');
-    handleSearch(match.params.query, page);
-    setQuery(match.params.query);
-    return () => {
-      dispatch(clearPosts());
-    };
-  }, [dispatch, page, match.params.query]);
-
-  const handleChangePage = (e, v) => {
-    setPage(v);
-    handleSearch(query, v);
-    window.scrollTo(0, 0);
-  };
+    dispatch(clearPosts());
+    dispatch(getSearchResults({ query, page }));
+  }, [dispatch, query, page]);
 
   return (
     <SearchResultPageWraaper>
-      <ResultText>
-        "{match.params.query}"검색 결과({resultNum ? resultNum : 0}건)
-      </ResultText>
-      <SearchInput
-        handleSearch={handleSearch}
-        query={query}
-        setQuery={setQuery}
-      />
-      <ResultsWrapper>
-        {loading ? <div>로딩</div> : null}
-        {!loading &&
-          results &&
-          results.map((result, index) => (
-            <RecentPostItem key={index} post={result} />
-          ))}
-      </ResultsWrapper>
-      <PaginationWrapper>
-        <Pagination
-          count={lastpage}
-          size="large"
-          onChange={handleChangePage}
-          value={page}
-          page={page}
-        />
-      </PaginationWrapper>
+      <h1>기술 블로그의 지식을 탐험하세요.</h1>
+
+      <SearchInput />
+
+      <PostList actionType="post/GET_SEARCHRESULTS">
+        <div className="result__text">
+          "{query}" 검색결과 => ({postsCount})개
+        </div>
+      </PostList>
+
+      <SimplePagination currentPage={page} handlePage={handlePage} />
     </SearchResultPageWraaper>
   );
 }
