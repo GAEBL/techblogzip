@@ -123,16 +123,13 @@ def trend(request):
     start_date = request.query_params.get('startdate')
     end_date = request.query_params.get('enddate')
     # target_data = request.query_params.get('target_data')
-    tag_count = request.query_params.get('tagcount')
 
     try:
         company_id = get_object_or_404(Company, name=company).id
-        posts = Post.objects.annotate(tags_count=Count(
-            'tags')).filter(company=company_id, date__range=[start_date, end_date], tags_count__range=[0, tag_count]).order_by('-date')
+        posts = Post.objects.filter(company=company_id, date__range=[start_date, end_date]).order_by('-date')
     except:
         company_id = 0
-        posts = Post.objects.annotate(tags_count=Count(
-            'tags')).filter(date__range=[start_date, end_date], tags_count__range=[0, tag_count]).order_by('-date')
+        posts = Post.objects.filter(date__range=[start_date, end_date]).order_by('-date')
 
     post_count = posts.count() / 10
     lastPage = math.ceil(post_count)
