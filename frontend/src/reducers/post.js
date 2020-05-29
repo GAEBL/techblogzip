@@ -19,7 +19,7 @@ const [
   GET_SEARCHRESULTS,
   GET_SEARCHRESULTS_SUCCEESS,
   GET_SEARCHRESULTS_FAILURE,
-] = createActionTypes('search/GET_SEARCHRESULTS');
+] = createActionTypes('post/GET_SEARCHRESULTS');
 
 const [POST_LIKE, POST_LIKE_SUCCEESS, POST_LIKE_FAILURE] = createActionTypes(
   'post/POST_LIKE',
@@ -39,8 +39,8 @@ export const postLike = createRequestThunk(POST_LIKE, Post.postLike);
 
 const initialState = {
   posts: [],
-  lastPage: 1,
-  resultNum: 0,
+  lastPage: null,
+  resultNum: null,
   post: null,
   error: null,
   pageData: null, // mainpage의 포스트 제외 기타 데이터들
@@ -48,6 +48,13 @@ const initialState = {
 
 const post = handleActions(
   {
+    [CLEAR_POSTS]: (state) => ({
+      ...state,
+      posts: [],
+      lastPage: null,
+      resultNum: null,
+      pageData: null,
+    }),
     [GET_ALL_POSTS_SUCCEESS]: (state, { payload: { data, lastPage } }) => ({
       ...state,
       posts: data, // FIXME: 나중에 페이지네이션 해야함
@@ -59,12 +66,7 @@ const post = handleActions(
       posts: [],
       error,
     }),
-    [CLEAR_POSTS]: (state) => ({
-      ...state,
-      posts: [],
-      lastPage: 1,
-      pageData: null,
-    }),
+
     [GET_MAINPAGE_DATA_SUCCESS]: (
       state,
       { payload: { data, company_count, posts_count } },
