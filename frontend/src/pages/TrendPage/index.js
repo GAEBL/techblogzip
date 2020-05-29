@@ -1,10 +1,23 @@
 import React from 'react';
+import styled from 'styled-components';
+import TrendForm from './TrendForm';
+import TrendData from './TrendData';
+
+const TrendPageWrapper = styled.div`
+  max-width: ${({ theme }) => theme.maxPageWidth};
+  margin: 0 auto;
+  padding: 1rem;
+  /* height: 100%;
+  display: flex;
+  align-items: center; */
+`;
 
 function TrendPage(props) {
   return (
-      <div>
-        <h1>기업의 기술블로그에서 원하는 주제를 찾아보세요</h1>
-      </div>
+    <TrendPageWrapper>
+      <TrendForm />
+      <TrendData />
+    </TrendPageWrapper>
   );
 }
 
