@@ -31,15 +31,13 @@ const PaginationWrapper = styled.div`
   margin-bottom: 0.5rem;
 `;
 
-function RecentPostsPage(props) {
+function RecentPostsPage({ history }) {
   const dispatch = useDispatch();
-  const { posts, loading, lastpage } = useSelector(
-    ({ post, loading, user }) => ({
-      posts: post.posts,
-      loading: loading['post/GET_ALL_POSTS'],
-      lastpage: post.lastPage,
-    }),
-  );
+  const { posts, loading, lastpage } = useSelector(({ post, loading }) => ({
+    posts: post.posts,
+    loading: loading['post/GET_ALL_POSTS'],
+    lastpage: post.lastPage,
+  }));
 
   const [company, setCompany] = useState('');
   const [sort, setSort] = useState('');
@@ -91,8 +89,10 @@ function RecentPostsPage(props) {
     window.scrollTo(0, 0);
   };
 
+  const haha = () => {};
   return (
     <RecentPostsPageWrapper>
+      <button onClick={haha}>show</button>
       <CompanySelector>
         <h1>기업의 기술블로그에서 원하는 주제를 찾아보세요</h1>
         {companys.map((company, index) => (
@@ -126,7 +126,7 @@ function RecentPostsPage(props) {
           Array.isArray(posts) &&
           // TODO: ID 고쳐지면 post.id로 넣기
           posts.map((post, index) => (
-            <RecentPostItem key={index} post={post} />
+            <RecentPostItem key={index} post={post} history={history} />
           ))}
       </PostsWrapper>
       <PaginationWrapper>

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Card, CardContent, StylesProvider } from '@material-ui/core';
+import { Card, CardContent, StylesProvider, Button } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { postLike } from '../../reducers/post';
+import { postLike, tagClick, handleQuery } from '../../reducers/post';
+import handleSearch from '../SearchResultPage/index';
 
 const CostomCard = styled(Card)`
   display: grid;
@@ -32,7 +33,7 @@ const FormatDate = styled.p`
   margin-right: 1rem;
 `;
 
-const RecentPostItem = ({ post }) => {
+const RecentPostItem = ({ post, history }) => {
   const {
     company,
     title,
@@ -82,6 +83,25 @@ const RecentPostItem = ({ post }) => {
     }
   };
 
+  const BadgeTag = ({ tag }) => {
+    const handleTag = () => {
+      if (history.location.pathname === '/search/:query') {
+        // 검색페이지에서 찾아볼 때
+        dispatch(handleQuery(tag.name));
+        handleSearch();
+      } else {
+        history.push('/search/:query');
+        dispatch(tagClick());
+        dispatch(handleQuery(tag.name));
+      }
+    };
+    return (
+      <Button size="small" color="secondary" onClick={handleTag}>
+        {tag.name}
+      </Button>
+    );
+  };
+
   return (
     <StylesProvider injectFirst>
       <CostomCard>
@@ -95,7 +115,10 @@ const RecentPostItem = ({ post }) => {
             <Summary>{contents}</Summary>
           </CostomA>
           <div>
-            <p>{tags.map((tag) => tag.name + ' ')}</p>
+            {tags.map((tag, index) => (
+              <BadgeTag tag={tag} key={index} />
+            ))}
+            <br />
             <button onClick={handleLike}>좋아요!</button>
             <Heart user={user} isliked={isliked} />
             <FormatDate>{date}</FormatDate>

@@ -12,10 +12,12 @@ export const Post = {
   getPostLikeCount: (id) => client.get(`/techblog/posts/like/${id}/`),
   getMainPageData: () => client.get('/techblog/main/'),
   //   searchPosts:() => client
-  getSearchResults: ({ query }) =>
+  getSearchResults: ({ query, company, page }) =>
     client.get('/techblog/search/', {
       params: {
         query,
+        company,
+        page,
       },
     }),
   postLike: ({ id, user }) =>
