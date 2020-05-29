@@ -7,11 +7,15 @@ from .crawlers import naver_crawler, kakao_crawler, toast_crawler, woowabros_cra
 from mainapp.models import Company, Post, Tag
 from crawling.textrank.textrank import TextRank
 import pandas as pd
+import pickle
 import json
 import re
 
 with open('./crawling/datas/techblog_list.json', 'r', encoding='utf-8') as f:
     companies = json.load(f)
+
+with open('./crawling/datas/stopwords.pkl', 'rb') as f:
+    stopwords = pickle.load(f)
 
 
 def remove_emoji(text):
@@ -52,11 +56,16 @@ def crawling(request):
 @permission_classes([IsAdminUser, ])
 @authentication_classes([JSONWebTokenAuthentication, ])
 def add_tags(request):
+    posts = Post.objects.filter(is_taged=1)
+    for post in posts:
+        post.is_taged = False
+        post.save()
     posts = Post.objects.filter(is_taged=0)
     for post in posts:
         textrank = TextRank(remove_emoji(post.contents))
         keywords = textrank.keywords(20)
-        for word in keywords:
+        passwords = [word for word in keywords if word not in stopwords]
+        for word in passwords:
             tag = Tag.objects.get_or_create(name=word)[0]
             post.tags.add(tag)
         post.is_taged = True
