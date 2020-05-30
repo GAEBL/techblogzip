@@ -13,6 +13,7 @@ const SearchResultPageWraaper = styled.div`
 
   .result__text {
     margin-bottom: 1rem;
+    font-size: 1.3rem;
   }
 `;
 
@@ -39,7 +40,10 @@ function SearchResultPage({ match }) {
 
       <PostList actionType="post/GET_SEARCHRESULTS">
         <div className="result__text">
-          "{query}" 검색결과 => ({postsCount})개
+          <span role="img" aria-label="img">
+            🔎{'  '}
+          </span>
+          "{query}" 검색결과 ({postsCount})
         </div>
       </PostList>
 
