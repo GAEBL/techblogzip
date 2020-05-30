@@ -3,6 +3,7 @@ import { colors } from '@material-ui/core';
 const MAIN_COLOR = colors.deepOrange;
 
 const theme = {
+  nonselectedMainColor: MAIN_COLOR,
   mainColor: MAIN_COLOR[400],
   mainColor__hover: MAIN_COLOR[500],
   logoColor: colors.indigo[500],

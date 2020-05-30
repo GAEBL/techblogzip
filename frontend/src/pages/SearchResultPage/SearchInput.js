@@ -4,13 +4,11 @@ import SearchIcon from '@material-ui/icons/Search';
 import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 
-const SearchInputWrapper = styled.form`
-  margin: 1rem 0;
-`;
+const SearchInputWrapper = styled.form``;
 
 const CustomPaper = styled(Paper)`
   display: flex;
-  margin-bottom: 1rem;
+  height: ${(props) => props.dense && '35px'};
 `;
 
 const CustomInputBase = styled(InputBase)`
@@ -18,7 +16,7 @@ const CustomInputBase = styled(InputBase)`
   width: 100%;
 `;
 
-function SearchInput({ history }) {
+function SearchInput({ history, handleClose = null, dense = false }) {
   const [query, setQuery] = useState('');
 
   const handleQuery = (e) => {
@@ -28,12 +26,17 @@ function SearchInput({ history }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (query.length === 0) return;
+    setQuery('');
+    if (handleClose) {
+      handleClose();
+    }
     history.push(`/search/${query}`);
   };
 
   return (
     <SearchInputWrapper onSubmit={handleSubmit}>
-      <CustomPaper>
+      <CustomPaper dense={dense}>
         <CustomInputBase
           placeholder="검색해보세요"
           value={query}
