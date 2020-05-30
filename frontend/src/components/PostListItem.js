@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Card } from '@material-ui/core';
+import TagList from './TagList';
 
 const CustomCard = styled(Card)`
   height: 200px;
@@ -48,6 +49,7 @@ function PostListItem({ post }) {
         <a className="item__title" href={url}>
           {title}
         </a>
+        <TagList tags={tags} />
         <p className="item__summary">{contents}</p>
         <div className="item__date">{date}</div>
       </ItemContainer>
