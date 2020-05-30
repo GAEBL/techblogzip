@@ -3,9 +3,9 @@ import styled, { css } from 'styled-components';
 import cs from 'classnames';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-import logos from '../../lib/logos';
 import { colors } from '@material-ui/core';
 import TagList from '../../components/TagList';
+import CompanyLogo from '../../components/CompanyLogo';
 
 const CarouselWrapper = styled.div`
   height: 100vh;
@@ -50,6 +50,15 @@ const CarouselItem = styled.div`
     transform: scale(1);
   }
 
+  .item_logo_title {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-gap: 1rem;
+    /* justify-items: center; */
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+
   .item__contents {
     display: flex;
     flex-direction: column;
@@ -70,12 +79,6 @@ const CarouselItem = styled.div`
     height: 25px;
     align-self: flex-start;
   }
-
-  /* 
-  .item__date {
-    color: grey;
-    font-size: 0.8rem;
-  } */
 
   @media all and (max-width: ${({ theme }) => theme.sm}) {
     .item__contents {
@@ -200,22 +203,17 @@ function Carousel({ posts }) {
       </DotWrapper>
 
       {posts.map((post, idx) => {
-        const { company, title, url, tags } = post; // TODO { date} 처리좀
-        const logoUrl = `${process.env.PUBLIC_URL}/images/${
-          logos[company.name]
-        }`;
+        const { company, title, url, tags } = post;
         return (
           <CarouselItem
             key={idx}
             className={cs({ showing: itemNumber === idx })}
           >
             <div className="item__contents">
-              <img src={logoUrl} className="item__logo" alt="logo" />
+              <CompanyLogo name={company.name} />
               <a className="item__link" href={url}>
                 {title}
               </a>
-              {/* TODO: date 넣을까? */}
-              {/* <div className="item__date">{date}</div> */}
               <TagList tags={tags} />
             </div>
           </CarouselItem>
