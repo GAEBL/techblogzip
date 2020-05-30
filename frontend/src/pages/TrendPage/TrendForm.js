@@ -14,6 +14,7 @@ import { getTrendData } from '../../reducers/trend';
 import moment from 'moment';
 
 const TrendFormWrapper = styled.form`
+  background-color: white;
   max-width: 600px;
   margin: 2rem auto;
   display: grid;
@@ -107,11 +108,16 @@ function TrendForm(props) {
         name="company"
         onChange={handleChange}
       >
-        {companyLogoData.map((data, i) => (
-          <MenuItem key={i} value={data.name}>
-            {data.displayName}
-          </MenuItem>
-        ))}
+        {companyLogoData.map((data, i) => {
+          if (i > 0) {
+            return (
+              <MenuItem key={i} value={data.name}>
+                {data.displayName}
+              </MenuItem>
+            );
+          }
+          return null;
+        })}
       </SimpleTextField>
       <DateWrapper>
         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={koLocale}>
