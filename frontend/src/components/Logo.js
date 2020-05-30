@@ -7,12 +7,21 @@ const LogoWrapper = styled.span`
   font-weight: bold;
   color: ${({ theme, reverse }) =>
     reverse ? theme.mainColor : theme.logoColor};
+  margin-bottom: ${(props) => (props.margin ? '1rem' : 0)};
+  &.vertical {
+    span {
+      display: block;
+      text-align: center;
+    }
+  }
 `;
 
-function Logo({ size = '2.5rem', reverse = false }) {
+function Logo({ size = '2.5rem', reverse = false, margin = false }) {
   return (
-    <LogoWrapper size={size} reverse={reverse}>
-      TECHBLOG.ZIP
+    <LogoWrapper size={size} reverse={reverse} margin={margin}>
+      <span>TECH</span>
+      <span>BLOG</span>
+      <span>.ZIP</span>
     </LogoWrapper>
   );
 }
