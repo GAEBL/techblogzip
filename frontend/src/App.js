@@ -21,9 +21,7 @@ const AppGridWrapper = styled.div`
   grid-template-rows: auto 3rem;
 `;
 
-const Contents = styled.section`
-  /* padding: 1rem; */
-`;
+const Contents = styled.section``;
 
 function App() {
   const dispatch = useDispatch();
