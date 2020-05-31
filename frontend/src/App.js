@@ -13,6 +13,7 @@ import { useDispatch } from 'react-redux';
 import { check, tempSetUser } from './reducers/user';
 import HideAppBar from './components/Material/HideAppBar';
 import Nav from './components/Material/Nav';
+import TagPage from './pages/TagPage';
 
 const AppGridWrapper = styled.div`
   height: 100%;
@@ -51,6 +52,7 @@ function App() {
           <Route path="/posts" component={RecentPostsPage} exact />
           <Route path="/search/:query" component={SearchResultPage} exact />
           <Route path="/trend" component={TrendPage} exact />
+          <Route path="/tag/:tag" component={TagPage} exact />
           <Route path="*" component={NotFoundPage} />
         </Switch>
       </Contents>
