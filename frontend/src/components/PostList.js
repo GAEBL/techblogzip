@@ -39,7 +39,7 @@ function PostList({ actionType, children }) {
       ) : (
         <>
           {children}
-          {posts.length > 0 ? (
+          {posts && posts.length > 0 ? (
             <div className="posts__container">
               {posts.map((post) => (
                 <PostListItem key={post.id} post={post} />
