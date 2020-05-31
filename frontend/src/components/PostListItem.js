@@ -20,6 +20,11 @@ const ItemCard = styled(Card)`
       font-weight: bold;
       font-size: 1.3rem;
     }
+    @media all and (max-width: 600px) {
+      .info__title {
+        font-size: 1rem;
+      }
+    }
   }
 
   .item__date {

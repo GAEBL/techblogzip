@@ -20,7 +20,7 @@ function SimplePagination({ currentPage, handlePage }) {
         <PaginationWrapper>
           <Pagination
             count={lastPage}
-            size="medium"
+            size="small"
             onChange={(_, nextPage) => handlePage(nextPage)}
             value={currentPage}
             page={currentPage}
