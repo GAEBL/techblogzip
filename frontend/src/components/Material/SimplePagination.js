@@ -6,6 +6,7 @@ import styled from 'styled-components';
 const PaginationWrapper = styled.div`
   display: flex;
   justify-content: center;
+  margin: 1rem 0;
 `;
 
 function SimplePagination({ currentPage, handlePage }) {
@@ -19,7 +20,7 @@ function SimplePagination({ currentPage, handlePage }) {
         <PaginationWrapper>
           <Pagination
             count={lastPage}
-            size="large"
+            size="small"
             onChange={(_, nextPage) => handlePage(nextPage)}
             value={currentPage}
             page={currentPage}

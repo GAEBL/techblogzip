@@ -6,6 +6,7 @@ import Logo from './Logo';
 import { Link, withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeInput, login, register } from '../reducers/auth';
+import { colors } from '@material-ui/core';
 
 const AuthTemplateWrapper = styled.div`
   width: 100%;
@@ -21,6 +22,13 @@ const AuthForm = styled.form`
   grid-gap: 0.8rem;
   min-width: 300px;
   margin-top: 2rem;
+  padding: 2rem;
+  background-color: white;
+  border: 1px solid ${colors.grey[200]};
+  border-radius: 10px;
+  box-shadow: 0 0px 1.1px rgba(0, 0, 0, 0.019), 0 0px 6.3px rgba(0, 0, 0, 0.027),
+    0 0px 16.4px rgba(0, 0, 0, 0.033), 0 0px 34.7px rgba(0, 0, 0, 0.041),
+    0 0px 80px rgba(0, 0, 0, 0.06);
 `;
 
 const ButtonContainer = styled.div`
@@ -86,8 +94,8 @@ function AuthTemplate({ type, history }) {
 
   return (
     <AuthTemplateWrapper>
-      <Logo />
       <AuthForm onSubmit={handleSubmit}>
+        <Logo margin />
         <SimpleTextField
           value={form.username}
           type="text"

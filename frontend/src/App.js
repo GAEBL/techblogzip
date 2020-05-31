@@ -8,21 +8,21 @@ import RegisterPage from './pages/RegisterPage';
 import TrendPage from './pages/TrendPage';
 import NotFoundPage from './pages/NotFoundPage';
 import styled from 'styled-components';
-import Header from './components/Header';
 import Footer from './components/Footer';
 import { useDispatch } from 'react-redux';
 import { check, tempSetUser } from './reducers/user';
+import HideAppBar from './components/Material/HideAppBar';
+import Nav from './components/Material/Nav';
 
 const AppGridWrapper = styled.div`
   height: 100%;
-  display: grid;
-  grid-template-columns: 1fr;
-  /* 컨텐츠 전체, 푸터 높이 */
-  grid-template-rows: auto 3rem;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Contents = styled.section`
-  /* padding: 1rem; */
+  flex-grow: 1;
+  padding-top: 64px;
 `;
 
 function App() {
@@ -40,8 +40,10 @@ function App() {
 
   return (
     <AppGridWrapper>
-      <Header />
-      <Contents>
+      <HideAppBar>
+        <Nav />
+      </HideAppBar>
+      <Contents id="contents">
         <Switch>
           <Route path="/" component={MainPage} exact />
           <Route path="/login" component={LoginPage} exact />

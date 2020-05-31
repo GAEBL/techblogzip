@@ -1,35 +1,24 @@
 import React from 'react';
-import { TextField, StylesProvider } from '@material-ui/core';
-import styled from 'styled-components';
+import { TextField, colors, makeStyles } from '@material-ui/core';
 
-const CustomInput = styled(TextField)`
-  display: block;
-  /* & + & {
-    margin-top: 1rem;
-  } */
-  /* 기본 보더 색상 */
-  & .MuiOutlinedInput-notchedOutline {
-    border-color: ${({ theme }) => theme.mainColor};
-  }
-  /* 호버 시 보더 색상 */
-  &:hover .MuiOutlinedInput-notchedOutline {
-    border-color: ${({ theme }) => theme.mainColor};
-  }
-  /* 포커스시 라벨 색상 */
-  & label.Mui-focused {
-    color: ${({ theme }) => theme.mainColor};
-  }
-  /* 포커스시 보더 색상 */
-  & .Mui-focused .MuiOutlinedInput-notchedOutline {
-    border-color: ${({ theme }) => theme.mainColor};
-  }
-`;
+const useStyles = makeStyles(() => ({
+  root: {
+    '&:hover .MuiOutlinedInput-notchedOutline': {
+      borderColor: colors.deepOrange[300],
+    },
+    '& label.Mui-focused': {
+      color: colors.deepOrange[300],
+    },
+    '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
+      borderColor: colors.deepOrange[300],
+    },
+  },
+}));
 
 function SimpleTextField(props) {
+  const classes = useStyles();
   return (
-    <StylesProvider injectFirst>
-      <CustomInput {...props} variant="outlined" fullWidth />
-    </StylesProvider>
+    <TextField classes={classes} {...props} variant="outlined" fullWidth />
   );
 }
 

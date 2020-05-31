@@ -1,35 +1,30 @@
 import React from 'react';
-import styled from 'styled-components';
 import { DatePicker } from '@material-ui/pickers';
-import { StylesProvider } from '@material-ui/core';
+import { colors, makeStyles, StylesProvider } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
-const CustomDatePicker = styled(DatePicker)`
-  & .MuiOutlinedInput-notchedOutline {
-    border-color: ${({ theme }) => theme.mainColor};
-  }
-  /* 호버 시 보더 색상 */
-  &:hover .MuiOutlinedInput-notchedOutline {
-    border-color: ${({ theme }) => theme.mainColor};
-  }
-  /* 포커스시 라벨 색상 */
-  & label.Mui-focused {
-    color: ${({ theme }) => theme.mainColor};
-  }
-  /* 포커스시 보더 색상 */
-  & .Mui-focused .MuiOutlinedInput-notchedOutline {
-    border-color: ${({ theme }) => theme.mainColor};
-  }
-
-  /* 내부 캘린더 색상은 루트의 index.css에서 수정할것... */
-`;
+const useStyles = makeStyles(() => ({
+  root: {
+    '&:hover .MuiOutlinedInput-notchedOutline': {
+      borderColor: colors.deepOrange[300],
+    },
+    '& label.Mui-focused': {
+      color: colors.deepOrange[300],
+    },
+    '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
+      borderColor: colors.deepOrange[300],
+    },
+  },
+}));
 
 // label, value, onchange
 
 function SimpleDatePicker(props) {
+  const classes = useStyles();
   return (
     <StylesProvider injectFirst>
-      <CustomDatePicker
+      <DatePicker
+        classes={classes}
         {...props}
         autoOk
         variant="inline"

@@ -1,21 +1,20 @@
 import React from 'react';
-import { Button, StylesProvider } from '@material-ui/core';
-import styled from 'styled-components';
+import { Button, makeStyles } from '@material-ui/core';
+import theme from '../../style/theme';
 
-const CustomButton = styled(Button)`
-  color: white;
-  background-color: ${({ theme }) => theme.mainColor};
-  :hover {
-    background-color: ${({ theme }) => theme.mainColor__hover};
-  }
-`;
+const useStyles = makeStyles(() => ({
+  root: {
+    color: 'white',
+    backgroundColor: theme.mainColor,
+    '&:hover': {
+      backgroundColor: theme.mainColor__hover,
+    },
+  },
+}));
 
 function SimpleButton(props) {
-  return (
-    <StylesProvider injectFirst>
-      <CustomButton {...props} variant="contained" />
-    </StylesProvider>
-  );
+  const classes = useStyles();
+  return <Button classes={classes} {...props} variant="contained" />;
 }
 
 export default SimpleButton;

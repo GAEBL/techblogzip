@@ -1,57 +1,72 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Card } from '@material-ui/core';
+import { Card, colors } from '@material-ui/core';
+import TagList from './TagList';
+import CompanyLogo from './CompanyLogo';
 
-const CustomCard = styled(Card)`
-  height: 200px;
+const ItemCard = styled(Card)`
   display: grid;
-  grid-template-columns: 2fr 3fr;
-  margin-bottom: 1rem;
-`;
+  grid-gap: 1rem;
+  padding: 1.5rem;
 
-const PostImg = styled.img`
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-`;
+  .item__info {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-gap: 1rem;
+    align-items: center;
+    .info__title {
+      color: black;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.3rem;
+    }
+    @media all and (max-width: 600px) {
+      .info__title {
+        font-size: 1rem;
+      }
+    }
+  }
 
-const ItemContainer = styled.div`
-  padding: 1rem;
-  .item__name {
+  .item__date {
+    font-size: 0.8rem;
+    color: ${colors.grey[400]};
   }
-  .item__title {
+
+  .item__img {
+    height: 200px;
+    width: 100%;
+    object-fit: cover;
   }
+
   .item__summary {
-    display: inline-block;
+    margin: 0;
+    color: #444444;
     text-overflow: ellipsis;
     overflow: hidden;
-    line-height: 20px;
-    max-height: 60px;
-    word-break: break-word;
-  }
-  .item__date {
-    display: flex;
-    justify-content: flex-end;
-    margin-right: 1rem;
+    line-height: 25px;
+    max-height: 75px;
+    /* word-break: break-word; */
   }
 `;
 
-// TODO: 좋아요, 태그리스트 추가할것
+// TODO: 좋아요 추가할것
 
 function PostListItem({ post }) {
   const { company, contents, date, image, is_liked, tags, title, url } = post;
+
   return (
-    <CustomCard>
-      <PostImg src={image} alt="" />
-      <ItemContainer>
-        <h5 className="item__name">{company.name}</h5>
-        <a className="item__title" href={url}>
+    <ItemCard>
+      <div className="item__info">
+        <CompanyLogo name={company.name} />
+        <a className="info__title" href={url}>
           {title}
         </a>
-        <p className="item__summary">{contents}</p>
-        <div className="item__date">{date}</div>
-      </ItemContainer>
-    </CustomCard>
+      </div>
+      <span className="item__date">{date}</span>
+      <p className="item__summary">{contents}</p>
+      <img className="item__img" src={image} alt="thumnail" />
+      <TagList tags={tags} />
+    </ItemCard>
   );
 }
 

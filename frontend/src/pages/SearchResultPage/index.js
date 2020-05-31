@@ -11,8 +11,17 @@ const SearchResultPageWraaper = styled.div`
   margin: 0 auto;
   padding: 1rem;
 
+  .page__title {
+    margin-bottom: 1rem;
+  }
+
+  .search__input {
+    margin-bottom: 1rem;
+  }
+
   .result__text {
     margin-bottom: 1rem;
+    font-size: 1.3rem;
   }
 `;
 
@@ -33,13 +42,17 @@ function SearchResultPage({ match }) {
 
   return (
     <SearchResultPageWraaper>
-      <h1>기술 블로그의 지식을 탐험하세요.</h1>
+      <h1 className="page__title">기술 블로그의 지식을 탐험하세요.</h1>
 
-      <SearchInput />
-
+      <div className="search__input">
+        <SearchInput />
+      </div>
       <PostList actionType="post/GET_SEARCHRESULTS">
         <div className="result__text">
-          "{query}" 검색결과 => ({postsCount})개
+          <span role="img" aria-label="img">
+            🔎{'  '}
+          </span>
+          "{query}" 검색결과 ({postsCount})
         </div>
       </PostList>
 
