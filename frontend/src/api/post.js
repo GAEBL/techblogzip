@@ -26,4 +26,12 @@ export const Post = {
         user,
       },
     }),
+  // FIXME: API
+  getPostsByRelatedTag: ({ tag, page }) =>
+    client.get(`/techblog/search/tag/`, {
+      params: {
+        tag,
+        page,
+      },
+    }),
 };
