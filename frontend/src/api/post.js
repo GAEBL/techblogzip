@@ -5,7 +5,7 @@ export const Post = {
     client.get('/techblog/posts/', {
       params: {
         company,
-        sort,
+        sort: sort === 'default' ? '' : sort,
         page,
       },
     }),
