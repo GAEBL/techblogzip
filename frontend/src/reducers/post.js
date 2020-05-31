@@ -25,6 +25,12 @@ const [POST_LIKE, POST_LIKE_SUCCEESS, POST_LIKE_FAILURE] = createActionTypes(
   'post/POST_LIKE',
 );
 
+const [
+  GET_POSTS_BY_TAG,
+  GET_POSTS_BY_TAG_SUCCESS,
+  GET_POSTS_BY_TAG_FAILURE,
+] = createActionTypes('post/GET_POSTS_BY_TAG');
+
 export const getAllPosts = createRequestThunk(GET_ALL_POSTS, Post.getAllPosts);
 export const clearPosts = createAction(CLEAR_POSTS);
 export const getMainpageData = createRequestThunk(
@@ -36,6 +42,10 @@ export const getSearchResults = createRequestThunk(
   Post.getSearchResults,
 );
 export const postLike = createRequestThunk(POST_LIKE, Post.postLike);
+export const getPostsByTag = createRequestThunk(
+  GET_POSTS_BY_TAG,
+  Post.getPostsByRelatedTag,
+);
 
 const initialState = {
   posts: [],
@@ -91,8 +101,8 @@ const post = handleActions(
     ) => ({
       ...state,
       posts: data,
-      lastPage: lastPage,
-      resultNum: resultNum,
+      lastPage,
+      resultNum,
       error: null,
     }),
     [GET_SEARCHRESULTS_FAILURE]: (state, { payload: error }) => ({
@@ -104,6 +114,20 @@ const post = handleActions(
       ...state,
     }),
     [POST_LIKE_FAILURE]: (state, { payload: error }) => ({
+      ...state,
+      error,
+    }),
+    [GET_POSTS_BY_TAG_SUCCESS]: (
+      state,
+      { payload: { lastPage, resultNum, data } },
+    ) => ({
+      ...state,
+      posts: data,
+      lastPage,
+      resultNum,
+      error: null,
+    }),
+    [GET_POSTS_BY_TAG_FAILURE]: (state, { payload: error }) => ({
       ...state,
       error,
     }),
