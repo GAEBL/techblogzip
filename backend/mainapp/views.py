@@ -32,7 +32,7 @@ def posts(request):
             posts = Post.objects.annotate(like_count=Count(
                 'is_liked')).order_by('-like_count', '-date')
         else:
-            posts = posts.annotate(like_count=Count(
+            posts = Post.objects.annotate(like_count=Count(
                 'is_liked')).filter(company=company_id).order_by('-like_count', '-date')
     elif sort == 'user_recommendation':  # IsAuthenticated
         pass
@@ -46,7 +46,8 @@ def posts(request):
     lastPage = math.ceil(post_count)
     paginator = PageNumberPagination()
     results = paginator.paginate_queryset(posts, request)
-    serializer = PostSerializer(results, many=True)
+    serializer = PostSerializer(
+        results, context={'request': request}, many=True)
     return JsonResponse({'lastPage': lastPage, 'data': serializer.data})
 
 
@@ -209,5 +210,3 @@ def sort_tag(request, id):  # 0: 업데이틍 전, 1: 업데이트 후
         tag_count = dict(
             sorted(tag_count.items(), key=lambda x: x[1], reverse=True))
     return JsonResponse({'company': company_name, 'data': tag_count})
-
-
