@@ -205,3 +205,5 @@ def sort_tag(request, id):  # 0: 업데이틍 전, 1: 업데이트 후
         tag_count = dict(
             sorted(tag_count.items(), key=lambda x: x[1], reverse=True))
     return JsonResponse({'company': company_name, 'data': tag_count})
+
+
