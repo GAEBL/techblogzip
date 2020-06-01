@@ -107,7 +107,8 @@ def search(request):
         post_search = post_search.order_by('-date')
 
         all_query_count, last_page, results = pagination(post_search, request)
-        serializer = PostSerializer(results, many=True)
+        serializer = PostSerializer(
+            results, context={'request': request}, many=True)
 
         return JsonResponse({'result': 'true', 'lastPage': last_page, 'resultNum': all_query_count, 'data': serializer.data})
     return JsonResponse({'result': 'false'})
@@ -124,7 +125,8 @@ def tag(request):
         return HttpResponse(status=204)
 
     all_query_count, last_page, results = pagination(posts, request)
-    serializer = PostSerializer(results, many=True)
+    serializer = PostSerializer(
+        results, context={'request': request}, many=True)
 
     return JsonResponse({'lastPage': last_page, 'resultNum': all_query_count, 'data': serializer.data})
 
@@ -146,7 +148,7 @@ def trend(request):
     company = request.query_params.get('company')
     start_date = request.query_params.get('startdate')
     end_date = request.query_params.get('enddate')
-    # target_data = request.query_params.get('target_data')
+    target_data = request.query_params.get('target_data')
 
     try:
         company_id = get_object_or_404(Company, name=company).id
@@ -158,7 +160,8 @@ def trend(request):
             date__range=[start_date, end_date]).order_by('-date')
 
     all_query_count, last_page, results = pagination(posts, request)
-    serializer = PostSerializer(results, many=True)
+    serializer = PostSerializer(
+        results, context={'request': request}, many=True)
 
     return JsonResponse({'lastPage': last_page, 'company': company, 'data': serializer.data})
 

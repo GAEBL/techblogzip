@@ -11,7 +11,8 @@ from rest_framework.pagination import PageNumberPagination
 
 from .serializers import UserSerializer
 from .models import User
-from mainapp.serializers import UserPostSerializer
+from mainapp.serializers import PostSerializer
+from mainapp.views import pagination
 
 import math
 
@@ -93,7 +94,7 @@ def mypage(request):
     user = get_object_or_404(User, id=user_id)
 
     if request.method == 'GET':
-        return JsonResponse({'username': user.username, 'email': user.email, 'is_subscribed':user.is_subscribed})
+        return JsonResponse({'username': user.username, 'email': user.email, 'is_subscribed': user.is_subscribed})
     elif request.method == 'PUT':
         username = request.data.get('username')
         if username != '':
@@ -134,10 +135,8 @@ def like_post(request):
     user = get_object_or_404(User, id=user_id)
     posts = user.liked_posts.all()
 
-    real_post_count = posts.count()
-    post_count = real_post_count / 10
-    lastPage = math.ceil(post_count)
-    paginator = PageNumberPagination()
-    results = paginator.paginate_queryset(posts, request)
-    serializer = UserPostSerializer(results, many=True)
-    return JsonResponse({'lastPage': lastPage, 'resultNum': real_post_count, 'data': serializer.data})
+    all_query_count, last_page, results = pagination(posts, request)
+    serializer = PostSerializer(
+        results, context={'request': request}, many=True)
+
+    return JsonResponse({'lastPage': last_page, 'resultNum': all_query_count, 'data': serializer.data})
