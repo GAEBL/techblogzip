@@ -29,11 +29,11 @@ def posts(request):
 
     if sort == 'likes':
         if company_id == 0:
-            posts = Post.objects.annotate(like_count=Count(
-                'is_liked')).order_by('-like_count', '-date')
+            posts = Post.objects.annotate(like_counts=Count(
+                'is_liked')).order_by('-like_counts', '-date')
         else:
-            posts = Post.objects.annotate(like_count=Count(
-                'is_liked')).filter(company=company_id).order_by('-like_count', '-date')
+            posts = Post.objects.annotate(like_counts=Count(
+                'is_liked')).filter(company=company_id).order_by('-like_counts', '-date')
     elif sort == 'user_recommendation':  # IsAuthenticated
         pass
     else:
@@ -64,9 +64,9 @@ def like(request, id):
         posts.save()
         posts.is_liked.remove(user)
         on_like = False
-    posts.likeCount = posts.is_liked.all().count()
+    posts.like_count = posts.is_liked.all().count()
     posts.save()
-    return JsonResponse({'id': id, 'result': 'true', 'count_like': posts.likeCount, 'on_like': on_like})
+    return JsonResponse({'id': id, 'result': 'true', 'count_like': posts.like_count, 'on_like': on_like})
 
 
 @api_view(['GET'])
