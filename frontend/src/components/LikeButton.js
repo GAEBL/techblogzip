@@ -8,10 +8,10 @@ import cs from 'classnames';
 
 const useStyle = makeStyles(() => ({
   root: {
-    fontSize: '0.8rem',
+    fontSize: '1rem',
     color: '#e0e0e0',
     '&.liked': {
-      color: '#ef9a9a',
+      color: '#f44336',
     },
   },
 }));
@@ -27,15 +27,9 @@ const LikeButtonWrapper = styled.div`
     :focus {
       outline: none;
     }
-    transform: scale(0.9);
-    opacity: 0.7;
-    transition: all 0.5s;
+
     &.clickable {
       cursor: pointer;
-      :hover {
-        transform: scale(1);
-        opacity: 1;
-      }
     }
   }
   .like__count {
