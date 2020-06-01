@@ -52,7 +52,7 @@ class UserPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ['id', 'company', 'title', 'date',
-                  'contents', 'image', 'url', 'tags', 'likeCount', ]
+                  'contents', 'image', 'url', 'tags', 'like_count', ]
 
 
 class MainPostSerializer(serializers.ModelSerializer):
