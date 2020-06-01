@@ -1,26 +1,18 @@
 export default [
   {
-    code: 'language',
-    displayName: '언어별',
+    targetData: 'language',
+    displayName: '프로그래밍언어',
   },
   {
-    code: 'lib',
-    displayName: '라이브러리/프레임워크',
+    targetData: 'lib',
+    displayName: 'LIB/FRAMEWORK',
   },
   {
-    code: 'frontend',
-    displayName: '프론트엔드',
+    targetData: 'frontend',
+    displayName: 'FRONTEND',
   },
   {
-    code: 'backend',
-    displayName: '백엔드',
-  },
-  {
-    code: 'qa',
-    displayName: 'QA',
-  },
-  {
-    code: 'devops',
-    displayName: 'DevOps',
+    targetData: 'backend',
+    displayName: 'BACKEND',
   },
 ];

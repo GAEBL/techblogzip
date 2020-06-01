@@ -144,7 +144,7 @@ function TrendForm(props) {
         onChange={handleChange}
       >
         {targetDatas.map((target, i) => (
-          <MenuItem key={i} value={target.code}>
+          <MenuItem key={i} value={target.targetData}>
             {target.displayName}
           </MenuItem>
         ))}
