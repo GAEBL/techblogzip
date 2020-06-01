@@ -10,7 +10,7 @@ from rest_framework_jwt.serializers import VerifyJSONWebTokenSerializer
 
 from .serializers import UserSerializer
 from .models import User
-from mainapp.models import Post
+from mainapp.serializers import UserPostSerializer
 
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
@@ -129,6 +129,6 @@ def like_post(request):
     user = jwt_decode_handler(token.split(' ')[1])
     user_id = user.get('user_id')
     user = get_object_or_404(User, id=user_id)
-    post = user.liked_posts_set.all()
-    print(post)
-    return JsonResponse({'result':'gg'})
+    post = user.liked_posts.all()
+    serializer = UserPostSerializer(post, many=True)
+    return JsonResponse({'data': serializer.data})
