@@ -59,9 +59,13 @@ def like(request, id):
         posts.is_liked.add(user)
         on_like = True
     else:
+        posts.likeCount = posts.likeCount - 1
+        posts.save()
         posts.is_liked.remove(user)
         on_like = False
-    return JsonResponse({'id': id, 'result': 'true', 'count_like': posts.is_liked.all().count(), 'on_like': on_like})
+    posts.likeCount = posts.is_liked.all().count()
+    posts.save()
+    return JsonResponse({'id': id, 'result': 'true', 'count_like': posts.likeCount, 'on_like': on_like})
 
 
 @api_view(['GET'])
