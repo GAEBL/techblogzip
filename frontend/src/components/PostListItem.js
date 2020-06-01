@@ -1,0 +1,73 @@
+import React from 'react';
+import styled from 'styled-components';
+import { Card, colors } from '@material-ui/core';
+import TagList from './TagList';
+import CompanyLogo from './CompanyLogo';
+
+const ItemCard = styled(Card)`
+  display: grid;
+  grid-gap: 1rem;
+  padding: 1.5rem;
+
+  .item__info {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-gap: 1rem;
+    align-items: center;
+    .info__title {
+      color: black;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.3rem;
+    }
+    @media all and (max-width: 600px) {
+      .info__title {
+        font-size: 1rem;
+      }
+    }
+  }
+
+  .item__date {
+    font-size: 0.8rem;
+    color: ${colors.grey[400]};
+  }
+
+  .item__img {
+    height: 200px;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .item__summary {
+    margin: 0;
+    color: #444444;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    line-height: 25px;
+    max-height: 75px;
+    /* word-break: break-word; */
+  }
+`;
+
+// TODO: 좋아요 추가할것
+
+function PostListItem({ post }) {
+  const { company, contents, date, image, is_liked, tags, title, url } = post;
+
+  return (
+    <ItemCard>
+      <div className="item__info">
+        <CompanyLogo name={company.name} />
+        <a className="info__title" href={url}>
+          {title}
+        </a>
+      </div>
+      <span className="item__date">{date}</span>
+      <p className="item__summary">{contents}</p>
+      <img className="item__img" src={image} alt="thumnail" />
+      <TagList tags={tags} />
+    </ItemCard>
+  );
+}
+
+export default PostListItem;
