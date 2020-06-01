@@ -7,10 +7,13 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_jwt.settings import api_settings
 from rest_framework_jwt.serializers import VerifyJSONWebTokenSerializer
+from rest_framework.pagination import PageNumberPagination
 
 from .serializers import UserSerializer
 from .models import User
 from mainapp.serializers import UserPostSerializer
+
+import math
 
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
@@ -129,6 +132,12 @@ def like_post(request):
     user = jwt_decode_handler(token.split(' ')[1])
     user_id = user.get('user_id')
     user = get_object_or_404(User, id=user_id)
-    post = user.liked_posts.all()
-    serializer = UserPostSerializer(post, many=True)
-    return JsonResponse({'data': serializer.data})
+    posts = user.liked_posts.all()
+
+    real_post_count = posts.count()
+    post_count = real_post_count / 10
+    lastPage = math.ceil(post_count)
+    paginator = PageNumberPagination()
+    results = paginator.paginate_queryset(posts, request)
+    serializer = UserPostSerializer(results, many=True)
+    return JsonResponse({'lastPage': lastPage, 'resultNum': real_post_count, 'data': serializer.data})
