@@ -33,6 +33,7 @@ class Post(models.Model):
     is_viewed = models.ManyToManyField(
         get_user_model(), related_name='viewed_posts')
     tags = models.ManyToManyField(Tag, related_name='posts')
+    like_count = models.IntegerField(default=0)
 
     def __str__(self):
         return self.title

@@ -10,6 +10,7 @@ from rest_framework_jwt.serializers import VerifyJSONWebTokenSerializer
 
 from .serializers import UserSerializer
 from .models import User
+from mainapp.serializers import UserPostSerializer
 
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
@@ -112,3 +113,22 @@ def mypage(request):
     elif request.method == 'DELETE':
         user.delete()
         return JsonResponse({'result': '삭제되었습니다.'})
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated, ])
+@authentication_classes([JSONWebTokenAuthentication, ])
+def like_post(request):
+    global jwt_decode_handler
+
+    token = request.headers.get('Authorization', None)
+
+    if token == None:
+        return HttpResponse(status=401)
+
+    user = jwt_decode_handler(token.split(' ')[1])
+    user_id = user.get('user_id')
+    user = get_object_or_404(User, id=user_id)
+    post = user.liked_posts.all()
+    serializer = UserPostSerializer(post, many=True)
+    return JsonResponse({'data': serializer.data})

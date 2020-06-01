@@ -29,11 +29,11 @@ def posts(request):
 
     if sort == 'likes':
         if company_id == 0:
-            posts = Post.objects.annotate(like_count=Count(
-                'is_liked')).order_by('-like_count', '-date')
+            posts = Post.objects.annotate(like_counts=Count(
+                'is_liked')).order_by('-like_counts', '-date')
         else:
-            posts = posts.annotate(like_count=Count(
-                'is_liked')).filter(company=company_id).order_by('-like_count', '-date')
+            posts = Post.objects.annotate(like_counts=Count(
+                'is_liked')).filter(company=company_id).order_by('-like_counts', '-date')
     elif sort == 'user_recommendation':  # IsAuthenticated
         pass
     else:
@@ -46,7 +46,8 @@ def posts(request):
     lastPage = math.ceil(post_count)
     paginator = PageNumberPagination()
     results = paginator.paginate_queryset(posts, request)
-    serializer = PostSerializer(results, many=True)
+    serializer = PostSerializer(
+        results, context={'request': request}, many=True)
     return JsonResponse({'lastPage': lastPage, 'data': serializer.data})
 
 
@@ -61,7 +62,9 @@ def like(request, id):
     else:
         posts.is_liked.remove(user)
         on_like = False
-    return JsonResponse({'id': id, 'result': 'true', 'count_like': posts.is_liked.all().count(), 'on_like': on_like})
+    posts.like_count = posts.is_liked.all().count()
+    posts.save()
+    return JsonResponse({'id': id, 'result': 'true', 'count_like': posts.like_count, 'on_like': on_like})
 
 
 @api_view(['GET'])
@@ -107,7 +110,7 @@ def search(request):
 
 @api_view(['GET'])
 @permission_classes([AllowAny, ])
-def search_tag(request):
+def tag(request):
     tag = request.query_params.get('tag')
 
     posts = Post.objects.filter(Q(tags__name__icontains=tag)).order_by('-date')
