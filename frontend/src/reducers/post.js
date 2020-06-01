@@ -2,6 +2,7 @@ import createActionTypes from '../lib/createActionTypes';
 import createRequestThunk from '../lib/createRequestThunk';
 import { Post } from '../api/post';
 import { handleActions, createAction } from 'redux-actions';
+import produce from 'immer';
 
 const CLEAR_POSTS = 'post/CLEAR_POSTS';
 const [
@@ -53,8 +54,8 @@ const initialState = {
   posts: [],
   lastPage: null,
   resultNum: null,
-  post: null,
   error: null,
+  toggleError: null,
   pageData: null, // mainpage의 포스트 제외 기타 데이터들
 };
 
@@ -112,13 +113,6 @@ const post = handleActions(
       posts: [],
       error,
     }),
-    [TOGGLE_LIKE_SUCCEESS]: (state, action) => ({
-      ...state,
-    }),
-    [TOGGLE_LIKE_FAILURE]: (state, { payload: error }) => ({
-      ...state,
-      error,
-    }),
     [GET_POSTS_BY_TAG_SUCCESS]: (
       state,
       { payload: { lastPage, resultNum, data } },
@@ -132,6 +126,16 @@ const post = handleActions(
     [GET_POSTS_BY_TAG_FAILURE]: (state, { payload: error }) => ({
       ...state,
       error,
+    }),
+    [TOGGLE_LIKE_SUCCEESS]: (state, { payload: { id, count_like, on_like } }) =>
+      produce(state, (draft) => {
+        const findIdx = draft.posts.findIndex((post) => post.id === id);
+        draft.posts[findIdx].like_count = count_like;
+        draft.posts[findIdx].check_liked = on_like;
+      }),
+    [TOGGLE_LIKE_FAILURE]: (state, { payload: error }) => ({
+      ...state,
+      toggleError: error,
     }),
   },
   initialState,
