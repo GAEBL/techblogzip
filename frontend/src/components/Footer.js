@@ -2,19 +2,18 @@ import React from 'react';
 import styled from 'styled-components';
 
 const FooterWrapper = styled.footer`
-  height: 100%;
-  width: 100%;
-  background-color: black;
+  padding: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: black;
   color: white;
 `;
 
 function Footer(props) {
   return (
     <FooterWrapper>
-      <h3>MATCHER</h3>
+      <h3>GAEBL</h3>
     </FooterWrapper>
   );
 }

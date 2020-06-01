@@ -7,12 +7,6 @@ import PageData from './PageData';
 
 const MainPageWrapper = styled.div``;
 
-const Contents = styled.div`
-  height: 100vh;
-  font-size: 3rem;
-  text-align: center;
-`;
-
 const MainContentWrapper = styled.section`
   max-width: ${({ theme }) => theme.maxPageWidth};
   margin: 0 auto;
@@ -27,9 +21,15 @@ function MainPage(props) {
 
   const dispatch = useDispatch();
   useEffect(() => {
+    // 메인페이지만 패딩 탑 0로..
+    const contents = document.querySelector('#contents');
+    contents.style.paddingTop = 0;
+
     dispatch(getMainpageData());
     return () => {
       dispatch(clearPosts());
+      // 나가면서 패딩 탑 주기
+      contents.style.paddingTop = '64px';
     };
   }, [dispatch]);
 
@@ -37,16 +37,8 @@ function MainPage(props) {
     <MainPageWrapper>
       {/* TODO:posts 0개일때? */}
       <Carousel posts={posts} />
-
       <MainContentWrapper>
         {!loading && pageData && <PageData pageData={pageData} />}
-        {/* <Contents>
-          <h4>블로그별 포스팅 개수</h4>
-          <h4>블로그별 포스팅 개수</h4>
-          <h4>블로그별 포스팅 개수</h4>
-          <h4>블로그별 포스팅 개수</h4>
-          <h4>블로그별 포스팅 개수</h4>
-        </Contents> */}
       </MainContentWrapper>
     </MainPageWrapper>
   );

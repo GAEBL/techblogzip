@@ -3,55 +3,60 @@ import SearchInput from './SearchInput';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSearchResults, clearPosts } from '../../reducers/post';
-import RecentPostItem from '../RecentPostsPage/RecentPostItem';
+import PostList from '../../components/PostList';
+import SimplePagination from '../../components/Material/SimplePagination';
 
 const SearchResultPageWraaper = styled.div`
-  max-width: 1200px;
+  max-width: ${({ theme }) => theme.maxPageWidth};
   margin: 0 auto;
+  padding: 1rem;
+
+  .page__title {
+    margin-bottom: 1rem;
+  }
+
+  .search__input {
+    margin-bottom: 1rem;
+  }
+
+  .result__text {
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+  }
 `;
 
-const ResultsWrapper = styled.div``;
+function SearchResultPage({ match }) {
+  const { query } = match.params;
+  const [page, setPage] = useState(1);
+  const { postsCount } = useSelector(({ post }) => ({
+    postsCount: post.resultNum,
+  }));
 
-const ResultText = styled.p`
-  font-size: 40px;
-`;
-
-function SearchResultPage(props) {
   const dispatch = useDispatch();
-  const [query, setQuery] = useState('');
-  const results = useSelector((state) => state.post.posts);
-  const loading = useSelector(
-    (state) => state.loading['search/GET_SEARCHRESULTS'],
-  );
-
-  const handleSearch = () => {
-    dispatch(getSearchResults({ query }));
-  };
+  const handlePage = (nextPage) => setPage(nextPage);
 
   useEffect(() => {
-    return () => {
-      dispatch(clearPosts());
-    };
-  }, [dispatch]);
+    dispatch(clearPosts());
+    dispatch(getSearchResults({ query, page }));
+  }, [dispatch, query, page]);
 
   return (
     <SearchResultPageWraaper>
-      <ResultText>
-        "{query}"검색 결과({results ? results.length : 0}건)
-      </ResultText>
-      <SearchInput
-        query={query}
-        setQuery={setQuery}
-        handleSearch={handleSearch}
-      />
-      <ResultsWrapper>
-        {loading ? <div>로딩</div> : null}
-        {!loading &&
-          results &&
-          results.map((result, index) => (
-            <RecentPostItem key={index} post={result} />
-          ))}
-      </ResultsWrapper>
+      <h1 className="page__title">기술 블로그의 지식을 탐험하세요.</h1>
+
+      <div className="search__input">
+        <SearchInput />
+      </div>
+      <PostList actionType="post/GET_SEARCHRESULTS">
+        <div className="result__text">
+          <span role="img" aria-label="img">
+            🔎{'  '}
+          </span>
+          "{query}" 검색결과 ({postsCount})
+        </div>
+      </PostList>
+
+      <SimplePagination currentPage={page} handlePage={handlePage} />
     </SearchResultPageWraaper>
   );
 }

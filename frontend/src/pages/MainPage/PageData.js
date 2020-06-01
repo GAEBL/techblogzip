@@ -33,12 +33,21 @@ const FadeInTexts = styled.div`
       opacity: 1;
     }
   }
+
+  @media all and (max-width: 600px) {
+    .text {
+      font-size: 1.5rem;
+    }
+  }
 `;
 
 const StyledCountUp = styled(CountUp)`
   font-size: 2rem;
   color: ${({ theme }) => theme.mainColor};
   margin-right: 0.3rem;
+  @media all and (max-width: 600px) {
+    font-size: 1.5rem;
+  }
 `;
 
 function PageData({ pageData }) {
@@ -69,18 +78,18 @@ function PageData({ pageData }) {
   return (
     <PageDataWrapper>
       <div className="logo-wrapper">
-        <Logo />
+        <Logo size="2rem" />
       </div>
       <FadeInTexts ref={texts}>
         <div className={cn('text', { fadeIn })}>
           {fadeIn && (
-            <StyledCountUp end={companyCount} duration={4} separator={','} />
+            <StyledCountUp end={companyCount} duration={3} separator={','} />
           )}
           개 기업의 기술 개발 블로그
         </div>
         <div className={cn('text', { fadeIn })}>
           {fadeIn && (
-            <StyledCountUp end={postsCount} duration={4} separator={','} />
+            <StyledCountUp end={postsCount} duration={3} separator={','} />
           )}
           개의 블로그 포스트 분석
         </div>
