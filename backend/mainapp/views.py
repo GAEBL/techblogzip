@@ -107,7 +107,7 @@ def search(request):
 
 @api_view(['GET'])
 @permission_classes([AllowAny, ])
-def search_tag(request):
+def tag(request):
     tag = request.query_params.get('tag')
 
     posts = Post.objects.filter(Q(tags__name__icontains=tag)).order_by('-date')
