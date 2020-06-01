@@ -14,6 +14,15 @@ import json
 from collections import Counter
 
 
+def pagination(query, request):
+    all_query_count = query.count()
+    query_page = all_query_count / 10
+    last_page = math.ceil(query_page)
+    paginator = PageNumberPagination()
+    results = paginator.paginate_queryset(query, request)
+    return all_query_count, last_page, results
+
+
 @api_view(['GET'])
 @permission_classes([AllowAny, ])
 def posts(request):
@@ -42,13 +51,11 @@ def posts(request):
         else:
             posts = Post.objects.filter(company=company_id).order_by('-date')
 
-    post_count = posts.count() / 10
-    lastPage = math.ceil(post_count)
-    paginator = PageNumberPagination()
-    results = paginator.paginate_queryset(posts, request)
+    all_query_count, last_page, results = pagination(posts, request)
     serializer = PostSerializer(
         results, context={'request': request}, many=True)
-    return JsonResponse({'lastPage': lastPage, 'data': serializer.data})
+
+    return JsonResponse({'lastPage': last_page, 'resultNum': all_query_count, 'data': serializer.data})
 
 
 @api_view(['POST'])
@@ -98,13 +105,12 @@ def search(request):
                 post_search = post_search.union(post_multi_search)
 
         post_search = post_search.order_by('-date')
-        real_post_count = post_search.count()
-        post_count = real_post_count / 10
-        lastPage = math.ceil(post_count)
-        paginator = PageNumberPagination()
-        results = paginator.paginate_queryset(post_search, request)
-        serializer = PostSerializer(results, many=True)
-        return JsonResponse({'result': 'true', 'lastPage': lastPage, 'resultNum': real_post_count, 'data': serializer.data})
+
+        all_query_count, last_page, results = pagination(post_search, request)
+        serializer = PostSerializer(
+            results, context={'request': request}, many=True)
+
+        return JsonResponse({'result': 'true', 'lastPage': last_page, 'resultNum': all_query_count, 'data': serializer.data})
     return JsonResponse({'result': 'false'})
 
 
@@ -118,13 +124,11 @@ def tag(request):
     if len(posts) == 0:
         return HttpResponse(status=204)
 
-    real_post_count = posts.count()
-    post_count = real_post_count / 10
-    lastPage = math.ceil(post_count)
-    paginator = PageNumberPagination()
-    results = paginator.paginate_queryset(posts, request)
-    serializer = PostSerializer(results, many=True)
-    return JsonResponse({'result': 'true', 'lastPage': lastPage, 'resultNum': real_post_count, 'data': serializer.data})
+    all_query_count, last_page, results = pagination(posts, request)
+    serializer = PostSerializer(
+        results, context={'request': request}, many=True)
+
+    return JsonResponse({'lastPage': last_page, 'resultNum': all_query_count, 'data': serializer.data})
 
 
 @api_view(['GET'])
@@ -144,7 +148,7 @@ def trend(request):
     company = request.query_params.get('company')
     start_date = request.query_params.get('startdate')
     end_date = request.query_params.get('enddate')
-    # target_data = request.query_params.get('target_data')
+    target_data = request.query_params.get('target_data')
 
     try:
         company_id = get_object_or_404(Company, name=company).id
@@ -155,12 +159,11 @@ def trend(request):
         posts = Post.objects.filter(
             date__range=[start_date, end_date]).order_by('-date')
 
-    post_count = posts.count() / 10
-    lastPage = math.ceil(post_count)
-    paginator = PageNumberPagination()
-    results = paginator.paginate_queryset(posts, request)
-    serializer = PostSerializer(results, many=True)
-    return JsonResponse({'lastPage': lastPage, 'company': company, 'data': serializer.data})
+    all_query_count, last_page, results = pagination(posts, request)
+    serializer = PostSerializer(
+        results, context={'request': request}, many=True)
+
+    return JsonResponse({'lastPage': last_page, 'company': company, 'data': serializer.data})
 
 
 @api_view(['GET'])
@@ -207,4 +210,5 @@ def sort_tag(request, id):  # 0: 업데이틍 전, 1: 업데이트 후
 
         tag_count = dict(
             sorted(tag_count.items(), key=lambda x: x[1], reverse=True))
+
     return JsonResponse({'company': company_name, 'data': tag_count})
