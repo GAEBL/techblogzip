@@ -21,9 +21,11 @@ const [
   GET_SEARCHRESULTS_FAILURE,
 ] = createActionTypes('post/GET_SEARCHRESULTS');
 
-const [POST_LIKE, POST_LIKE_SUCCEESS, POST_LIKE_FAILURE] = createActionTypes(
-  'post/POST_LIKE',
-);
+const [
+  TOGGLE_LIKE,
+  TOGGLE_LIKE_SUCCEESS,
+  TOGGLE_LIKE_FAILURE,
+] = createActionTypes('post/TOGGLE_LIKE');
 
 const [
   GET_POSTS_BY_TAG,
@@ -41,7 +43,7 @@ export const getSearchResults = createRequestThunk(
   GET_SEARCHRESULTS,
   Post.getSearchResults,
 );
-export const postLike = createRequestThunk(POST_LIKE, Post.postLike);
+export const toggleLike = createRequestThunk(TOGGLE_LIKE, Post.toggleLike);
 export const getPostsByTag = createRequestThunk(
   GET_POSTS_BY_TAG,
   Post.getPostsByRelatedTag,
@@ -110,10 +112,10 @@ const post = handleActions(
       posts: [],
       error,
     }),
-    [POST_LIKE_SUCCEESS]: (state, action) => ({
+    [TOGGLE_LIKE_SUCCEESS]: (state, action) => ({
       ...state,
     }),
-    [POST_LIKE_FAILURE]: (state, { payload: error }) => ({
+    [TOGGLE_LIKE_FAILURE]: (state, { payload: error }) => ({
       ...state,
       error,
     }),

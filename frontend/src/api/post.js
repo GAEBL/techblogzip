@@ -20,12 +20,6 @@ export const Post = {
         page,
       },
     }),
-  postLike: ({ id, user }) =>
-    client.post(`/techblog/posts/like/${id}/`, {
-      params: {
-        user,
-      },
-    }),
   // FIXME: API
   getPostsByRelatedTag: ({ tag, page }) =>
     client.get(`/techblog/search/tag/`, {
@@ -34,4 +28,5 @@ export const Post = {
         page,
       },
     }),
+  toggleLike: (id) => client.post(`/techblog/posts/like/${id}/`),
 };
