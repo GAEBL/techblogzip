@@ -2,18 +2,17 @@ import client from '../client';
 
 export const Post = {
   getAllPosts: ({ company, sort, page }) =>
-    client.get('/techblog/posts/', {
+    client.get('/posts/', {
       params: {
         company,
         sort: sort === 'default' ? '' : sort,
         page,
       },
     }),
-  getPostLikeCount: (id) => client.get(`/techblog/posts/like/${id}/`),
-  getMainPageData: () => client.get('/techblog/main/'),
+  getMainPageData: () => client.get('/main/'),
   //   searchPosts:() => client
   getSearchResults: ({ query, company, page }) =>
-    client.get('/techblog/search/', {
+    client.get('/search/', {
       params: {
         query,
         company,
@@ -22,11 +21,11 @@ export const Post = {
     }),
   // FIXME: API
   getPostsByRelatedTag: ({ tag, page }) =>
-    client.get(`/techblog/search/tag/`, {
+    client.get(`/tag/`, {
       params: {
         tag,
         page,
       },
     }),
-  toggleLike: (id) => client.post(`/techblog/posts/like/${id}/`),
+  toggleLike: (id) => client.post(`/posts/like/${id}/`),
 };
