@@ -106,7 +106,7 @@ def search(request):
 
         post_search = post_search.order_by('-date')
 
-        all_query_count, last_page, results = pagination(posts, request)
+        all_query_count, last_page, results = pagination(post_search, request)
         serializer = PostSerializer(results, many=True)
 
         return JsonResponse({'result': 'true', 'lastPage': last_page, 'resultNum': all_query_count, 'data': serializer.data})
