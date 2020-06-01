@@ -34,6 +34,12 @@ const [
   GET_POSTS_BY_TAG_FAILURE,
 ] = createActionTypes('post/GET_POSTS_BY_TAG');
 
+const [
+  GET_POSTS_BY_LIKED,
+  GET_POSTS_BY_LIKED_SUCCES,
+  GET_POSTS_BY_LIKED_FAILURE,
+] = createActionTypes('post/GET_POSTS_BY_LIKED');
+
 export const getAllPosts = createRequestThunk(GET_ALL_POSTS, Post.getAllPosts);
 export const clearPosts = createAction(CLEAR_POSTS);
 export const getMainpageData = createRequestThunk(
@@ -48,6 +54,10 @@ export const toggleLike = createRequestThunk(TOGGLE_LIKE, Post.toggleLike);
 export const getPostsByTag = createRequestThunk(
   GET_POSTS_BY_TAG,
   Post.getPostsByRelatedTag,
+);
+export const getPostsByLiked = createRequestThunk(
+  GET_POSTS_BY_LIKED,
+  Post.getPostsByLiked,
 );
 
 const initialState = {
@@ -136,6 +146,19 @@ const post = handleActions(
     [TOGGLE_LIKE_FAILURE]: (state, { payload: error }) => ({
       ...state,
       toggleError: error,
+    }),
+    [GET_POSTS_BY_LIKED_SUCCES]: (
+      state,
+      { payload: { lastPage, resultNum, data } },
+    ) => ({
+      ...state,
+      posts: data,
+      lastPage,
+      resultNum,
+    }),
+    [GET_POSTS_BY_LIKED_FAILURE]: (state, { payload: error }) => ({
+      ...state,
+      error,
     }),
   },
   initialState,

@@ -14,6 +14,7 @@ import { check, tempSetUser } from './reducers/user';
 import HideAppBar from './components/Material/HideAppBar';
 import Nav from './components/Material/Nav';
 import TagPage from './pages/TagPage';
+import MyPage from './pages/MyPage';
 
 const AppGridWrapper = styled.div`
   height: 100%;
@@ -53,6 +54,7 @@ function App() {
           <Route path="/search/:query" component={SearchResultPage} exact />
           <Route path="/trend" component={TrendPage} exact />
           <Route path="/tag/:tag" component={TagPage} exact />
+          <Route path="/mypage" component={MyPage} exact />
           <Route path="*" component={NotFoundPage} />
         </Switch>
       </Contents>

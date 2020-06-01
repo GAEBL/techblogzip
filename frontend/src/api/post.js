@@ -28,4 +28,5 @@ export const Post = {
       },
     }),
   toggleLike: (id) => client.post(`/posts/like/${id}/`),
+  getPostsByLiked: () => client.get(`/auth/user/likes`),
 };

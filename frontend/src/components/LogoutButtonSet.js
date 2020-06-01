@@ -3,17 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../reducers/user';
 import styled from 'styled-components';
 import { colors } from '@material-ui/core';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 
 const LogoutSetWrapper = styled.div`
   display: flex;
   margin-right: 1rem;
-
-  .username {
-    font-weight: bold;
-    color: ${colors.deepOrange[200]};
-    margin-right: 1rem;
-  }
 
   .logout__button {
     font-weight: bold;
@@ -33,6 +27,13 @@ const LogoutSetWrapper = styled.div`
   }
 `;
 
+const UserLink = styled(Link)`
+  font-weight: bold;
+  color: ${colors.deepOrange[200]};
+  margin-left: 0.5rem;
+  margin-right: 1rem;
+`;
+
 function LogoutButtonSet({ history }) {
   const dispatch = useDispatch();
   const { user } = useSelector(({ user }) => ({
@@ -46,7 +47,10 @@ function LogoutButtonSet({ history }) {
 
   return (
     <LogoutSetWrapper>
-      <span className="username">{user.username}</span>
+      <span role="img" aria-label="img">
+        👋🏻
+      </span>
+      <UserLink to="/mypage">{user.username}</UserLink>
       <button className="logout__button" onClick={onLogout}>
         로그아웃
       </button>
