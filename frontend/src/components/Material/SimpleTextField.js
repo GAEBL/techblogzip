@@ -17,9 +17,7 @@ const useStyles = makeStyles(() => ({
 
 function SimpleTextField(props) {
   const classes = useStyles();
-  return (
-    <TextField classes={classes} {...props} variant="outlined" fullWidth />
-  );
+  return <TextField classes={classes} {...props} variant="outlined" />;
 }
 
 export default SimpleTextField;

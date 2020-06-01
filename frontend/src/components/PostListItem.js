@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Card, colors } from '@material-ui/core';
 import TagList from './TagList';
 import CompanyLogo from './CompanyLogo';
+import LikeButton from './LikeButton';
 
 const ItemCard = styled(Card)`
   display: grid;
@@ -27,9 +28,14 @@ const ItemCard = styled(Card)`
     }
   }
 
-  .item__date {
-    font-size: 0.8rem;
-    color: ${colors.grey[400]};
+  .item__sub__info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .item__date {
+      font-size: 0.8rem;
+      color: ${colors.grey[400]};
+    }
   }
 
   .item__img {
@@ -52,7 +58,18 @@ const ItemCard = styled(Card)`
 // TODO: 좋아요 추가할것
 
 function PostListItem({ post }) {
-  const { company, contents, date, image, is_liked, tags, title, url } = post;
+  const {
+    id,
+    company,
+    contents,
+    date,
+    image,
+    tags,
+    title,
+    url,
+    check_liked,
+    like_count,
+  } = post;
 
   return (
     <ItemCard>
@@ -62,7 +79,10 @@ function PostListItem({ post }) {
           {title}
         </a>
       </div>
-      <span className="item__date">{date}</span>
+      <div className="item__sub__info">
+        <LikeButton postId={id} isLiked={check_liked} likeCount={like_count} />
+        <span className="item__date">{date}</span>
+      </div>
       <p className="item__summary">{contents}</p>
       <img className="item__img" src={image} alt="thumnail" />
       <TagList tags={tags} />
