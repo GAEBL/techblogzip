@@ -60,8 +60,6 @@ def like(request, id):
         posts.is_liked.add(user)
         on_like = True
     else:
-        posts.likeCount = posts.likeCount - 1
-        posts.save()
         posts.is_liked.remove(user)
         on_like = False
     posts.like_count = posts.is_liked.all().count()
