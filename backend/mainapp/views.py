@@ -1,3 +1,6 @@
+import pickle
+from functools import reduce
+import operator
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse, HttpResponse
 from django.db.models import Q, Count
@@ -12,6 +15,15 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 import math
 import json
 from collections import Counter
+
+
+def pagination(query, request):
+    all_query_count = query.count()
+    query_page = all_query_count / 10
+    last_page = math.ceil(query_page)
+    paginator = PageNumberPagination()
+    results = paginator.paginate_queryset(query, request)
+    return all_query_count, last_page, results
 
 
 @api_view(['GET'])
@@ -29,11 +41,11 @@ def posts(request):
 
     if sort == 'likes':
         if company_id == 0:
-            posts = Post.objects.annotate(like_count=Count(
-                'is_liked')).order_by('-like_count', '-date')
+            posts = Post.objects.annotate(like_counts=Count(
+                'is_liked')).order_by('-like_counts', '-date')
         else:
-            posts = posts.annotate(like_count=Count(
-                'is_liked')).filter(company=company_id).order_by('-like_count', '-date')
+            posts = Post.objects.annotate(like_counts=Count(
+                'is_liked')).filter(company=company_id).order_by('-like_counts', '-date')
     elif sort == 'user_recommendation':  # IsAuthenticated
         pass
     else:
@@ -42,12 +54,14 @@ def posts(request):
         else:
             posts = Post.objects.filter(company=company_id).order_by('-date')
 
-    post_count = posts.count() / 10
-    lastPage = math.ceil(post_count)
-    paginator = PageNumberPagination()
-    results = paginator.paginate_queryset(posts, request)
-    serializer = PostSerializer(results, many=True)
-    return JsonResponse({'lastPage': lastPage, 'data': serializer.data})
+    all_query_count, last_page, results = pagination(posts, request)
+    serializer = PostSerializer(
+        results, context={'request': request}, many=True)
+
+    mains = Post.objects.all().order_by('-date')[:5]
+    main_serializer = PostSerializer(mains, many=True)
+
+    return JsonResponse({'lastPage': last_page, 'resultNum': all_query_count, 'data': serializer.data, 'main': main_serializer.data})
 
 
 @api_view(['POST'])
@@ -61,7 +75,9 @@ def like(request, id):
     else:
         posts.is_liked.remove(user)
         on_like = False
-    return JsonResponse({'id': id, 'result': 'true', 'count_like': posts.is_liked.all().count(), 'on_like': on_like})
+    posts.like_count = posts.is_liked.all().count()
+    posts.save()
+    return JsonResponse({'id': id, 'result': 'true', 'count_like': posts.like_count, 'on_like': on_like})
 
 
 @api_view(['GET'])
@@ -95,19 +111,18 @@ def search(request):
                 post_search = post_search.union(post_multi_search)
 
         post_search = post_search.order_by('-date')
-        real_post_count = post_search.count()
-        post_count = real_post_count / 10
-        lastPage = math.ceil(post_count)
-        paginator = PageNumberPagination()
-        results = paginator.paginate_queryset(post_search, request)
-        serializer = PostSerializer(results, many=True)
-        return JsonResponse({'result': 'true', 'lastPage': lastPage, 'resultNum': real_post_count, 'data': serializer.data})
+
+        all_query_count, last_page, results = pagination(post_search, request)
+        serializer = PostSerializer(
+            results, context={'request': request}, many=True)
+
+        return JsonResponse({'result': 'true', 'lastPage': last_page, 'resultNum': all_query_count, 'data': serializer.data})
     return JsonResponse({'result': 'false'})
 
 
 @api_view(['GET'])
 @permission_classes([AllowAny, ])
-def search_tag(request):
+def tag(request):
     tag = request.query_params.get('tag')
 
     posts = Post.objects.filter(Q(tags__name__icontains=tag)).order_by('-date')
@@ -115,13 +130,11 @@ def search_tag(request):
     if len(posts) == 0:
         return HttpResponse(status=204)
 
-    real_post_count = posts.count()
-    post_count = real_post_count / 10
-    lastPage = math.ceil(post_count)
-    paginator = PageNumberPagination()
-    results = paginator.paginate_queryset(posts, request)
-    serializer = PostSerializer(results, many=True)
-    return JsonResponse({'result': 'true', 'lastPage': lastPage, 'resultNum': real_post_count, 'data': serializer.data})
+    all_query_count, last_page, results = pagination(posts, request)
+    serializer = PostSerializer(
+        results, context={'request': request}, many=True)
+
+    return JsonResponse({'lastPage': last_page, 'resultNum': all_query_count, 'data': serializer.data})
 
 
 @api_view(['GET'])
@@ -141,23 +154,56 @@ def trend(request):
     company = request.query_params.get('company')
     start_date = request.query_params.get('startdate')
     end_date = request.query_params.get('enddate')
-    # target_data = request.query_params.get('target_data')
+    target_data = request.query_params.get('targetdata')
+
+    if target_data == 'language':
+        with open('language.pickle', 'rb') as f:
+            target_tag = pickle.load(f)
+    elif target_data == 'lib':
+        with open('lib.pickle', 'rb') as f:
+            target_tag = pickle.load(f)
+    elif target_data == 'frontend':
+        with open('frontend.pickle', 'rb') as f:
+            target_tag = pickle.load(f)
+    elif target_data == 'backend':
+        with open('backend.pickle', 'rb') as f:
+            target_tag = pickle.load(f)
+
+    query = reduce(operator.or_, (Q(tags__name__icontains=target)
+                                  for target in target_tag))
 
     try:
         company_id = get_object_or_404(Company, name=company).id
-        posts = Post.objects.filter(company=company_id, date__range=[
+        posts = Post.objects.filter(query, company=company_id, date__range=[
                                     start_date, end_date]).order_by('-date')
     except:
         company_id = 0
-        posts = Post.objects.filter(
-            date__range=[start_date, end_date]).order_by('-date')
+        posts = Post.objects.filter(query,
+                                    date__range=[start_date, end_date]).order_by('-date')
 
-    post_count = posts.count() / 10
-    lastPage = math.ceil(post_count)
-    paginator = PageNumberPagination()
-    results = paginator.paginate_queryset(posts, request)
-    serializer = PostSerializer(results, many=True)
-    return JsonResponse({'lastPage': lastPage, 'company': company, 'data': serializer.data})
+    tag_count = {}
+    if posts.exists():
+        for post in posts.iterator():
+            tags = post.tags
+            if tags.exists():
+                for tag in tags.values():
+                    tag_id = tag['name']  # id, name
+                    if tag_id in tag_count:
+                        tag_count[tag_id] += 1
+                    else:
+                        tag_count[tag_id] = 1
+    else:
+        return JsonResponse({'result': 'noData'})
+
+    trend_dict = {}
+    trend_dict['data'] = []
+    for key, val in tag_count.items():
+        trend_dict['data'].append({
+            'name': key,
+            'value': val
+        })
+
+    return JsonResponse(trend_dict)
 
 
 @api_view(['GET'])
@@ -204,4 +250,5 @@ def sort_tag(request, id):  # 0: 업데이틍 전, 1: 업데이트 후
 
         tag_count = dict(
             sorted(tag_count.items(), key=lambda x: x[1], reverse=True))
+
     return JsonResponse({'company': company_name, 'data': tag_count})

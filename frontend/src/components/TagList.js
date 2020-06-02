@@ -23,8 +23,8 @@ function TagList({ tags }) {
   return (
     <TagWrapper>
       {tags.map((tag, i) => (
-        <TagLink to={`/tag/${tag.name}`}>
-          <Tag key={i}>#{tag.name}</Tag>
+        <TagLink to={`/tag/${tag.name}`} key={i}>
+          <Tag>#{tag.name}</Tag>
         </TagLink>
       ))}
     </TagWrapper>

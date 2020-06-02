@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import LogoButton from './LogoButton';
-import { NativeSelect, FormControl } from '@material-ui/core';
-import { useDispatch } from 'react-redux';
+import { MenuItem, Fade } from '@material-ui/core';
+import { useDispatch, useSelector } from 'react-redux';
 import { getAllPosts, clearPosts } from '../../reducers/post';
 import PostList from '../../components/PostList';
 import SimplePagination from '../../components/Material/SimplePagination';
 import companyLogoData from '../../lib/companyLogoData';
+import SimpleTextField from '../../components/Material/SimpleTextField';
+import Carousel from './Carousel';
 
-const RecentPostsPageWrapper = styled.div`
-  max-width: ${({ theme }) => theme.maxPageWidth};
-  margin: 0 auto;
-  padding: 1rem;
-`;
+const RecentPostsPageWrapper = styled.div``;
 
 const Title = styled.h1`
   margin-bottom: 1rem;
@@ -24,16 +22,27 @@ const CompanySelector = styled.div`
 
 const DropDownBar = styled.div`
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
+`;
+
+const ContentsWrapper = styled.div`
+  max-width: ${({ theme }) => theme.maxPageWidth};
+  width: 100%;
+  margin: 0 auto;
+  padding: 1rem;
 `;
 
 function RecentPostsPage() {
   const dispatch = useDispatch();
+  const { mainPosts } = useSelector(({ post }) => ({
+    mainPosts: post.main,
+  }));
 
   const [queryParams, setQueryParams] = useState({
     company: '',
-    sort: '',
+    sort: 'default',
     page: 1,
   });
 
@@ -69,35 +78,43 @@ function RecentPostsPage() {
 
   return (
     <RecentPostsPageWrapper>
-      <Title>기업의 기술블로그에서 원하는 주제를 찾아보세요.</Title>
-      <CompanySelector>
-        {companyLogoData.map((company) => (
-          <LogoButton
-            key={company.name}
-            company={company}
-            selected={queryParams.company}
-            handleClick={() => handleClick(company.name)}
+      <Carousel posts={mainPosts} />
+      <Fade in={true} {...{ timeout: 1500 }}>
+        <ContentsWrapper>
+          <Title>각 기업의 포스트를 찾아보세요.</Title>
+          <CompanySelector>
+            {companyLogoData.map((company) => (
+              <LogoButton
+                key={company.name}
+                company={company}
+                selected={queryParams.company}
+                handleClick={() => handleClick(company.name)}
+              />
+            ))}
+          </CompanySelector>
+
+          <PostList actionType="post/GET_ALL_POSTS">
+            <DropDownBar>
+              <h1>포스트</h1>
+              <SimpleTextField
+                select
+                value={queryParams.sort}
+                name="sort"
+                onChange={handleChange}
+                size="small"
+              >
+                <MenuItem value="default">최신순</MenuItem>
+                <MenuItem value="likes">좋아요순</MenuItem>
+                <MenuItem value="user_recommendation">매칭순</MenuItem>
+              </SimpleTextField>
+            </DropDownBar>
+          </PostList>
+          <SimplePagination
+            currentPage={queryParams.page}
+            handlePage={handlePage}
           />
-        ))}
-      </CompanySelector>
-
-      <PostList actionType="post/GET_ALL_POSTS">
-        <DropDownBar>
-          <Title>포스트</Title>
-          <FormControl>
-            <NativeSelect value={queryParams.sort} onChange={handleChange}>
-              <option value="">최신순</option>
-              <option value="likes">좋아요순</option>
-              <option value="user_recommendation">매칭순</option>
-            </NativeSelect>
-          </FormControl>
-        </DropDownBar>
-      </PostList>
-
-      <SimplePagination
-        currentPage={queryParams.page}
-        handlePage={handlePage}
-      />
+        </ContentsWrapper>
+      </Fade>
     </RecentPostsPageWrapper>
   );
 }
