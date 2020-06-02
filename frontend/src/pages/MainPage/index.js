@@ -10,6 +10,7 @@ import { colors } from '@material-ui/core';
 import FakeLikeBtn from './FakeLikeBtn';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import { Link } from 'react-router-dom';
+import FakeLineChart from './FakeLineChart';
 
 const MainPageWrapper = styled.div``;
 
@@ -42,6 +43,7 @@ const PageSection = styled.section`
 
 const ContentsLink = styled(Link)`
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   text-decoration: none;
   color: black;
@@ -73,8 +75,9 @@ const RightIcon = styled(ChevronRightIcon)`
 `;
 
 function MainPage(props) {
-  const { pageData } = useSelector(({ post, loading }) => ({
+  const { pageData, isLoggedIn } = useSelector(({ post, user }) => ({
     pageData: post.pageData,
+    isLoggedIn: user.isLoggedIn,
   }));
 
   const dispatch = useDispatch();
@@ -109,15 +112,17 @@ function MainPage(props) {
               />
               개 기업의 기술 개발 블로그
             </span>
-            <ContentsLink className="content__subtext">
+            <ContentsLink to="/posts" className="content__subtext">
               최신글 보러가기 <RightIcon />
             </ContentsLink>
           </UpFadeIn>
         </div>
       </PageSection>
-      <PageSection bgColor={colors.grey[200]}>
+      <PageSection bgColor={colors.grey[300]}>
         <div className="contents">
           <UpFadeIn>
+            <FakeLineChart />
+
             <span className="contents__text">
               <StyledCountUp
                 end={
@@ -128,7 +133,7 @@ function MainPage(props) {
               />
               개의 블로그 포스트 분석
             </span>
-            <ContentsLink className="content__subtext">
+            <ContentsLink to="/trend" className="content__subtext">
               트렌드 분석하기 <RightIcon />
             </ContentsLink>
           </UpFadeIn>
@@ -138,8 +143,12 @@ function MainPage(props) {
         <div className="contents">
           <UpFadeIn>
             <FakeLikeBtn />
-            <ContentsLink to="/register" className="content__subtext">
-              <span>마음에 드는 글, 가입하고 찜하세요!</span> <RightIcon />
+            <ContentsLink
+              to={isLoggedIn ? '/mypage' : '/register'}
+              className="content__subtext"
+            >
+              <span>마음에 드는 글, </span>
+              <span>가입하고 찜하세요!</span> <RightIcon />
             </ContentsLink>
           </UpFadeIn>
         </div>
