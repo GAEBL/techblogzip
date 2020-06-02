@@ -156,23 +156,18 @@ def trend(request):
     end_date = request.query_params.get('enddate')
     target_data = request.query_params.get('targetdata')
 
-    with open('language.pickle', 'rb') as f:
-        language_tag = pickle.load(f)
-    with open('lib.pickle', 'rb') as f:
-        lib_tag = pickle.load(f)
-    with open('frontend.pickle', 'rb') as f:
-        frontend_tag = pickle.load(f)
-    with open('backend.pickle', 'rb') as f:
-        backend_tag = pickle.load(f)
-
     if target_data == 'language':
-        target_tag = language_tag
+        with open('language.pickle', 'rb') as f:
+            target_tag = pickle.load(f)
     elif target_data == 'lib':
-        target_tag = lib_tag
+        with open('lib.pickle', 'rb') as f:
+            target_tag = pickle.load(f)
     elif target_data == 'frontend':
-        target_tag = frontend_tag
+        with open('frontend.pickle', 'rb') as f:
+            target_tag = pickle.load(f)
     elif target_data == 'backend':
-        target_tag = backend_tag
+        with open('backend.pickle', 'rb') as f:
+            target_tag = pickle.load(f)
 
     query = reduce(operator.or_, (Q(tags__name__icontains=target)
                                   for target in target_tag))
@@ -183,8 +178,8 @@ def trend(request):
                                     start_date, end_date]).order_by('-date')
     except:
         company_id = 0
-        posts = Post.objects.filter(
-            date__range=[start_date, end_date]).order_by('-date')
+        posts = Post.objects.filter(query,
+                                    date__range=[start_date, end_date]).order_by('-date')
 
     tag_count = {}
     if posts.exists():
