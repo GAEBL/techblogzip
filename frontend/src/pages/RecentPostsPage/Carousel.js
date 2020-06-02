@@ -6,6 +6,7 @@ import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import { colors } from '@material-ui/core';
 import TagList from '../../components/TagList';
 import CompanyLogo from '../../components/CompanyLogo';
+import { useSelector } from 'react-redux';
 
 const CarouselWrapper = styled.div`
   height: 400px;

@@ -61,6 +61,7 @@ export const getPostsByLiked = createRequestThunk(
 );
 
 const initialState = {
+  main: [],
   posts: [],
   lastPage: null,
   resultNum: null,
@@ -78,24 +79,27 @@ const post = handleActions(
       resultNum: null,
       pageData: null,
     }),
-    [GET_ALL_POSTS_SUCCEESS]: (state, { payload: { data, lastPage } }) => ({
+    [GET_ALL_POSTS_SUCCEESS]: (
+      state,
+      { payload: { data, main, lastPage } },
+    ) => ({
       ...state,
+      main,
       posts: data, // FIXME: 나중에 페이지네이션 해야함
       lastPage: lastPage,
       error: null,
     }),
     [GET_ALL_POSTS_FAILURE]: (state, { payload: error }) => ({
       ...state,
+      main: [],
       posts: [],
       error,
     }),
-
     [GET_MAINPAGE_DATA_SUCCESS]: (
       state,
-      { payload: { data, company_count, posts_count } },
+      { payload: { company_count, posts_count } },
     ) => ({
       ...state,
-      posts: data,
       pageData: {
         companyCount: company_count,
         postsCount: posts_count,
@@ -104,7 +108,6 @@ const post = handleActions(
     }),
     [GET_MAINPAGE_DATA_FAILURE]: (state, { payload: error }) => ({
       ...state,
-      posts: [],
       pageData: null,
       error,
     }),
