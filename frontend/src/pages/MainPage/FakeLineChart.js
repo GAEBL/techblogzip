@@ -7,11 +7,11 @@ const ChartContainer = styled.div`
   width: 100%;
   @media all and (max-width: 600px) {
     height: 250px;
-    width: 400px;
+    width: 350px;
   }
   @media all and (max-width: 350px) {
     height: 200px;
-    width: 300px;
+    width: 200px;
   }
 `;
 
@@ -26,7 +26,7 @@ function FakeLineChart(props) {
           return prev + 1;
         }
       });
-    }, 3000);
+    }, 1500);
 
     return () => {
       clearInterval(interval);
@@ -52,12 +52,12 @@ function FakeLineChart(props) {
         colors={{ scheme: 'yellow_orange_red' }}
         pointSize={8}
         pointColor={{ theme: 'background' }}
-        pointBorderWidth={6}
+        pointBorderWidth={8}
         pointBorderColor={{ from: 'serieColor' }}
         enablePointLabel={false}
         pointLabel="y"
         pointLabelYOffset={-12}
-        lineWidth={6}
+        lineWidth={5}
         enableGridX={false}
         enableGridY={false}
       />
