@@ -57,7 +57,10 @@ def posts(request):
     serializer = PostSerializer(
         results, context={'request': request}, many=True)
 
-    return JsonResponse({'lastPage': last_page, 'resultNum': all_query_count, 'data': serializer.data})
+    mains = Post.objects.all().order_by('-date')[:5]
+    main_serializer = PostSerializer(mains, many=True)
+
+    return JsonResponse({'lastPage': last_page, 'resultNum': all_query_count, 'data': serializer.data, 'main': main_serializer.data})
 
 
 @api_view(['POST'])
@@ -152,7 +155,7 @@ def trend(request):
     end_date = request.query_params.get('enddate')
     target_data = request.query_params.get('targetdata')  # backend
 
-    language_tag = [] 
+    language_tag = []
     lib_tag = []
     front_tag = ['사회', '과학']
     backend_tag = ['국어', '수학']
@@ -191,7 +194,7 @@ def trend(request):
                         tag_count[tag_id] = 1
     else:
         return JsonResponse({'result': 'noData'})
-    
+
     trend_dict = {}
     for key, val in tag_count.items():
         trend_dict['name'] = key
