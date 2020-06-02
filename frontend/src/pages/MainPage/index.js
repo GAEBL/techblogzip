@@ -113,16 +113,18 @@ function MainPage(props) {
               개 기업의 기술 개발 블로그
             </span>
             <ContentsLink to="/posts" className="content__subtext">
-              최신글 보러가기 <RightIcon />
+              최신 기술 포스트
+              <RightIcon />
             </ContentsLink>
           </UpFadeIn>
         </div>
       </PageSection>
-      <PageSection bgColor={colors.grey[300]}>
+
+      <PageSection bgColor={colors.grey[900]}>
         <div className="contents">
           <UpFadeIn>
             <FakeLineChart />
-            <span className="contents__text">
+            <span className="contents__text" style={{ color: 'white' }}>
               <StyledCountUp
                 end={
                   pageData && pageData.postsCount ? pageData.postsCount : 1400
@@ -132,8 +134,12 @@ function MainPage(props) {
               />
               개의 블로그 포스트 분석
             </span>
-            <ContentsLink to="/trend" className="content__subtext">
-              트렌드 분석하기 <RightIcon />
+            <ContentsLink
+              to="/trend"
+              className="content__subtext"
+              style={{ color: 'white' }}
+            >
+              트렌드 분석 <RightIcon />
             </ContentsLink>
           </UpFadeIn>
         </div>
@@ -142,12 +148,14 @@ function MainPage(props) {
         <div className="contents">
           <UpFadeIn>
             <FakeLikeBtn />
+            <span className="contents__text">
+              마음에 드는 글, 가입하고 찜하세요!
+            </span>
             <ContentsLink
               to={isLoggedIn ? '/mypage' : '/register'}
               className="content__subtext"
             >
-              <span>마음에 드는 글, </span>
-              <span>가입하고 찜하세요!</span> <RightIcon />
+              <span>마이 페이지</span> <RightIcon />
             </ContentsLink>
           </UpFadeIn>
         </div>

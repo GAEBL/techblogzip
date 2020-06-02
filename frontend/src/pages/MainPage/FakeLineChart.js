@@ -49,15 +49,15 @@ function FakeLineChart(props) {
         axisRight={null}
         axisBottom={null}
         axisLeft={null}
-        colors={{ scheme: 'reds' }}
-        pointSize={6}
+        colors={{ scheme: 'yellow_orange_red' }}
+        pointSize={8}
         pointColor={{ theme: 'background' }}
         pointBorderWidth={6}
         pointBorderColor={{ from: 'serieColor' }}
         enablePointLabel={false}
         pointLabel="y"
         pointLabelYOffset={-12}
-        lineWidth={7}
+        lineWidth={6}
         enableGridX={false}
         enableGridY={false}
       />
