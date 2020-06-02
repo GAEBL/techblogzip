@@ -22,7 +22,7 @@ const ButtonWrapper = styled.button`
   &.active {
     transform: scale(1);
     opacity: 1;
-    border: 2px solid ${colors.deepOrange[500]};
+    border: 2px solid ${({ theme }) => theme.nonselectedMainColor[500]};
   }
 
   .logo__img {

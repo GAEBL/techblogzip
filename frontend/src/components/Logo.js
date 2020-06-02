@@ -1,23 +1,35 @@
 import React from 'react';
 import styled from 'styled-components';
+import cn from 'classnames';
 
 const LogoWrapper = styled.span`
-  font-family: 'Bungee Shade', cursive;
+  font-family: 'Bungee', cursive;
   font-size: ${(props) => props.size};
   font-weight: bold;
-  color: ${({ theme }) => theme.mainColor};
+  color: ${({ theme, color }) => (color ? color : theme.mainColor)};
   margin-bottom: ${(props) => (props.margin ? '1rem' : 0)};
-  &.vertical {
-    span {
-      display: block;
-      text-align: center;
+  text-align: center;
+
+  @media all and (max-width: 600px) {
+    &.responsive {
+      font-size: 1.5rem;
     }
   }
 `;
 
-function Logo({ size = '2.5rem', reverse = false, margin = false }) {
+function Logo({
+  size = '2.5rem',
+  margin = false,
+  color = null,
+  responsive = true,
+}) {
   return (
-    <LogoWrapper size={size} reverse={reverse} margin={margin}>
+    <LogoWrapper
+      size={size}
+      margin={margin}
+      color={color}
+      className={cn({ responsive })}
+    >
       <span>TECH</span>
       <span>BLOG</span>
       <span>.ZIP</span>

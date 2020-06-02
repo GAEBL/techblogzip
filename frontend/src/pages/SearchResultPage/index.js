@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getSearchResults, clearPosts } from '../../reducers/post';
 import PostList from '../../components/PostList';
 import SimplePagination from '../../components/Material/SimplePagination';
+import { Fade } from '@material-ui/core';
 
 const SearchResultPageWraaper = styled.div`
   max-width: ${({ theme }) => theme.maxPageWidth};
@@ -41,23 +42,25 @@ function SearchResultPage({ match }) {
   }, [dispatch, query, page]);
 
   return (
-    <SearchResultPageWraaper>
-      <h1 className="page__title">기술 블로그의 지식을 탐험하세요.</h1>
+    <Fade in={true} {...{ timeout: 1000 }}>
+      <SearchResultPageWraaper>
+        <h1 className="page__title">기술 블로그의 지식을 탐험하세요.</h1>
 
-      <div className="search__input">
-        <SearchInput />
-      </div>
-      <PostList actionType="post/GET_SEARCHRESULTS">
-        <div className="result__text">
-          <span role="img" aria-label="img">
-            🔎{'  '}
-          </span>
-          "{query}" 검색결과 ({postsCount})
+        <div className="search__input">
+          <SearchInput />
         </div>
-      </PostList>
+        <PostList actionType="post/GET_SEARCHRESULTS">
+          <div className="result__text">
+            <span role="img" aria-label="img">
+              🔎{'  '}
+            </span>
+            "{query}" 검색결과 ({postsCount})
+          </div>
+        </PostList>
 
-      <SimplePagination currentPage={page} handlePage={handlePage} />
-    </SearchResultPageWraaper>
+        <SimplePagination currentPage={page} handlePage={handlePage} />
+      </SearchResultPageWraaper>
+    </Fade>
   );
 }
 
