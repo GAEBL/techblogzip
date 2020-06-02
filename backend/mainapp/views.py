@@ -1,3 +1,4 @@
+import pickle
 from functools import reduce
 import operator
 from django.shortcuts import get_object_or_404
@@ -153,12 +154,16 @@ def trend(request):
     company = request.query_params.get('company')
     start_date = request.query_params.get('startdate')
     end_date = request.query_params.get('enddate')
-    target_data = request.query_params.get('targetdata')  # backend
+    target_data = request.query_params.get('targetdata')
 
-    language_tag = []
-    lib_tag = []
-    front_tag = ['사회', '과학']
-    backend_tag = ['국어', '수학']
+    with open('language.pickle', 'rb') as f:
+        language_tag = pickle.load(f)
+    with open('lib.pickle', 'rb') as f:
+        lib_tag = pickle.load(f)
+    with open('frontend.pickle', 'rb') as f:
+        frontend_tag = pickle.load(f)
+    with open('backend.pickle', 'rb') as f:
+        backend_tag = pickle.load(f)
 
     if target_data == 'language':
         target_tag = language_tag
@@ -196,11 +201,14 @@ def trend(request):
         return JsonResponse({'result': 'noData'})
 
     trend_dict = {}
+    trend_dict['data'] = []
     for key, val in tag_count.items():
-        trend_dict['name'] = key
-        trend_dict['value'] = val
+        trend_dict['data'].append({
+            'name': key,
+            'value': val
+        })
 
-    return JsonResponse({'data': tag_count})
+    return JsonResponse(trend_dict)
 
 
 @api_view(['GET'])
