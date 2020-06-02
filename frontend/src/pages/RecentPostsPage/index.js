@@ -8,6 +8,7 @@ import PostList from '../../components/PostList';
 import SimplePagination from '../../components/Material/SimplePagination';
 import companyLogoData from '../../lib/companyLogoData';
 import SimpleTextField from '../../components/Material/SimpleTextField';
+import Carousel from './Carousel';
 
 const RecentPostsPageWrapper = styled.div`
   max-width: ${({ theme }) => theme.maxPageWidth};
@@ -71,6 +72,7 @@ function RecentPostsPage() {
 
   return (
     <RecentPostsPageWrapper>
+      <Carousel posts={[]} />
       <Title>각 기업의 포스트를 찾아보세요.</Title>
       <CompanySelector>
         {companyLogoData.map((company) => (

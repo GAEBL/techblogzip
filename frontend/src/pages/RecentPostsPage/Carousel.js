@@ -8,7 +8,7 @@ import TagList from '../../components/TagList';
 import CompanyLogo from '../../components/CompanyLogo';
 
 const CarouselWrapper = styled.div`
-  height: 100vh;
+  height: 400px;
   position: relative;
 `;
 
