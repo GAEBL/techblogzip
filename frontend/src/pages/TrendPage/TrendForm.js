@@ -4,7 +4,7 @@ import SimpleTextField from '../../components/Material/SimpleTextField';
 import SimpleButton from '../../components/Material/SimpleButton';
 import SimpleDatePicker from '../../components/Material/SimpleDatePicker';
 import targetDatas from '../../lib/targetDatas';
-import { MenuItem, colors } from '@material-ui/core';
+import { MenuItem, colors, Fade } from '@material-ui/core';
 import DateFnsUtils from '@date-io/date-fns';
 import koLocale from 'date-fns/locale/ko';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
@@ -97,62 +97,64 @@ function TrendForm(props) {
   };
 
   return (
-    <TrendFormWrapper onSubmit={handleSubmit}>
-      <Title>
-        <span role="img" aria-label="img">
-          👀
-        </span>{' '}
-        원하는 기술 블로그의 트렌드를 확인해보세요.
-      </Title>
-      <SimpleTextField
-        label="기술 블로그"
-        select
-        value={trendForm.company}
-        name="company"
-        onChange={handleChange}
-      >
-        {companyLogoData.map((data, i) => {
-          if (i > 0) {
-            return (
-              <MenuItem key={i} value={data.name}>
-                {data.displayName}
-              </MenuItem>
-            );
-          }
-          return null;
-        })}
-      </SimpleTextField>
-      <DateWrapper>
-        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={koLocale}>
-          <SimpleDatePicker
-            label="필터링 시작일"
-            value={trendForm.startDate}
-            onChange={(date) => handleDateChange('startDate', date)}
-          />
-          <SimpleDatePicker
-            label="필터링 종료일"
-            value={trendForm.endDate}
-            onChange={(date) => handleDateChange('endDate', date)}
-          />
-        </MuiPickersUtilsProvider>
-      </DateWrapper>
-      <SimpleTextField
-        label="타겟 데이터"
-        select
-        value={trendForm.targetData}
-        name="targetData"
-        onChange={handleChange}
-      >
-        {targetDatas.map((target, i) => (
-          <MenuItem key={i} value={target.targetData}>
-            {target.displayName}
-          </MenuItem>
-        ))}
-      </SimpleTextField>
-      <SimpleButton fullWidth type="submit">
-        트렌드 분석
-      </SimpleButton>
-    </TrendFormWrapper>
+    <Fade in={true} {...{ timeout: 1000 }}>
+      <TrendFormWrapper onSubmit={handleSubmit}>
+        <Title>
+          <span role="img" aria-label="img">
+            👀
+          </span>{' '}
+          원하는 기술 블로그의 트렌드를 확인해보세요.
+        </Title>
+        <SimpleTextField
+          label="기술 블로그"
+          select
+          value={trendForm.company}
+          name="company"
+          onChange={handleChange}
+        >
+          {companyLogoData.map((data, i) => {
+            if (i > 0) {
+              return (
+                <MenuItem key={i} value={data.name}>
+                  {data.displayName}
+                </MenuItem>
+              );
+            }
+            return null;
+          })}
+        </SimpleTextField>
+        <DateWrapper>
+          <MuiPickersUtilsProvider utils={DateFnsUtils} locale={koLocale}>
+            <SimpleDatePicker
+              label="필터링 시작일"
+              value={trendForm.startDate}
+              onChange={(date) => handleDateChange('startDate', date)}
+            />
+            <SimpleDatePicker
+              label="필터링 종료일"
+              value={trendForm.endDate}
+              onChange={(date) => handleDateChange('endDate', date)}
+            />
+          </MuiPickersUtilsProvider>
+        </DateWrapper>
+        <SimpleTextField
+          label="타겟 데이터"
+          select
+          value={trendForm.targetData}
+          name="targetData"
+          onChange={handleChange}
+        >
+          {targetDatas.map((target, i) => (
+            <MenuItem key={i} value={target.targetData}>
+              {target.displayName}
+            </MenuItem>
+          ))}
+        </SimpleTextField>
+        <SimpleButton fullWidth type="submit">
+          트렌드 분석
+        </SimpleButton>
+      </TrendFormWrapper>
+    </Fade>
   );
 }
 

@@ -6,7 +6,7 @@ import Logo from './Logo';
 import { Link, withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeInput, login, register } from '../reducers/auth';
-import { colors } from '@material-ui/core';
+import { colors, Fade } from '@material-ui/core';
 
 const AuthTemplateWrapper = styled.div`
   width: 100%;
@@ -15,12 +15,14 @@ const AuthTemplateWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 1rem;
 `;
 
 const AuthForm = styled.form`
   display: grid;
   grid-gap: 0.8rem;
-  min-width: 300px;
+  width: 100%;
+  max-width: 400px;
   margin-top: 2rem;
   padding: 2rem;
   background-color: white;
@@ -93,65 +95,67 @@ function AuthTemplate({ type, history }) {
   }, [isLoggedIn, history, dispatch]);
 
   return (
-    <AuthTemplateWrapper>
-      <AuthForm onSubmit={handleSubmit}>
-        <Logo margin />
-        <SimpleTextField
-          value={form.username}
-          type="text"
-          name="username"
-          label="유저명"
-          onChange={handleChange}
-          required
-        />
+    <Fade in={true} {...{ timeout: 1000 }}>
+      <AuthTemplateWrapper>
+        <AuthForm onSubmit={handleSubmit}>
+          <Logo margin />
+          <SimpleTextField
+            value={form.username}
+            type="text"
+            name="username"
+            label="유저명"
+            onChange={handleChange}
+            required
+          />
 
-        <SimpleTextField
-          value={form.password}
-          type="password"
-          name="password"
-          label="비밀번호"
-          onChange={handleChange}
-          required
-        />
-        {type === 'register' && (
-          <>
-            <SimpleTextField
-              value={form.passwordConfirm}
-              type="password"
-              name="passwordConfirm"
-              label="비밀번호 확인"
-              onChange={handleChange}
-              required
-            />
-            <SimpleTextField
-              value={form.email}
-              type="text"
-              name="email"
-              label="이메일"
-              onChange={handleChange}
-              required
-            />
-            <StyledCheckBox>
-              <input
-                type="checkbox"
-                name="is_subscribed"
-                value={form.is_subscribed}
-                onChange={handleCheckBox}
+          <SimpleTextField
+            value={form.password}
+            type="password"
+            name="password"
+            label="비밀번호"
+            onChange={handleChange}
+            required
+          />
+          {type === 'register' && (
+            <>
+              <SimpleTextField
+                value={form.passwordConfirm}
+                type="password"
+                name="passwordConfirm"
+                label="비밀번호 확인"
+                onChange={handleChange}
+                required
               />
-              <label htmlFor="is_subscribed">이메일 구독에 동의합니다.</label>
-            </StyledCheckBox>
-          </>
-        )}
-        <ButtonContainer>
-          <SimpleButton type="submit">
-            {type === 'login' ? '로그인' : '회원가입'}
-          </SimpleButton>
-          <StyledLink to={type === 'login' ? '/register' : '/login'}>
-            {type === 'login' ? '회원가입' : '로그인'}
-          </StyledLink>
-        </ButtonContainer>
-      </AuthForm>
-    </AuthTemplateWrapper>
+              <SimpleTextField
+                value={form.email}
+                type="text"
+                name="email"
+                label="이메일"
+                onChange={handleChange}
+                required
+              />
+              <StyledCheckBox>
+                <input
+                  type="checkbox"
+                  name="is_subscribed"
+                  value={form.is_subscribed}
+                  onChange={handleCheckBox}
+                />
+                <label htmlFor="is_subscribed">이메일 구독에 동의합니다.</label>
+              </StyledCheckBox>
+            </>
+          )}
+          <ButtonContainer>
+            <SimpleButton type="submit">
+              {type === 'login' ? '로그인' : '회원가입'}
+            </SimpleButton>
+            <StyledLink to={type === 'login' ? '/register' : '/login'}>
+              {type === 'login' ? '회원가입' : '로그인'}
+            </StyledLink>
+          </ButtonContainer>
+        </AuthForm>
+      </AuthTemplateWrapper>
+    </Fade>
   );
 }
 

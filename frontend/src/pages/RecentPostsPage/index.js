@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import LogoButton from './LogoButton';
-import { MenuItem } from '@material-ui/core';
+import { MenuItem, Fade } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllPosts, clearPosts } from '../../reducers/post';
 import PostList from '../../components/PostList';
@@ -79,41 +79,42 @@ function RecentPostsPage() {
   return (
     <RecentPostsPageWrapper>
       <Carousel posts={mainPosts} />
-      <ContentsWrapper>
-        <Title>각 기업의 포스트를 찾아보세요.</Title>
-        <CompanySelector>
-          {companyLogoData.map((company) => (
-            <LogoButton
-              key={company.name}
-              company={company}
-              selected={queryParams.company}
-              handleClick={() => handleClick(company.name)}
-            />
-          ))}
-        </CompanySelector>
+      <Fade in={true} {...{ timeout: 1500 }}>
+        <ContentsWrapper>
+          <Title>각 기업의 포스트를 찾아보세요.</Title>
+          <CompanySelector>
+            {companyLogoData.map((company) => (
+              <LogoButton
+                key={company.name}
+                company={company}
+                selected={queryParams.company}
+                handleClick={() => handleClick(company.name)}
+              />
+            ))}
+          </CompanySelector>
 
-        <PostList actionType="post/GET_ALL_POSTS">
-          <DropDownBar>
-            <h1>포스트</h1>
-            <SimpleTextField
-              select
-              value={queryParams.sort}
-              name="sort"
-              onChange={handleChange}
-              size="small"
-            >
-              <MenuItem value="default">최신순</MenuItem>
-              <MenuItem value="likes">좋아요순</MenuItem>
-              <MenuItem value="user_recommendation">매칭순</MenuItem>
-            </SimpleTextField>
-          </DropDownBar>
-        </PostList>
-
-        <SimplePagination
-          currentPage={queryParams.page}
-          handlePage={handlePage}
-        />
-      </ContentsWrapper>
+          <PostList actionType="post/GET_ALL_POSTS">
+            <DropDownBar>
+              <h1>포스트</h1>
+              <SimpleTextField
+                select
+                value={queryParams.sort}
+                name="sort"
+                onChange={handleChange}
+                size="small"
+              >
+                <MenuItem value="default">최신순</MenuItem>
+                <MenuItem value="likes">좋아요순</MenuItem>
+                <MenuItem value="user_recommendation">매칭순</MenuItem>
+              </SimpleTextField>
+            </DropDownBar>
+          </PostList>
+          <SimplePagination
+            currentPage={queryParams.page}
+            handlePage={handlePage}
+          />
+        </ContentsWrapper>
+      </Fade>
     </RecentPostsPageWrapper>
   );
 }

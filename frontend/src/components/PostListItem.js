@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Card, colors } from '@material-ui/core';
+import { Card, colors, Fade } from '@material-ui/core';
 import TagList from './TagList';
 import CompanyLogo from './CompanyLogo';
 import LikeButton from './LikeButton';
@@ -72,21 +72,27 @@ function PostListItem({ post }) {
   } = post;
 
   return (
-    <ItemCard>
-      <div className="item__info">
-        <CompanyLogo name={company.name} />
-        <a className="info__title" href={url}>
-          {title}
-        </a>
-      </div>
-      <div className="item__sub__info">
-        <LikeButton postId={id} isLiked={check_liked} likeCount={like_count} />
-        <span className="item__date">{date}</span>
-      </div>
-      <p className="item__summary">{contents}</p>
-      <img className="item__img" src={image} alt="thumnail" />
-      <TagList tags={tags} />
-    </ItemCard>
+    <Fade in={true} {...{ timeout: 1500 }}>
+      <ItemCard>
+        <div className="item__info">
+          <CompanyLogo name={company.name} />
+          <a className="info__title" href={url}>
+            {title}
+          </a>
+        </div>
+        <div className="item__sub__info">
+          <LikeButton
+            postId={id}
+            isLiked={check_liked}
+            likeCount={like_count}
+          />
+          <span className="item__date">{date}</span>
+        </div>
+        <p className="item__summary">{contents}</p>
+        <img className="item__img" src={image} alt="thumnail" />
+        <TagList tags={tags} />
+      </ItemCard>
+    </Fade>
   );
 }
 

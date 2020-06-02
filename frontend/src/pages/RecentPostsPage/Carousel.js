@@ -3,10 +3,9 @@ import styled, { css } from 'styled-components';
 import cs from 'classnames';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-import { colors } from '@material-ui/core';
+import { colors, Fade } from '@material-ui/core';
 import TagList from '../../components/TagList';
 import CompanyLogo from '../../components/CompanyLogo';
-import { useSelector } from 'react-redux';
 
 const CarouselWrapper = styled.div`
   height: 400px;
@@ -177,50 +176,52 @@ function Carousel({ posts }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [posts]);
   return (
-    <CarouselWrapper>
-      <CarouselBtn
-        className="carousel__button"
-        direction="left"
-        onClick={() => handleItemNumber('left')}
-      >
-        <ArrowBackIosIcon />
-      </CarouselBtn>
-      <CarouselBtn
-        className="carousel__button"
-        direction="right"
-        onClick={() => handleItemNumber('right')}
-      >
-        <ArrowForwardIosIcon />
-      </CarouselBtn>
+    <Fade in={true} {...{ timeout: 1500 }}>
+      <CarouselWrapper>
+        <CarouselBtn
+          className="carousel__button"
+          direction="left"
+          onClick={() => handleItemNumber('left')}
+        >
+          <ArrowBackIosIcon />
+        </CarouselBtn>
+        <CarouselBtn
+          className="carousel__button"
+          direction="right"
+          onClick={() => handleItemNumber('right')}
+        >
+          <ArrowForwardIosIcon />
+        </CarouselBtn>
 
-      <DotWrapper>
-        {posts.map((_, idx) => (
-          <Dot
-            key={idx}
-            onClick={() => onDotClick(idx)}
-            className={cs({ showing: itemNumber === idx })}
-          ></Dot>
-        ))}
-      </DotWrapper>
+        <DotWrapper>
+          {posts.map((_, idx) => (
+            <Dot
+              key={idx}
+              onClick={() => onDotClick(idx)}
+              className={cs({ showing: itemNumber === idx })}
+            ></Dot>
+          ))}
+        </DotWrapper>
 
-      {posts.map((post, idx) => {
-        const { company, title, url, tags } = post;
-        return (
-          <CarouselItem
-            key={idx}
-            className={cs({ showing: itemNumber === idx })}
-          >
-            <div className="item__contents">
-              <CompanyLogo name={company.name} />
-              <a className="item__link" href={url}>
-                {title}
-              </a>
-              <TagList tags={tags} />
-            </div>
-          </CarouselItem>
-        );
-      })}
-    </CarouselWrapper>
+        {posts.map((post, idx) => {
+          const { company, title, url, tags } = post;
+          return (
+            <CarouselItem
+              key={idx}
+              className={cs({ showing: itemNumber === idx })}
+            >
+              <div className="item__contents">
+                <CompanyLogo name={company.name} />
+                <a className="item__link" href={url}>
+                  {title}
+                </a>
+                <TagList tags={tags} />
+              </div>
+            </CarouselItem>
+          );
+        })}
+      </CarouselWrapper>
+    </Fade>
   );
 }
 

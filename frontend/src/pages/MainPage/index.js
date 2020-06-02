@@ -6,7 +6,7 @@ import Introduce from './Introduce';
 import Logos from './Logos';
 import CountUp from 'react-countup';
 import UpFadeIn from './UpFadeIn';
-import { colors } from '@material-ui/core';
+import { colors, Fade } from '@material-ui/core';
 import FakeLikeBtn from './FakeLikeBtn';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import { Link } from 'react-router-dom';
@@ -94,73 +94,77 @@ function MainPage(props) {
     };
   }, [dispatch]);
   return (
-    <MainPageWrapper>
-      <PageSection gradient={false}>
-        <Introduce />
-      </PageSection>
-      <PageSection bgColor="#FAFAFA" gradient={false}>
-        <div className="contents">
-          <UpFadeIn>
-            <Logos />
-            <span className="contents__text">
-              <StyledCountUp
-                end={
-                  pageData && pageData.companyCount ? pageData.companyCount : 9
-                }
-                duration={3}
-                separator={','}
-              />
-              개 기업의 기술 개발 블로그
-            </span>
-            <ContentsLink to="/posts" className="content__subtext">
-              최신 기술 포스트
-              <RightIcon />
-            </ContentsLink>
-          </UpFadeIn>
-        </div>
-      </PageSection>
+    <Fade in={true} {...{ timeout: 1000 }}>
+      <MainPageWrapper>
+        <PageSection gradient={false}>
+          <Introduce />
+        </PageSection>
+        <PageSection bgColor="#FAFAFA" gradient={false}>
+          <div className="contents">
+            <UpFadeIn>
+              <Logos />
+              <span className="contents__text">
+                <StyledCountUp
+                  end={
+                    pageData && pageData.companyCount
+                      ? pageData.companyCount
+                      : 9
+                  }
+                  duration={3}
+                  separator={','}
+                />
+                개 기업의 기술 개발 블로그
+              </span>
+              <ContentsLink to="/posts" className="content__subtext">
+                최신 기술 포스트
+                <RightIcon />
+              </ContentsLink>
+            </UpFadeIn>
+          </div>
+        </PageSection>
 
-      <PageSection bgColor={colors.grey[900]}>
-        <div className="contents">
-          <UpFadeIn>
-            <FakeLineChart />
-            <span className="contents__text" style={{ color: 'white' }}>
-              <StyledCountUp
-                end={
-                  pageData && pageData.postsCount ? pageData.postsCount : 1400
-                }
-                duration={3}
-                separator={','}
-              />
-              개의 블로그 포스트 분석
-            </span>
-            <ContentsLink
-              to="/trend"
-              className="content__subtext"
-              style={{ color: 'white' }}
-            >
-              트렌드 분석 <RightIcon />
-            </ContentsLink>
-          </UpFadeIn>
-        </div>
-      </PageSection>
-      <PageSection bgColor={colors.orange[400]}>
-        <div className="contents">
-          <UpFadeIn>
-            <FakeLikeBtn />
-            <span className="contents__text">
-              마음에 드는 글, 가입하고 찜하세요!
-            </span>
-            <ContentsLink
-              to={isLoggedIn ? '/mypage' : '/register'}
-              className="content__subtext"
-            >
-              <span>마이 페이지</span> <RightIcon />
-            </ContentsLink>
-          </UpFadeIn>
-        </div>
-      </PageSection>
-    </MainPageWrapper>
+        <PageSection bgColor={colors.grey[900]}>
+          <div className="contents">
+            <UpFadeIn>
+              <FakeLineChart />
+              <span className="contents__text" style={{ color: 'white' }}>
+                <StyledCountUp
+                  end={
+                    pageData && pageData.postsCount ? pageData.postsCount : 1400
+                  }
+                  duration={3}
+                  separator={','}
+                />
+                개의 블로그 포스트 분석
+              </span>
+              <ContentsLink
+                to="/trend"
+                className="content__subtext"
+                style={{ color: 'white' }}
+              >
+                트렌드 분석 <RightIcon />
+              </ContentsLink>
+            </UpFadeIn>
+          </div>
+        </PageSection>
+        <PageSection bgColor={colors.orange[400]}>
+          <div className="contents">
+            <UpFadeIn>
+              <FakeLikeBtn />
+              <span className="contents__text">
+                마음에 드는 글, 가입하고 찜하세요!
+              </span>
+              <ContentsLink
+                to={isLoggedIn ? '/mypage' : '/register'}
+                className="content__subtext"
+              >
+                <span>마이 페이지</span> <RightIcon />
+              </ContentsLink>
+            </UpFadeIn>
+          </div>
+        </PageSection>
+      </MainPageWrapper>
+    </Fade>
   );
 }
 

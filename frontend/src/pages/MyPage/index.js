@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import PostList from '../../components/PostList';
 import { getPostsByLiked } from '../../reducers/post';
 import SimplePagination from '../../components/Material/SimplePagination';
+import { Fade } from '@material-ui/core';
 
 const MyPageWrapper = styled.div`
   max-width: ${({ theme }) => theme.maxPageWidth};
@@ -32,19 +33,21 @@ function MyPage({ history }) {
     dispatch(getPostsByLiked());
   }, [dispatch, isLoggedIn, history]);
   return (
-    <MyPageWrapper>
-      {isLoggedIn && (
-        <>
-          <PostList actionType="post/GET_POST_BY_LIKED">
-            <h1 className="page__title">
-              {currentUser.username}님이 스크랩한 기술 블로그
-            </h1>
-          </PostList>
+    <Fade in={true} {...{ timeout: 1000 }}>
+      <MyPageWrapper>
+        {isLoggedIn && (
+          <>
+            <PostList actionType="post/GET_POST_BY_LIKED">
+              <h1 className="page__title">
+                {currentUser.username}님이 스크랩한 기술 블로그
+              </h1>
+            </PostList>
 
-          <SimplePagination currentPage={page} handlePage={handlePage} />
-        </>
-      )}
-    </MyPageWrapper>
+            <SimplePagination currentPage={page} handlePage={handlePage} />
+          </>
+        )}
+      </MyPageWrapper>
+    </Fade>
   );
 }
 
