@@ -5,6 +5,7 @@ import _ from 'lodash';
 
 const UpFadeInWrapper = styled.div`
   padding: 1rem;
+  width: 100%;
 `;
 
 const FadeInTexts = styled.div`

@@ -3,7 +3,7 @@ import { ResponsiveLine } from '@nivo/line';
 import styled from 'styled-components';
 
 const ChartContainer = styled.div`
-  height: 300px;
+  height: 400px;
   width: 100%;
   @media all and (max-width: 600px) {
     height: 250px;

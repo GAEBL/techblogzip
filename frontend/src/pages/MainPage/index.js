@@ -122,7 +122,6 @@ function MainPage(props) {
         <div className="contents">
           <UpFadeIn>
             <FakeLineChart />
-
             <span className="contents__text">
               <StyledCountUp
                 end={
