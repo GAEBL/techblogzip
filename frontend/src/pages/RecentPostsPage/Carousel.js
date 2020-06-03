@@ -94,7 +94,7 @@ const CarouselItem = styled.div`
 const DotWrapper = styled.div`
   position: absolute;
   z-index: 2;
-  bottom: 20%;
+  bottom: 10%;
   left: 50%;
   transform: translateX(-50%);
 `;
