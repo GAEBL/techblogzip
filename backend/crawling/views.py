@@ -6,21 +6,28 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from .crawlers import naver_crawler, kakao_crawler, toast_crawler, woowabros_crawler, line_crawler, coupang_crawler, spoqa_crawler, yanolja_crawler, samsung_crawler
 from mainapp.models import Company, Post, Tag
 from crawling.textrank.textrank import TextRank
+from tqdm import tqdm
 import pandas as pd
 import pickle
+import nltk
 import json
 import re
 
 with open('./crawling/datas/techblog_list.json', 'r', encoding='utf-8') as f:
     companies = json.load(f)
 
-with open('./crawling/datas/stopwords.pkl', 'rb') as f:
-    stopwords = pickle.load(f)
+with open('./crawling/datas/korean_stopwords.pkl', 'rb') as f:
+    korean_stopwords = pickle.load(f)
+
+try:
+    english_stopwords = nltk.corpus.stopwords.words('english')
+except:
+    nltk.download('stopwords')
+    english_stopwords = nltk.corpus.stopwords.words('english')
 
 
-def remove_emoji(text):
-    remover = re.compile('[\U00010000-\U0010ffff]', flags=re.UNICODE)
-    return remover.sub(r'', text)
+def remove_others(text):
+    return re.sub(r'[^A-Za-z0-9ㄱ-힣%\-\'\[{()}\]]', r' ', text)
 
 
 @api_view(['GET'])
@@ -60,21 +67,24 @@ def add_tags(request):
     for post in posts:
         post.is_taged = False
         post.save()
+
     posts = Post.objects.filter(is_taged=0)
-    for post in posts:
-        textrank = TextRank(remove_emoji(post.contents))
-        keywords = textrank.keywords(20)
-        passwords = [word for word in keywords if word not in stopwords]
+    for post in tqdm(posts):
+        textrank = TextRank(remove_others(post.contents))
+        keywords = textrank.keywords(12)
+        passwords = [
+            word for word in keywords if word not in korean_stopwords and word not in english_stopwords]
         for word in passwords:
             tag = Tag.objects.get_or_create(name=word)[0]
             post.tags.add(tag)
         post.is_taged = True
         post.save()
+
     return JsonResponse({'status': 200})
 
 
 @api_view(['GET'])
-@permission_classes([AllowAny])
+@permission_classes([AllowAny, ])
 def check(request):
     posts = Post.objects.filter(
         company__name=request.query_params.get('company'))

@@ -1,18 +1,32 @@
-from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
+from nltk.tokenize import TreebankWordTokenizer
 from sklearn.preprocessing import normalize
-from konlpy.tag import Kkma, Okt
+from decouple import Config, RepositoryEnv
+from konlpy.tag import Kkma
+from time import sleep
 import numpy as np
+import requests
+import json
+import os
+
+
+class ETRI(object):
+    def __init__(self, n=0):
+        self.path = os.getcwd().replace('\\', '/') + '/crawling/datas/api.env'
+        self.config = Config(RepositoryEnv(self.path))
+
+        self.n = n
+        self.headers = {'Content-Type': 'application/json; charset=UTF-8'}
+        self.analysis_code = 'morp'
+        self.url = 'http://aiopen.etri.re.kr:8000/WiseNLU'
+        self.access_key = self.config.get(f'ETRI_KEY_{n}')
 
 
 class SentenceTokenizer(object):
     def __init__(self):
         self.kkma = Kkma()
-        self.okt = Okt()
-        self.stopwords = []
-
-    def add_stopwords(self, word):
-        if word is not '':
-            self.stopwords.append(word)
+        self.etri = ETRI()
+        self.sentences = []
 
     def text2sentences(self, text):
         sentences = self.kkma.sentences(text)
@@ -22,32 +36,64 @@ class SentenceTokenizer(object):
                 sentences[idx] = ''
         return sentences
 
-    def get_nouns(self, sentences):
+    def get_nouns(self, text):
         nouns = []
-        for sentence in sentences:
-            if sentence is not '':
-                temp = []
-                for noun in self.okt.nouns(sentence):
-                    if noun not in self.stopwords and len(noun) > 1:
-                        temp.append(noun)
-                nouns.append(' '.join(temp))
+
+        while True:
+            sleep(3)
+
+            response = requests.post(
+                url=self.etri.url,
+                headers=self.etri.headers,
+                data=json.dumps({
+                    'access_key': self.etri.access_key,
+                    'argument': {
+                        'analysis_code': self.etri.analysis_code,
+                        'text': text
+                    }
+                })
+            )
+
+            code = response.status_code
+            if code == 200:
+                response = response.json()
+                if response.get('result') == -1:
+                    self.etri.access_key = self.etri.config.get(
+                        f'ETRI_KEY_{(self.etri.n + 1) % 4}')
+                else:
+                    break
+
+            if code == 413:
+                if not self.sentences:
+                    self.sentences = self.text2sentences(text)
+                else:
+                    self.sentences = self.sentences[
+                        :int(len(self.sentences) * 0.9)]
+                text = ' '.join(self.sentences)
+            elif code == 429:
+                sleep(30)
+
+        if response.get('return_object') != None:
+            sentence = response.get('return_object').get('sentence')[0]
+            if sentence:
+                morps = sentence.get('morp')
+                for morp in morps:
+                    if morp.get('type') in ['SL', 'NNG', 'NNP']:
+                        if morp.get('type') == 'SL':
+                            nouns += TreebankWordTokenizer().tokenize(morp.get('lemma'))
+                        else:
+                            nouns.append(morp.get('lemma'))
+
         return nouns
 
 
 class GraphMatrix(object):
     def __init__(self):
-        self.tfidf = TfidfVectorizer()
         self.cnt_vec = CountVectorizer()
-        self.graph_sentence = []
 
-    def build_sent_graph(self, sentence):
-        tfidf_mat = self.tfidf.fit_transform(sentence).toarray()
-        self.graph_sentence = np.dot(tfidf_mat, tfidf_mat.T)
-        return self.graph_sentence
-
-    def build_words_graph(self, sentence):
+    def build_words_graph(self, words):
         cnt_vec_mat = normalize(
-            self.cnt_vec.fit_transform(sentence).toarray().astype(float), axis=0)
+            self.cnt_vec.fit_transform(words).toarray().astype(float), axis=0)
         vocab = self.cnt_vec.vocabulary_
         return np.dot(cnt_vec_mat.T, cnt_vec_mat), {vocab[word]: word for word in vocab}
 
@@ -72,33 +118,16 @@ class Rank(object):
 class TextRank(object):
     def __init__(self, text):
         self.sent_tokenizer = SentenceTokenizer()
-        self.sentences = self.sent_tokenizer.text2sentences(text)
-        self.nouns = self.sent_tokenizer.get_nouns(self.sentences)
+        self.nouns = self.sent_tokenizer.get_nouns(text)
 
         self.graph_matrix = GraphMatrix()
-        self.sent_graph = self.graph_matrix.build_sent_graph(self.nouns)
         self.words_graph, self.idx_word = self.graph_matrix.build_words_graph(
             self.nouns)
 
         self.rank = Rank()
-        self.sent_rank_idx = self.rank.get_ranks(self.sent_graph)
-        self.sorted_sent_rank_idx = sorted(
-            self.sent_rank_idx, key=lambda k: self.sent_rank_idx[k], reverse=True)
-
         self.word_rank_idx = self.rank.get_ranks(self.words_graph)
         self.sorted_word_rank_idx = sorted(
             self.word_rank_idx, key=lambda k: self.word_rank_idx[k], reverse=True)
-
-    def summarize(self, sent_num=3):
-        summary, index = [], []
-        for idx in self.sorted_sent_rank_idx[:sent_num]:
-            index.append(idx)
-
-        index.sort()
-        for idx in index:
-            summary.append(self.sentences[idx])
-
-        return summary
 
     def keywords(self, word_num=10):
         rank = Rank()
