@@ -16,6 +16,13 @@ const CarouselBtn = styled.button`
   background-color: transparent;
   position: absolute;
   border: none;
+  cursor: pointer;
+  transform: scale(0.9);
+  transition: all 0.3s;
+  :hover {
+    color: orange;
+    transform: scale(1);
+  }
   :focus {
     outline: none;
   }
