@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'recommend',
     'like',
     'search',
+    'trend',
     'rest_framework',
     'corsheaders',
     'drf_yasg',
