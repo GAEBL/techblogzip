@@ -1,6 +1,10 @@
 import pickle
-from functools import reduce
 import operator
+import math
+import json
+from functools import reduce
+from collections import Counter
+
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse, HttpResponse
 from django.db.models import Q, Count
@@ -11,10 +15,6 @@ from .serializers import *
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
-
-import math
-import json
-from collections import Counter
 
 
 def pagination(query, request):
@@ -66,21 +66,21 @@ def posts(request):
 
 @api_view(['GET'])
 @permission_classes([AllowAny, ])
-def company(request, id):
-    company = get_object_or_404(Company, id=id)
-    serializer = CompanySerializer(company)
-    return JsonResponse({'data': serializer.data})
-
-
-@api_view(['GET'])
-@permission_classes([AllowAny, ])
-def main(request):
+def home(request):
     company_count = Company.objects.all().count()
     posts_count = Post.objects.all().count()
     posts = Post.objects.all().order_by('-date')[:5]
     serializer = MainPostSerializer(posts, many=True)
     return JsonResponse({'company_count': company_count,
                          'posts_count': posts_count, 'data': serializer.data})
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny, ])
+def company(request, id):
+    company = get_object_or_404(Company, id=id)
+    serializer = CompanySerializer(company)
+    return JsonResponse({'data': serializer.data})
 
 
 @api_view(['GET'])
@@ -127,6 +127,9 @@ def trend(request):
                         tag_count[tag_id] += 1
                     else:
                         tag_count[tag_id] = 1
+
+        tag_count = dict(
+            sorted(tag_count.items(), key=lambda x: x[1], reverse=True))
     else:
         return JsonResponse({'result': 'noData'})
 
