@@ -88,56 +88,102 @@ def trend(request):
     company = request.query_params.get('company')
     start_date = request.query_params.get('startdate')
     end_date = request.query_params.get('enddate')
-    target_data = request.query_params.get('targetdata')
-
-    if target_data == 'language':
-        with open('language.pickle', 'rb') as f:
-            target_tag = pickle.load(f)
-    elif target_data == 'lib':
-        with open('lib.pickle', 'rb') as f:
-            target_tag = pickle.load(f)
-    elif target_data == 'frontend':
-        with open('frontend.pickle', 'rb') as f:
-            target_tag = pickle.load(f)
-    elif target_data == 'backend':
-        with open('backend.pickle', 'rb') as f:
-            target_tag = pickle.load(f)
-
-    query = reduce(operator.or_, (Q(tags__name__icontains=target)
-                                  for target in target_tag))
 
     try:
         company_id = get_object_or_404(Company, name=company).id
-        posts = Post.objects.filter(query, company=company_id, date__range=[
-                                    start_date, end_date]).order_by('-date')
     except:
         company_id = 0
-        posts = Post.objects.filter(query,
-                                    date__range=[start_date, end_date]).order_by('-date')
 
-    tag_count = {}
+    post_json, start_day, end_day = posts_date(company_id)
+    language, lib, frontend, backend = target(company_id, start_date, end_date)
+
+    return JsonResponse({'date': post_json, 'startDay': start_day, 'endDay': end_day, 'language': language, 'lib': lib, 'frontend': frontend, 'backend': backend})
+
+
+def posts_date(company_id):
+    if company_id != 0:
+        posts = Post.objects.filter(company=company_id).order_by('-date')
+    else:
+        posts = Post.objects.all.order_by('-date')
+
+    post_count = {}
     if posts.exists():
         for post in posts.iterator():
-            tags = post.tags
-            if tags.exists():
-                for tag in tags.values():
-                    tag_id = tag['name']  # id, name
-                    if tag_id in tag_count:
-                        tag_count[tag_id] += 1
-                    else:
-                        tag_count[tag_id] = 1
+            date = post.date.replace('.', '-')
+            if date in post_count:
+                post_count[date] += 1
+            else:
+                post_count[date] = 1
 
-        tag_count = dict(
-            sorted(tag_count.items(), key=lambda x: x[1], reverse=True))
-    else:
-        return JsonResponse({'result': 'noData'})
-
-    trend_dict = {}
-    trend_dict['data'] = []
-    for key, val in tag_count.items():
-        trend_dict['data'].append({
-            'name': key,
+    post_json = {}
+    post_json['postingDate'] = []
+    for key, val in post_count.items():
+        post_json['postingDate'].append({
+            'day': key,
             'value': val
         })
 
-    return JsonResponse(trend_dict)
+    start_day = post_json['postingDate'][0]['day']
+    end_day = post_json['postingDate'][-1]['day']
+
+    return post_json, start_day, end_day
+
+
+def target(company_id, start_date, end_date):
+    with open('language.pickle', 'rb') as f:
+        language_tag = pickle.load(f)
+    with open('lib.pickle', 'rb') as f:
+        lib_tag = pickle.load(f)
+    with open('frontend.pickle', 'rb') as f:
+        frontend_tag = pickle.load(f)
+    with open('backend.pickle', 'rb') as f:
+        backend_tag = pickle.load(f)
+
+    language, lib, frontend, backend = [], [], [], []
+    for target_tag in [language_tag, lib_tag, frontend_tag, backend_tag]:
+        query = reduce(operator.or_, (Q(tags__name__icontains=target)
+                                      for target in target_tag))
+
+        if company_id != 0:
+            posts = Post.objects.filter(query, company=company_id, date__range=[
+                                        start_date, end_date]).order_by('-date')
+        else:
+            posts = Post.objects.filter(query,
+                                        date__range=[start_date, end_date]).order_by('-date')
+
+        tag_count = {}
+        if posts.exists():
+            for post in posts.iterator():
+                tags = post.tags
+                if tags.exists():
+                    for tag in tags.values():
+                        tag_id = tag['name']  # id, name
+                        if tag_id in tag_count:
+                            tag_count[tag_id] += 1
+                        else:
+                            tag_count[tag_id] = 1
+
+            tag_count = dict(
+                sorted(tag_count.items(), key=lambda x: x[1], reverse=True))
+
+            trend_dict = {}
+            trend_dict['data'] = []
+            for key, val in tag_count.items():
+                trend_dict['data'].append({
+                    'id': key,
+                    'name': key,
+                    'value': val
+                })
+        else:
+            trend_dict = {}
+
+        if target_tag == language_tag:
+            language.append(trend_dict)
+        elif target_tag == lib_tag:
+            lib.append(trend_dict)
+        elif target_tag == frontend_tag:
+            frontend.append(trend_dict)
+        elif target_tag == backend_tag:
+            backend.append(trend_dict)
+
+    return language, lib, frontend, backend
