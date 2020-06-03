@@ -3,7 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import PostListItem from './PostListItem';
 import { clearPosts } from '../reducers/post';
 import styled from 'styled-components';
-import ZipLoading from './ZipLoading';
+import LoadingSpinner from './LoadingSpinner';
+import { colors } from '@material-ui/core';
 
 const PostListWrapper = styled.div`
   .posts__container {
@@ -33,11 +34,11 @@ function PostList({ actionType, children }) {
   }, [dispatch]);
 
   return (
-    <PostListWrapper>
+    <>
       {loading ? (
-        <ZipLoading />
+        <LoadingSpinner color={colors.orange[500]} size={80} type={'cylon'} />
       ) : (
-        <>
+        <PostListWrapper>
           {children}
           {posts && posts.length > 0 ? (
             <div className="posts__container">
@@ -48,9 +49,9 @@ function PostList({ actionType, children }) {
           ) : (
             <div className="posts__zeroitem">결과가 없습니다</div>
           )}
-        </>
+        </PostListWrapper>
       )}
-    </PostListWrapper>
+    </>
   );
 }
 

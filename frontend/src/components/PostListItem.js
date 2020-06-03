@@ -76,7 +76,12 @@ function PostListItem({ post }) {
       <ItemCard>
         <div className="item__info">
           <CompanyLogo name={company.name} />
-          <a className="info__title" href={url}>
+          <a
+            className="info__title"
+            target="_blank"
+            rel="noopener noreferrer"
+            href={url}
+          >
             {title}
           </a>
         </div>
