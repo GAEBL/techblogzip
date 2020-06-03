@@ -10,8 +10,6 @@ import companyLogoData from '../../lib/companyLogoData';
 import SimpleTextField from '../../components/Material/SimpleTextField';
 import Carousel from './Carousel';
 
-const RecentPostsPageWrapper = styled.div``;
-
 const Title = styled.h1`
   margin-bottom: 1rem;
 `;
@@ -77,7 +75,7 @@ function RecentPostsPage() {
   };
 
   return (
-    <RecentPostsPageWrapper>
+    <>
       <Carousel posts={mainPosts} />
       <Fade in={true} {...{ timeout: 1500 }}>
         <ContentsWrapper>
@@ -115,7 +113,7 @@ function RecentPostsPage() {
           />
         </ContentsWrapper>
       </Fade>
-    </RecentPostsPageWrapper>
+    </>
   );
 }
 

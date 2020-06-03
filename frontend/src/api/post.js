@@ -9,10 +9,10 @@ export const Post = {
         page,
       },
     }),
-  getMainPageData: () => client.get('/main/'),
+  getMainPageData: () => client.get('/home/'),
   //   searchPosts:() => client
   getSearchResults: ({ query, company, page }) =>
-    client.get('/search/', {
+    client.get('/search/posts/', {
       params: {
         query,
         company,
@@ -21,12 +21,12 @@ export const Post = {
     }),
   // FIXME: API
   getPostsByRelatedTag: ({ tag, page }) =>
-    client.get(`/tag/`, {
+    client.get(`search/tag/`, {
       params: {
         tag,
         page,
       },
     }),
-  toggleLike: (id) => client.post(`/posts/like/${id}/`),
-  getPostsByLiked: () => client.get(`/auth/user/likes`),
+  toggleLike: (id) => client.post(`/like/posts/${id}/`),
+  getPostsByLiked: () => client.get(`/like/user/posts/`),
 };
