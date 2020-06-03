@@ -82,25 +82,7 @@ def company(request, id):
     return JsonResponse({'data': serializer.data})
 
 
-@api_view(['GET'])
-@permission_classes([AllowAny, ])
-def trend(request):
-    company = request.query_params.get('company')
-    start_date = request.query_params.get('startdate')
-    end_date = request.query_params.get('enddate')
-
-    try:
-        company_id = get_object_or_404(Company, name=company).id
-    except:
-        company_id = 0
-
-    post_json, start_day, end_day = posts_date(company_id)
-    language, lib, frontend, backend = target(company_id, start_date, end_date)
-
-    return JsonResponse({'date': post_json, 'startDay': start_day, 'endDay': end_day, 'language': language, 'lib': lib, 'frontend': frontend, 'backend': backend})
-
-
-def posts_date(company_id):
+def post_update_count(company_id):
     if company_id != 0:
         posts = Post.objects.filter(company=company_id).order_by('-date')
     else:
@@ -115,21 +97,20 @@ def posts_date(company_id):
             else:
                 post_count[date] = 1
 
-    post_json = {}
-    post_json['postingDate'] = []
+    post_json = []
     for key, val in post_count.items():
-        post_json['postingDate'].append({
+        post_json.append({
             'day': key,
             'value': val
         })
 
-    start_day = post_json['postingDate'][0]['day']
-    end_day = post_json['postingDate'][-1]['day']
+    start_day = post_json[0]['day']
+    end_day = post_json[-1]['day']
 
     return post_json, start_day, end_day
 
 
-def target(company_id, start_date, end_date):
+def target_count(company_id, start_date, end_date):
     with open('language.pickle', 'rb') as f:
         language_tag = pickle.load(f)
     with open('lib.pickle', 'rb') as f:
@@ -139,7 +120,7 @@ def target(company_id, start_date, end_date):
     with open('backend.pickle', 'rb') as f:
         backend_tag = pickle.load(f)
 
-    language, lib, frontend, backend = [], [], [], []
+    language, lib, frontend, backend = {}, {}, {}, {}
     for target_tag in [language_tag, lib_tag, frontend_tag, backend_tag]:
         query = reduce(operator.or_, (Q(tags__name__icontains=target)
                                       for target in target_tag))
@@ -178,12 +159,44 @@ def target(company_id, start_date, end_date):
             trend_dict = {}
 
         if target_tag == language_tag:
-            language.append(trend_dict)
+            language = trend_dict
         elif target_tag == lib_tag:
-            lib.append(trend_dict)
-        elif target_tag == frontend_tag:
-            frontend.append(trend_dict)
+            lib = trend_dict
+        elif target_tag == frontend_tag: 
+            frontend = trend_dict
         elif target_tag == backend_tag:
-            backend.append(trend_dict)
+            backend = trend_dict
 
     return language, lib, frontend, backend
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny, ])
+def trend(request):
+    company = request.query_params.get('company')
+    start_date = request.query_params.get('startdate')
+    end_date = request.query_params.get('enddate')
+
+    try:
+        company_id = get_object_or_404(Company, name=company).id
+    except:
+        company_id = 0
+
+    post_json, start_day, end_day = post_update_count(company_id)
+    language, lib, frontend, backend = target_count(company_id, start_date, end_date)
+
+    return JsonResponse({'startDay': start_day, 'endDay': end_day, 'postingDate':post_json, 'language': language, 'lib': lib, 'frontend': frontend, 'backend': backend})
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny, ])
+def tag_mention_count(request):
+    company = request.query_params.get('company')
+    tag = request.query_params.get('tag')
+
+    try:
+        company_id = get_object_or_404(Company, name=company).id
+    except:
+        company_id = 0
+
+    return JsonResponse({'a':'b'})
