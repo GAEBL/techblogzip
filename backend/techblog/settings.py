@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'mainapp',
     'crawling',
     'recommend',
+    'like',
     'rest_framework',
     'corsheaders',
     'drf_yasg',

@@ -64,22 +64,6 @@ def posts(request):
     return JsonResponse({'lastPage': last_page, 'resultNum': all_query_count, 'data': serializer.data, 'main': main_serializer.data})
 
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated, ])
-def like(request, id):
-    posts = get_object_or_404(Post, id=id)
-    user = request.user
-    if user not in posts.is_liked.all():
-        posts.is_liked.add(user)
-        on_like = True
-    else:
-        posts.is_liked.remove(user)
-        on_like = False
-    posts.like_count = posts.is_liked.all().count()
-    posts.save()
-    return JsonResponse({'id': id, 'result': 'true', 'count_like': posts.like_count, 'on_like': on_like})
-
-
 @api_view(['GET'])
 @permission_classes([AllowAny, ])
 def company(request, id):

@@ -6,5 +6,4 @@ urlpatterns = [
     path('login/', views.login),
     path('check/', views.check),
     path('myinfo/', views.myinfo),
-    path('user/likes/', views.like_post),
 ]

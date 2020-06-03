@@ -32,6 +32,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('accounts.urls')),
     path('', include('mainapp.urls')),
+    path('like/', include('like.urls')),
     # 오프라인 상태에서 테스트용, 추후 crontab으로 변경
     path('crawling/', include('crawling.urls')),
     path('recommend/', include('recommend.urls')),
