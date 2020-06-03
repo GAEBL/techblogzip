@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'crawling',
     'recommend',
     'like',
+    'search',
     'rest_framework',
     'corsheaders',
     'drf_yasg',
