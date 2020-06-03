@@ -12,8 +12,6 @@ from .models import User
 from mainapp.serializers import PostSerializer
 from mainapp.views import pagination
 
-import math
-
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
