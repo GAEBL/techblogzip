@@ -1,7 +1,6 @@
 import pickle
 import operator
 import math
-import json
 from functools import reduce
 from collections import Counter
 
@@ -142,51 +141,3 @@ def trend(request):
         })
 
     return JsonResponse(trend_dict)
-
-
-@api_view(['GET'])
-@permission_classes([AllowAny, ])
-def sort_tag(request, id):  # 0: 업데이틍 전, 1: 업데이트 후
-    company_name = request.query_params.get('company', None)
-
-    try:
-        company = get_object_or_404(Company, name=company_name)
-        company_id = company.id
-        posts = Post.objects.filter(company=company_id)
-
-        tag_dict = company.tag_dict
-
-        if id == 1:  # 업데이트 후
-            tag_count = {}
-            if posts.exists():
-                for post in posts.iterator():
-                    tags = post.tags
-                    if tags.exists():
-                        for tag in tags.values():
-                            tag_id = tag['name']  # id, name
-                            if tag_id in tag_count:
-                                tag_count[tag_id] += 1
-                            else:
-                                tag_count[tag_id] = 1
-
-            tag_count = dict(
-                sorted(tag_count.items(), key=lambda x: x[1], reverse=True))
-            result = json.dumps(tag_count, ensure_ascii=False)
-            company.tag_dict = result
-            company.save()
-        elif id == 0:  # 업데이트 전
-            tag_count = json.loads(tag_dict)
-    except:
-        companys = Company.objects.all()
-
-        dictionary = {}
-        tag_count = Counter(dictionary)
-        for company in companys.iterator():
-            python_tag_dict = json.loads(company.tag_dict)
-            tag_dict = Counter(python_tag_dict)
-            tag_count += tag_dict
-
-        tag_count = dict(
-            sorted(tag_count.items(), key=lambda x: x[1], reverse=True))
-
-    return JsonResponse({'company': company_name, 'data': tag_count})

@@ -6,7 +6,6 @@ class Company(models.Model):
     name = models.CharField(max_length=100)
     url = models.TextField(default='')
     description = models.TextField(default='')
-    tag_dict = models.TextField(default='')
 
     def __str__(self):
         return self.name
