@@ -188,15 +188,3 @@ def trend(request):
     return JsonResponse({'startDay': start_day, 'endDay': end_day, 'postingDate':post_json, 'language': language, 'lib': lib, 'frontend': frontend, 'backend': backend})
 
 
-@api_view(['GET'])
-@permission_classes([AllowAny, ])
-def tag_mention_count(request):
-    company = request.query_params.get('company')
-    tag = request.query_params.get('tag')
-
-    try:
-        company_id = get_object_or_404(Company, name=company).id
-    except:
-        company_id = 0
-
-    return JsonResponse({'a':'b'})
