@@ -6,8 +6,6 @@ from rest_framework.decorators import api_view, permission_classes, authenticati
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_jwt.settings import api_settings
-from rest_framework_jwt.serializers import VerifyJSONWebTokenSerializer
-from rest_framework.pagination import PageNumberPagination
 
 from .serializers import UserSerializer
 from .models import User
