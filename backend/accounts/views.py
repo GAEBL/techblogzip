@@ -6,15 +6,11 @@ from rest_framework.decorators import api_view, permission_classes, authenticati
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_jwt.settings import api_settings
-from rest_framework_jwt.serializers import VerifyJSONWebTokenSerializer
-from rest_framework.pagination import PageNumberPagination
 
 from .serializers import UserSerializer
 from .models import User
 from mainapp.serializers import PostSerializer
 from mainapp.views import pagination
-
-import math
 
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
@@ -81,7 +77,7 @@ def check(request):
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated, ])
 @authentication_classes([JSONWebTokenAuthentication, ])
-def mypage(request):
+def myinfo(request):
     global jwt_decode_handler
 
     token = request.headers.get('Authorization', None)
@@ -117,26 +113,3 @@ def mypage(request):
     elif request.method == 'DELETE':
         user.delete()
         return JsonResponse({'result': '삭제되었습니다.'})
-
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated, ])
-@authentication_classes([JSONWebTokenAuthentication, ])
-def like_post(request):
-    global jwt_decode_handler
-
-    token = request.headers.get('Authorization', None)
-
-    if token == None:
-        return HttpResponse(status=401)
-
-    user = jwt_decode_handler(token.split(' ')[1])
-    user_id = user.get('user_id')
-    user = get_object_or_404(User, id=user_id)
-    posts = user.liked_posts.all()
-
-    all_query_count, last_page, results = pagination(posts, request)
-    serializer = PostSerializer(
-        results, context={'request': request}, many=True)
-
-    return JsonResponse({'lastPage': last_page, 'resultNum': all_query_count, 'data': serializer.data})
