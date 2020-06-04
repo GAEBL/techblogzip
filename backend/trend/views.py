@@ -13,33 +13,6 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 
 
-def post_update_count(company_id):
-    if company_id != 0:
-        posts = Post.objects.filter(company=company_id).order_by('-date')
-    else:
-        posts = Post.objects.order_by('-date')
-
-    post_count = {}
-    if posts.exists():
-        for post in posts.iterator():
-            date = post.date.replace('.', '-')
-            if date in post_count:
-                post_count[date] += 1
-            else:
-                post_count[date] = 1
-
-    post_json = []
-    for key, val in post_count.items():
-        post_json.append({
-            'day': key,
-            'value': val
-        })
-
-    start_day = post_json[0]['day']
-    end_day = post_json[-1]['day']
-
-    return post_json, start_day, end_day
-
 
 def target_count(company_id, start_date, end_date):
     with open('language.pickle', 'rb') as f:
@@ -113,11 +86,48 @@ def trend(request):
     except:
         company_id = 0
 
-    post_json, start_day, end_day = post_update_count(company_id)
+    
     language, lib, frontend, backend = target_count(
         company_id, start_date, end_date)
 
     return JsonResponse({'startDay': start_day, 'endDay': end_day, 'postingDate': post_json, 'language': language, 'lib': lib, 'frontend': frontend, 'backend': backend})
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny, ])
+def post_mention_count(request):
+    company = request.query_params.get('company')
+
+    try:
+        company_id = get_object_or_404(Company, name=company).id
+        posts = Post.objects.filter(company=company_id).order_by('-date')
+    except:
+        posts = Post.objects.order_by('-date')
+
+    end_posts = posts.count()
+
+    post_count = {}
+    if posts.exists():
+        for post in posts.iterator():
+            post_date = post.date
+            if post_date != '':
+                date = post_date.replace('.', '-')
+                if date in post_count:
+                    post_count[date] += 1
+                else:
+                    post_count[date] = 1
+
+    post_json = []
+    for key, val in post_count.items():
+        post_json.append({
+            'day': key,
+            'value': val
+        })
+
+    start_day = post_json[0]['day']
+    end_day = post_json[-1]['day']
+
+    return JsonResponse({'startDay': start_day, 'endDay': end_day, 'data': post_json})
 
 
 @api_view(['GET'])
@@ -138,11 +148,13 @@ def tag_mention_count(request):
     tag_date_count = {}
     if posts.exists():
         for post in posts.iterator():
-            date = post.date.replace('.', '-')
-            if date in tag_date_count:
-                tag_date_count[date] += 1
-            else:
-                tag_date_count[date] = 1
+            post_date = post.date
+            if post_date != '':
+                date = post_date.replace('.', '-')
+                if date in tag_date_count:
+                    tag_date_count[date] += 1
+                else:
+                    tag_date_count[date] = 1
 
     tag_dict = []
     for key, val in tag_date_count.items():
