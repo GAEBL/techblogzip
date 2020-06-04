@@ -8,10 +8,10 @@ const TrendPieChart = ({ data /* see data tab */ }) => (
       data={data}
       margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
       innerRadius={0.2}
-      padAngle={0.7}
+      padAngle={3}
       cornerRadius={3}
       colors={{ scheme: 'category10' }}
-      borderWidth={1}
+      borderWidth={12}
       borderColor={{ from: 'color', modifiers: [['darker', 0.2]] }}
       radialLabelsSkipAngle={10}
       radialLabelsTextXOffset={6}

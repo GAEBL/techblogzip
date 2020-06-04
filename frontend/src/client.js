@@ -3,7 +3,12 @@ import axios from 'axios';
 const client = axios.create();
 
 // LOCAL
+
+// if (process.env.NODE_ENV === 'development') {
+//   client.defaults.baseURL = 'http://192.168.0.15:8080';
+// } else {
 client.defaults.baseURL = 'http://k02c1031.p.ssafy.io:8000';
+// }
 
 // PRODUCT
 // 기본적으로 API를 요청할때 , 토큰 존재시 헤더에 붙여주는 로직

@@ -7,8 +7,8 @@ function TrendCalendar({ data }) {
     <ChartWrapper>
       <ResponsiveCalendar
         data={data.data}
-        from={data.startDay}
-        to={data.endDay}
+        from={'2017-01-01'}
+        to={data.startDay}
         emptyColor="#eeeeee"
         colors={['#61cdbb', '#97e3d5', '#e8c1a0', '#f47560']}
         margin={{ top: 40, right: 40, bottom: 40, left: 40 }}

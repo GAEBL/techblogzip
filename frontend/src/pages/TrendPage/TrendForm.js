@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import SimpleTextField from '../../components/Material/SimpleTextField';
 import SimpleButton from '../../components/Material/SimpleButton';
@@ -19,8 +19,7 @@ import LoadingSpinner from '../../components/LoadingSpinner';
 
 const TrendFormWrapper = styled.form`
   background-color: white;
-  max-width: 600px;
-  margin: 2rem auto;
+  margin: 2rem auto 6rem auto;
   display: grid;
   grid-gap: 1rem;
   padding: 2rem;

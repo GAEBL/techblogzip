@@ -109,18 +109,6 @@ const data = [
           x: 'bicycle',
           y: 188,
         },
-        {
-          x: 'horse',
-          y: 291,
-        },
-        {
-          x: 'skateboard',
-          y: 57,
-        },
-        {
-          x: 'others',
-          y: 232,
-        },
       ],
     },
     {
@@ -163,18 +151,6 @@ const data = [
           x: 'bicycle',
           y: 206,
         },
-        {
-          x: 'horse',
-          y: 288,
-        },
-        {
-          x: 'skateboard',
-          y: 149,
-        },
-        {
-          x: 'others',
-          y: 249,
-        },
       ],
     },
     {
@@ -216,18 +192,6 @@ const data = [
         {
           x: 'bicycle',
           y: 243,
-        },
-        {
-          x: 'horse',
-          y: 294,
-        },
-        {
-          x: 'skateboard',
-          y: 252,
-        },
-        {
-          x: 'others',
-          y: 107,
         },
       ],
     },
@@ -273,18 +237,6 @@ const data = [
           x: 'bicycle',
           y: 83,
         },
-        {
-          x: 'horse',
-          y: 237,
-        },
-        {
-          x: 'skateboard',
-          y: 79,
-        },
-        {
-          x: 'others',
-          y: 160,
-        },
       ],
     },
     {
@@ -327,18 +279,6 @@ const data = [
           x: 'bicycle',
           y: 276,
         },
-        {
-          x: 'horse',
-          y: 181,
-        },
-        {
-          x: 'skateboard',
-          y: 254,
-        },
-        {
-          x: 'others',
-          y: 295,
-        },
       ],
     },
     {
@@ -380,18 +320,6 @@ const data = [
         {
           x: 'bicycle',
           y: 237,
-        },
-        {
-          x: 'horse',
-          y: 17,
-        },
-        {
-          x: 'skateboard',
-          y: 31,
-        },
-        {
-          x: 'others',
-          y: 112,
         },
       ],
     },
@@ -437,18 +365,6 @@ const data = [
           x: 'bicycle',
           y: 53,
         },
-        {
-          x: 'horse',
-          y: 227,
-        },
-        {
-          x: 'skateboard',
-          y: 276,
-        },
-        {
-          x: 'others',
-          y: 140,
-        },
       ],
     },
     {
@@ -491,18 +407,6 @@ const data = [
           x: 'bicycle',
           y: 112,
         },
-        {
-          x: 'horse',
-          y: 209,
-        },
-        {
-          x: 'skateboard',
-          y: 59,
-        },
-        {
-          x: 'others',
-          y: 77,
-        },
       ],
     },
     {
@@ -544,18 +448,6 @@ const data = [
         {
           x: 'bicycle',
           y: 290,
-        },
-        {
-          x: 'horse',
-          y: 263,
-        },
-        {
-          x: 'skateboard',
-          y: 10,
-        },
-        {
-          x: 'others',
-          y: 11,
         },
       ],
     },

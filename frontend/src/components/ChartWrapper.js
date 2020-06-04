@@ -7,15 +7,6 @@ const ChartContainer = styled.div`
   align-items: center;
   height: 600px;
   width: 100%;
-
-  @media all and (max-width: 600px) {
-    height: 250px;
-    width: 350px;
-  }
-  @media all and (max-width: 350px) {
-    height: 200px;
-    width: 200px;
-  }
 `;
 
 function ChartWrapper({ children }) {

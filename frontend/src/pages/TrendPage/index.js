@@ -2,12 +2,13 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import TrendForm from './TrendForm';
 import { useSelector, useDispatch } from 'react-redux';
-import LoadingSpinner from '../../components/LoadingSpinner';
 import { Fade, colors } from '@material-ui/core';
 import InformationTemplate from './InformationTemplate';
 import PostingDate from './PostingDate';
 import TargetSelectButtons from './TargetSelectButtons';
 import { clearTrendData } from '../../reducers/trend';
+import CompanyLogo from '../../components/CompanyLogo';
+import CylonSpinner from '../../components/CylonSpinner';
 
 const TrendPageWrapper = styled.div`
   max-width: ${({ theme }) => theme.maxPageWidth};
@@ -16,6 +17,7 @@ const TrendPageWrapper = styled.div`
 `;
 
 const Card = styled.article`
+  position: relative;
   min-height: ${({ loading }) => loading && '800px'};
   height: 100%;
   background: white;
@@ -26,9 +28,6 @@ const Card = styled.article`
     0 0px 16.4px rgba(0, 0, 0, 0.033), 0 0px 34.7px rgba(0, 0, 0, 0.041),
     0 0px 80px rgba(0, 0, 0, 0.06);
   margin-bottom: 2rem;
-  .article__title {
-    font-size: 2rem;
-  }
 `;
 
 const NoData = styled.div`
@@ -38,21 +37,21 @@ const NoData = styled.div`
   align-items: center;
 `;
 
-function CylonSpinner() {
-  return <LoadingSpinner color={colors.orange[500]} size={80} type={'cylon'} />;
-}
-
 function TrendPage(props) {
-  const { loading, rankTags, companyPostingDates } = useSelector(
-    ({ loading, trend }) => ({
-      loading: {
-        getPostingDates: loading['trend/GET_COMPANY_POSTING_DATES'],
-        getRankTags: loading['trend/GET_RANK_TAGS'],
-      },
-      rankTags: trend.rankTags,
-      companyPostingDates: trend.companyPostingDates,
-    }),
-  );
+  const {
+    loading,
+    rankTags,
+    companyPostingDates,
+    selectedCompany,
+  } = useSelector(({ loading, trend }) => ({
+    loading: {
+      getPostingDates: loading['trend/GET_COMPANY_POSTING_DATES'],
+      getRankTags: loading['trend/GET_RANK_TAGS'],
+    },
+    rankTags: trend.rankTags,
+    companyPostingDates: trend.companyPostingDates,
+    selectedCompany: trend.selectedCompany,
+  }));
   const dispatch = useDispatch();
   useEffect(() => {
     return () => {
@@ -68,7 +67,7 @@ function TrendPage(props) {
         <>
           {loading.getPostingDates ? (
             <Fade in={true} {...{ timeout: 1000 }}>
-              <Card loading={true}>
+              <Card loading={'true'}>
                 <CylonSpinner />
               </Card>
             </Fade>
@@ -76,6 +75,11 @@ function TrendPage(props) {
             <>
               <Fade in={true} {...{ timeout: 1000 }}>
                 <Card>
+                  <CompanyLogo
+                    name={selectedCompany}
+                    size="150px"
+                    absol={'true'}
+                  />
                   <PostingDate data={companyPostingDates} />
                 </Card>
               </Fade>
@@ -84,7 +88,7 @@ function TrendPage(props) {
 
           {loading.getRankTags ? (
             <Fade in={true} {...{ timeout: 1000 }}>
-              <Card loading={true}>
+              <Card loading={'true'}>
                 <TargetSelectButtons />
                 <CylonSpinner />
               </Card>
@@ -99,7 +103,7 @@ function TrendPage(props) {
               </Fade>
             ) : (
               <Fade in={true} {...{ timeout: 1000 }}>
-                <Card loading={true}>
+                <Card loading={'true'}>
                   <TargetSelectButtons />
                   <NoData>데이터를 불러오는데 실패했어요!</NoData>
                 </Card>

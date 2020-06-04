@@ -41,13 +41,18 @@ export const clearTrendData = createAction(CLEAR_TREND_DATA);
 const initialState = {
   trendForm: {
     company: 'WOOWABROS',
-    startDate: new Date('2018-06-06'),
+    startDate: new Date('2018-01-01'),
     endDate: new Date(),
     targetData: 'backend',
   },
   rankTags: null,
   tagDates: null,
   companyPostingDates: null,
+  selectedCompany: null,
+  selectedDate: {
+    start: null,
+    end: null,
+  },
   error: {
     rankTags: null,
     tagDates: null,
@@ -67,6 +72,8 @@ const trend = handleActions(
         draft.rankTags = null;
         draft.tagDates = null;
         draft.companyPostingDates = null;
+        draft.selectedCompany = null;
+        draft.selectedDate = null;
         draft.error = {
           rankTags: null,
           tagDates: null,
@@ -96,11 +103,18 @@ const trend = handleActions(
     [GET_COMPANY_POSTING_DATES_SUCCES]: (state, { payload }) =>
       produce(state, (draft) => {
         draft.companyPostingDates = { ...payload };
+        draft.selectedCompany = state.trendForm.company;
+        draft.selectedDate = {
+          start: state.trendForm.startDate,
+          end: state.trendForm.endDate,
+        };
         draft.error.companyPostingDates = null;
       }),
     [GET_COMPANY_POSTING_DATES_FAILURE]: (state, { payload: error }) =>
       produce(state, (draft) => {
         draft.companyPostingDates = null;
+        draft.selectedCompany = null;
+        draft.selectedDate = null;
         draft.error.companyPostingDates = error;
       }),
   },

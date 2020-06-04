@@ -3,8 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import PostListItem from './PostListItem';
 import { clearPosts } from '../reducers/post';
 import styled from 'styled-components';
-import LoadingSpinner from './LoadingSpinner';
-import { colors } from '@material-ui/core';
+import CylonSpinner from './CylonSpinner';
 
 const PostListWrapper = styled.div`
   .posts__container {
@@ -36,7 +35,7 @@ function PostList({ actionType, children }) {
   return (
     <>
       {loading ? (
-        <LoadingSpinner color={colors.orange[500]} size={80} type={'cylon'} />
+        <CylonSpinner />
       ) : (
         <PostListWrapper>
           {children}

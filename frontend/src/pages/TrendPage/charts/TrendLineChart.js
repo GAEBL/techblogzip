@@ -8,7 +8,7 @@ function TrendLineChart({ data }) {
       <ResponsiveLine
         data={data}
         xFormat="time:%Y-%m-%d"
-        margin={{ top: 50, right: 30, bottom: 100, left: 60 }}
+        margin={{ top: 50, right: 30, bottom: 80, left: 60 }}
         xScale={{
           type: 'time',
           format: '%Y-%m-%d',
@@ -20,18 +20,21 @@ function TrendLineChart({ data }) {
           max: 'auto',
           reverse: false,
         }}
+        lineWidth={3}
+        enablePoints={false}
         axisTop={null}
         axisRight={null}
         axisBottom={null}
         // axisBottom={{
         //   format: '%b %d',
-        //   tickValues: 'every 50 days',
+        //   tickValues: 'every 100 days',
         //   tickRotation: -50,
         //   legend: 'time scale',
         //   legendOffset: -12,
         // }}
         axisLeft={{
           orient: 'left',
+          tickValues: 5,
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
@@ -52,7 +55,7 @@ function TrendLineChart({ data }) {
             direction: 'row',
             justify: false,
             translateX: 0,
-            translateY: 100,
+            translateY: 50,
             itemsSpacing: 0,
             itemDirection: 'left-to-right',
             itemWidth: 80,
