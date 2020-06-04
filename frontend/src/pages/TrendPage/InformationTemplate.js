@@ -70,8 +70,12 @@ function InformationTemplate({ rankTags }) {
   return (
     <TemplateWrapper>
       <h1 className="date">
-        {selectedDate.start.toLocaleDateString()} ~{' '}
-        {selectedDate.end.toLocaleDateString()}
+        {selectedDate && (
+          <>
+            {selectedDate.start.toLocaleDateString()} ~{' '}
+            {selectedDate.end.toLocaleDateString()}
+          </>
+        )}
       </h1>
       <MostTagSection>
         <div className="divider">

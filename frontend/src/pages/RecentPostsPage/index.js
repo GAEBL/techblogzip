@@ -103,7 +103,7 @@ function RecentPostsPage() {
               >
                 <MenuItem value="default">최신순</MenuItem>
                 <MenuItem value="likes">좋아요순</MenuItem>
-                <MenuItem value="user_recommendation">매칭순</MenuItem>
+                {/* <MenuItem value="user_recommendation">매칭순</MenuItem> */}
               </SimpleTextField>
             </DropDownBar>
           </PostList>
