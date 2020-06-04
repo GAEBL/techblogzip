@@ -113,35 +113,36 @@ def post_mention_count(request):
 @permission_classes([AllowAny, ])
 def tag_mention_count(request):
     company = request.query_params.get('company')
-    tag = request.query_params.get('tag')
+    tag = request.query_params.get('tag').replace(',', ' ').split()
 
     try:
         company_id = get_object_or_404(Company, name=company).id
         posts = post.objects.filter(company=company_id)
-        posts = posts.filter(Q(tags__name__icontains=tag)).order_by('date')
     except:
-        company_id = 0
-        posts = Post.objects.filter(
-            Q(tags__name__icontains=tag)).order_by('date')
+        posts = Post.objects.all()
 
-    tag_date_count = {}
-    if posts.exists():
-        for post in posts.iterator():
-            post_date = post.date
-            if post_date != '':
-                date = post_date.replace('.', '-')
-                if date in tag_date_count:
-                    tag_date_count[date] += 1
-                else:
-                    tag_date_count[date] = 1
+    tag_mention = []
+    for idx, tag in enumerate(tag):
+        posts = posts.filter(Q(tags__name__icontains=tag)).order_by('date')
 
-    tag_dict = {}
-    tag_dict['id'] = tag
-    tag_dict['data'] = []
-    for key, val in tag_date_count.items():
-        tag_dict['data'].append({
-            'x': key,
-            'y': val,
-        })
+        tag_date_count = {}
+        if posts.exists():
+            for post in posts.iterator():
+                post_date = post.date
+                if post_date != '':
+                    date = post_date.replace('.', '-')
+                    if date in tag_date_count:
+                        tag_date_count[date] += 1
+                    else:
+                        tag_date_count[date] = 1
 
-    return JsonResponse({'data': [tag_dict]})
+        tag_dict = {}
+        tag_dict['id'] = tag
+        tag_dict['data'] = []
+        for key, val in tag_date_count.items():
+            tag_dict['data'].append({
+                'x': key,
+                'y': val,
+            })
+        tag_mention.append(tag_dict)
+    return JsonResponse({'data': tag_mention})
