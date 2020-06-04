@@ -98,34 +98,34 @@ def trend(request):
 def post_mention_count(request):
     company = request.query_params.get('company')
 
-    if company_id != 0:
+    try:
+        company_id = get_object_or_404(Company, name=company).id
         posts = Post.objects.filter(company=company_id).order_by('-date')
-    else:
+    except:
         posts = Post.objects.order_by('-date')
 
     end_posts = posts.count()
-    print(end_posts)
+
     post_count = {}
-    idx, start_day, end_day = 0, 0, 0
     if posts.exists():
         for post in posts.iterator():
-            date = post.date.replace('.', '-')
-            if date in post_count:
-                post_count[date] += 1
-            else:
-                post_count[date] = 1
-            if idx == 0:
-                start_day = date
-            elif idx == end_posts - 1:
-                end_day = date
-            idx += 1
-    print(idx)
+            post_date = post.date
+            if post_date != '':
+                date = post_date.replace('.', '-')
+                if date in post_count:
+                    post_count[date] += 1
+                else:
+                    post_count[date] = 1
+
     post_json = []
     for key, val in post_count.items():
         post_json.append({
             'day': key,
             'value': val
         })
+
+    start_day = post_json[0]['day']
+    end_day = post_json[-1]['day']
 
     return JsonResponse({'startDay': start_day, 'endDay': end_day, 'data': post_json})
 
