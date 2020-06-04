@@ -105,6 +105,8 @@ const WideNavWrapper = styled.div`
 `;
 
 const NavLink = styled(Link)`
+  font-family: 'VT323', monospace;
+  font-size: 1.3rem;
   text-decoration: none;
   color: white;
   font-weight: bold;
@@ -127,14 +129,14 @@ function Nav() {
           <NavLink to="/">
             <Logo size="1rem" />
           </NavLink>
-          <NavLink to="/posts">최신글</NavLink>
-          <NavLink to="/trend">트렌드분석</NavLink>
+          <NavLink to="/posts">LATEST-POST</NavLink>
+          <NavLink to="/trend">ANALYZE</NavLink>
         </div>
         <div className="divider">
           {!isLoggedIn ? (
             <>
-              <NavLink to="/login">로그인</NavLink>
-              <NavLink to="/register">회원가입</NavLink>
+              <NavLink to="/login">LOGIN</NavLink>
+              <NavLink to="/register">REGISTER</NavLink>
             </>
           ) : (
             <LogoutButtonSet />

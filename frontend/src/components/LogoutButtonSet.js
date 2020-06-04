@@ -10,6 +10,8 @@ const LogoutSetWrapper = styled.div`
   margin-right: 1rem;
 
   .logout__button {
+    font-family: 'VT323', monospace;
+    font-size: 1.3rem;
     font-weight: bold;
     background-color: transparent;
     border: none;
@@ -32,6 +34,8 @@ const UserLink = styled(Link)`
   color: ${colors.deepOrange[200]};
   margin-left: 0.5rem;
   margin-right: 1rem;
+  font-size: 1.3rem;
+  font-family: 'VT323', monospace;
 `;
 
 function LogoutButtonSet({ history }) {
@@ -52,7 +56,7 @@ function LogoutButtonSet({ history }) {
       </span>
       <UserLink to="/mypage">{user.username}</UserLink>
       <button className="logout__button" onClick={onLogout}>
-        로그아웃
+        LOGOUT
       </button>
     </LogoutSetWrapper>
   );

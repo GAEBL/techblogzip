@@ -6,8 +6,10 @@ import styled from 'styled-components';
 const SpinnerWrapper = styled.div`
   height: 600px;
   .text {
+    font-family: 'VT323', monospace;
+    font-size: 2rem;
     font-weight: bold;
-    animation: tutsFade 1s 1s infinite linear alternate;
+    animation: tutsFade 0.5s 1s infinite linear alternate;
     @keyframes tutsFade {
       from {
         opacity: 1;
@@ -23,7 +25,7 @@ function CylonSpinner() {
   return (
     <SpinnerWrapper>
       <LoadingSpinner color={colors.orange[500]} size={80} type={'cylon'}>
-        <div className="text">거의 다 가져왔어요!</div>
+        <div className="text">Almost there!</div>
       </LoadingSpinner>
     </SpinnerWrapper>
   );
