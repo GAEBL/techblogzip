@@ -135,11 +135,13 @@ def tag_mention_count(request):
                 else:
                     tag_date_count[date] = 1
 
-    tag_dict = []
+    tag_dict = {}
+    tag_dict['id'] = tag
+    tag_dict['data'] = []
     for key, val in tag_date_count.items():
-        tag_dict.append({
+        tag_dict['data'].append({
             'x': key,
             'y': val,
         })
 
-    return JsonResponse({'id': tag, 'data': tag_dict})
+    return JsonResponse({'data': [tag_dict]})
