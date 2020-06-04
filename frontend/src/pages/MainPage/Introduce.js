@@ -49,6 +49,7 @@ function Introduce(props) {
       <img className="cover__img" src={imageUrl} alt="" />
       <ContentsWrapper>
         <h1>기술 블로그 지식을 한눈에,</h1>
+
         <h1 className="logo">TECHBLOG.ZIP</h1>
       </ContentsWrapper>
     </IntroduceWrapper>
