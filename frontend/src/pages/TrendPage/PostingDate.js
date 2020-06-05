@@ -38,6 +38,7 @@ const PostingDateWrapper = styled.div`
 
     .divider {
       margin: 1rem 0;
+      text-align: center;
       .divider__title {
         font-size: 1.5rem;
       }
@@ -75,7 +76,6 @@ function PostingDate({ data }) {
       <div className="divider__wrapper">
         <h3 className="divider">
           <div className="divider__title">첫 포스팅</div>
-
           <div className="day__date">
             {moment(data.endDay, 'YYYYMMDD').fromNow()}
           </div>
