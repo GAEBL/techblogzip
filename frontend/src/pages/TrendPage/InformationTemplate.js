@@ -72,8 +72,8 @@ function InformationTemplate({ rankTags }) {
       <h1 className="date">
         {selectedDate && (
           <>
-            {selectedDate.start.toLocaleDateString()} ~{' '}
-            {selectedDate.end.toLocaleDateString()}
+            {selectedDate.start && selectedDate.start.toLocaleDateString()} ~{' '}
+            {selectedDate.end && selectedDate.end.toLocaleDateString()}
           </>
         )}
       </h1>
