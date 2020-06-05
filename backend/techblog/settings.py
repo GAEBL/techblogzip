@@ -43,16 +43,20 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'accounts',
+    # applications
     'mainapp',
+    'accounts',
     'crawling',
     'recommend',
-    'like',
     'search',
     'trend',
+    'like',
+    # additional libs
     'rest_framework',
+    'dnago_crontab',
     'corsheaders',
     'drf_yasg',
+    # original libs
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
