@@ -34,6 +34,14 @@ const MyPageWrapper = styled.div`
   .page__title {
     font-size: 2rem;
     margin-bottom: 1rem;
+    padding: 1.5rem;
+    border-radius: 5px;
+    box-shadow: 0 0px 1.1px rgba(0, 0, 0, 0.019),
+      0 0px 6.3px rgba(0, 0, 0, 0.027), 0 0px 16.4px rgba(0, 0, 0, 0.033),
+      0 0px 34.7px rgba(0, 0, 0, 0.041), 0 0px 80px rgba(0, 0, 0, 0.06);
+    @media all and (max-width: 700px) {
+      font-size: 1.5rem;
+    }
   }
 
   .page__username {
