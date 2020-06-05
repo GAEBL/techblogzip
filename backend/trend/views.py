@@ -1,3 +1,4 @@
+import os
 import pickle
 import operator
 from functools import reduce
@@ -12,10 +13,14 @@ from mainapp.serializers import PostSerializer
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 
+PATH = os.getcwd().replace('\\', '/')
+
 
 @api_view(['GET'])
 @permission_classes([AllowAny, ])
 def target_count(request):
+    global PATH
+
     company = request.query_params.get('company')
     target_data = request.query_params.get('target')
     start_date = request.query_params.get('startdate')
@@ -23,16 +28,16 @@ def target_count(request):
 
     target_tag = 0
     if target_data == 'language':
-        with open('language.pickle', 'rb') as f:
+        with open(PATH + '/trend/data/language.pickle', 'rb') as f:
             target_tag = pickle.load(f)
     elif target_data == 'lib':
-        with open('lib.pickle', 'rb') as f:
+        with open(PATH + '/trend/data/lib.pickle', 'rb') as f:
             target_tag = pickle.load(f)
     elif target_data == 'frontend':
-        with open('frontend.pickle', 'rb') as f:
+        with open(PATH + '/trend/data/frontend.pickle', 'rb') as f:
             target_tag = pickle.load(f)
     elif target_data == 'backend':
-        with open('backend.pickle', 'rb') as f:
+        with open(PATH + '/trend/data/backend.pickle', 'rb') as f:
             target_tag = pickle.load(f)
 
     query = reduce(operator.or_, (Q(tags__name__icontains=target)
@@ -117,7 +122,7 @@ def tag_mention_count(request):
 
     try:
         company_id = get_object_or_404(Company, name=company).id
-        posts = post.objects.filter(company=company_id)
+        posts = Post.objects.filter(company=company_id)
     except:
         posts = Post.objects.all()
 
