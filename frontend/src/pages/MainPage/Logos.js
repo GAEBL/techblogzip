@@ -11,14 +11,14 @@ const LogosWrapper = styled.div`
 `;
 
 const Logo = styled.img`
-  width: 100px;
-  height: 100px;
+  width: 150px;
+  height: 150px;
   border-radius: 4px;
   object-fit: cover;
   border: 2px solid ${colors.grey[100]};
   @media all and (max-width: 700px) {
-    width: 50px;
-    height: 50px;
+    width: 80px;
+    height: 80px;
   }
 `;
 

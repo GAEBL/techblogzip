@@ -12,9 +12,12 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import { Link } from 'react-router-dom';
 import FakeLineChart from './FakeLineChart';
 
-const MainPageWrapper = styled.div``;
+const MainPageWrapper = styled.div`
+  scroll-snap-align: y mandatory;
+`;
 
 const PageSection = styled.section`
+  scroll-snap-align: start;
   height: 100vh;
   width: 100%;
   position: relative;
