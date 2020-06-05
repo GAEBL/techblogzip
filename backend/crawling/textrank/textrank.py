@@ -12,7 +12,7 @@ import os
 
 class ETRI(object):
     def __init__(self, n=0):
-        self.path = os.getcwd().replace('\\', '/') + '/crawling/datas/api.env'
+        self.path = os.getcwd().replace('\\', '/') + '/crawling/data/api.env'
         self.config = Config(RepositoryEnv(self.path))
 
         self.n = n
@@ -58,8 +58,9 @@ class SentenceTokenizer(object):
             if code == 200:
                 response = response.json()
                 if response.get('result') == -1:
+                    self.etri.n += 1
                     self.etri.access_key = self.etri.config.get(
-                        f'ETRI_KEY_{(self.etri.n + 1) % 4}')
+                        f'ETRI_KEY_{(self.etri.n) % 4}')
                 else:
                     break
 
