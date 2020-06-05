@@ -10,7 +10,7 @@ const TrendPieChart = ({ data /* see data tab */ }) => (
       innerRadius={0.2}
       padAngle={3}
       cornerRadius={3}
-      colors={{ scheme: 'nivo' }}
+      colors={{ scheme: 'category10' }}
       borderWidth={4}
       borderColor={{ from: 'color', modifiers: [['darker', 0.2]] }}
       radialLabelsSkipAngle={10}
@@ -19,83 +19,13 @@ const TrendPieChart = ({ data /* see data tab */ }) => (
       radialLabelsLinkOffset={0}
       radialLabelsLinkDiagonalLength={16}
       radialLabelsLinkHorizontalLength={24}
-      radialLabelsLinkStrokeWidth={1}
+      radialLabelsLinkStrokeWidth={6}
       radialLabelsLinkColor={{ from: 'color' }}
       slicesLabelsSkipAngle={10}
       slicesLabelsTextColor="#333333"
       animate={true}
       motionStiffness={90}
       motionDamping={15}
-      defs={[
-        {
-          id: 'dots',
-          type: 'patternDots',
-          background: 'inherit',
-          color: 'rgba(255, 255, 255, 0.3)',
-          size: 4,
-          padding: 1,
-          stagger: true,
-        },
-        {
-          id: 'lines',
-          type: 'patternLines',
-          background: 'inherit',
-          color: 'rgba(255, 255, 255, 0.3)',
-          rotation: -45,
-          lineWidth: 6,
-          spacing: 10,
-        },
-      ]}
-      fill={[
-        {
-          match: {
-            id: 'ruby',
-          },
-          id: 'dots',
-        },
-        {
-          match: {
-            id: 'c',
-          },
-          id: 'dots',
-        },
-        {
-          match: {
-            id: 'go',
-          },
-          id: 'dots',
-        },
-        {
-          match: {
-            id: 'python',
-          },
-          id: 'dots',
-        },
-        {
-          match: {
-            id: 'scala',
-          },
-          id: 'lines',
-        },
-        {
-          match: {
-            id: 'lisp',
-          },
-          id: 'lines',
-        },
-        {
-          match: {
-            id: 'elixir',
-          },
-          id: 'lines',
-        },
-        {
-          match: {
-            id: 'javascript',
-          },
-          id: 'lines',
-        },
-      ]}
       legends={[
         {
           anchor: 'bottom',

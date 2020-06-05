@@ -1,18 +1,18 @@
-import React from 'react';
+import React, { useMemo, useEffect } from 'react';
 import styled from 'styled-components';
 import TrendPieChart from './charts/TrendPieChart';
 import Tag from '../../components/Tag';
 import CountUp from 'react-countup';
 import UpFadeIn from '../MainPage/UpFadeIn';
-import TrendLineChart from './charts/TrendLineChart';
-import TagButtons from './TagButtons';
-import { useSelector } from 'react-redux';
+import TagCountByCompanies from './TagCountByCompanies';
+import { useSelector, useDispatch } from 'react-redux';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { colors } from '@material-ui/core';
-import TimelineIcon from '@material-ui/icons/Timeline';
+import SortIcon from '@material-ui/icons/Sort';
 import EmojiEventsOutlinedIcon from '@material-ui/icons/EmojiEventsOutlined';
 import VisibilityOutlinedIcon from '@material-ui/icons/VisibilityOutlined';
 import TrackChangesOutlinedIcon from '@material-ui/icons/TrackChangesOutlined';
+import { getTagCounts } from '../../reducers/trend';
 
 const TemplateWrapper = styled.article`
   margin-bottom: 2rem;
@@ -51,21 +51,20 @@ const StyledCountUp = styled(CountUp)`
   margin-right: 0.3rem;
 `;
 
-const LineChartLoadingWrapper = styled.div`
-  height: 600px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 function InformationTemplate({ rankTags }) {
-  const { tagDates, loading, selectedDate } = useSelector(
-    ({ trend, loading }) => ({
-      selectedDate: trend.selectedDate,
-      tagDates: trend.tagDates,
-      loading: loading['trend/GET_TAG_DATES'],
-    }),
-  );
+  const { selectedDate } = useSelector(({ trend }) => ({
+    selectedDate: trend.selectedDate,
+  }));
+
+  const tagNames = useMemo(() => {
+    return rankTags.map((tag) => tag.name);
+  }, [rankTags]);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    console.log(tagNames);
+    dispatch(getTagCounts(tagNames));
+  }, [dispatch, tagNames]);
 
   return (
     <TemplateWrapper>
@@ -102,7 +101,7 @@ function InformationTemplate({ rankTags }) {
       <div className="divider">
         <div className="title__wrapper">
           <TrackChangesOutlinedIcon />
-          <h1 className="article__title">상위 태그별 비율</h1>
+          <h1 className="article__title">블로그내 TOP10 태그별 비율</h1>
         </div>
         <UpFadeIn>
           <TrendPieChart data={rankTags} />
@@ -110,23 +109,10 @@ function InformationTemplate({ rankTags }) {
       </div>
       <div className="divider">
         <div className="title__wrapper">
-          <TimelineIcon />
-          <h1 className="article__title">상위 태그 빈도수</h1>
+          <SortIcon />
+          <h1 className="article__title">기업별 TOP10 태그 비율</h1>
         </div>
-        <TagButtons tags={rankTags} />
-        {loading ? (
-          <LineChartLoadingWrapper>
-            <LoadingSpinner
-              color={colors.orange[500]}
-              size={80}
-              type={'bubbles'}
-            />
-          </LineChartLoadingWrapper>
-        ) : tagDates ? (
-          <TrendLineChart data={tagDates} />
-        ) : (
-          <div>태그날짜 없음!</div>
-        )}
+        <TagCountByCompanies />
       </div>
     </TemplateWrapper>
   );
