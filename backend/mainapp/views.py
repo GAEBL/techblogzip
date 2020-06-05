@@ -66,8 +66,7 @@ def home(request):
     posts_count = Post.objects.all().count()
     posts = Post.objects.all().order_by('-date')[:5]
     serializer = MainPostSerializer(posts, many=True)
-    return JsonResponse({'company_count': company_count,
-                         'posts_count': posts_count, 'data': serializer.data})
+    return JsonResponse({'company_count': company_count, 'posts_count': posts_count})
 
 
 @api_view(['GET'])
