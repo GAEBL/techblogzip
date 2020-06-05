@@ -14,7 +14,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 
 def pagination(query, request):
     all_query_count = query.count()
-    query_page = all_query_count / 10
+    query_page = all_query_count / 12
     last_page = math.ceil(query_page)
     paginator = PageNumberPagination()
     results = paginator.paginate_queryset(query, request)
