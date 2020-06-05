@@ -1,4 +1,4 @@
-from .crawlers import naver_crawler, kakao_crawler, toast_crawler, woowabros_crawler, line_crawler, coupang_crawler, spoqa_crawler, yanolja_crawler, samsung_crawler
+from crawling.crawlers import naver_crawler, kakao_crawler, toast_crawler, woowabros_crawler, line_crawler, coupang_crawler, spoqa_crawler, yanolja_crawler, samsung_crawler
 from mainapp.models import Company, Post, Tag
 from crawling.textrank.textrank import TextRank
 from datetime import datetime
