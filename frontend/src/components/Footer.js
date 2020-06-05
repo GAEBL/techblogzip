@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { colors } from '@material-ui/core';
 
 const FooterWrapper = styled.footer`
   padding: 1rem;
@@ -17,7 +18,7 @@ const InnerBox = styled.div`
   justify-items: center;
   font-family: 'VT323', monospace;
   .team__slogan {
-    font-size: 5rem;
+    font-size: 3rem;
     .accent {
       color: ${({ theme }) => theme.mainColor};
     }
@@ -26,14 +27,15 @@ const InnerBox = styled.div`
   .maker {
     font-size: 1rem;
     .maker__name {
-      color: ${({ theme }) => theme.mainColor};
+      color: ${colors.amber[200]};
+      font-weight: bold;
     }
     .maker__role {
     }
   }
 
   .team__name {
-    font-size: 3rem;
+    font-size: 2rem;
   }
 `;
 

@@ -6,8 +6,6 @@ import CountUp from 'react-countup';
 import UpFadeIn from '../MainPage/UpFadeIn';
 import TagCountByCompanies from './TagCountByCompanies';
 import { useSelector, useDispatch } from 'react-redux';
-import LoadingSpinner from '../../components/LoadingSpinner';
-import { colors } from '@material-ui/core';
 import SortIcon from '@material-ui/icons/Sort';
 import EmojiEventsOutlinedIcon from '@material-ui/icons/EmojiEventsOutlined';
 import VisibilityOutlinedIcon from '@material-ui/icons/VisibilityOutlined';
@@ -62,7 +60,6 @@ function InformationTemplate({ rankTags }) {
 
   const dispatch = useDispatch();
   useEffect(() => {
-    console.log(tagNames);
     dispatch(getTagCounts(tagNames));
   }, [dispatch, tagNames]);
 
