@@ -21,7 +21,10 @@ function SimplePagination({ currentPage, handlePage }) {
           <Pagination
             count={lastPage}
             size="small"
-            onChange={(_, nextPage) => handlePage(nextPage)}
+            onChange={(_, nextPage) => {
+              window.scrollTo(0, 450);
+              handlePage(nextPage);
+            }}
             value={currentPage}
             page={currentPage}
           />
