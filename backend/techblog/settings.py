@@ -179,5 +179,5 @@ CORS_ORIGIN_ALLOW_ALL = True
 AUTH_USER_MODEL = 'accounts.User'
 
 CRONJOBS = [
-    ('0 * * * *', 'crawling.cron.crawling'),
+    ('0 * * * *', 'crawling.cron.crawling', '>> crawling_schdule.log'),
 ]
