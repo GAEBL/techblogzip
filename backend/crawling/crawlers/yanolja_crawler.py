@@ -1,4 +1,5 @@
 from .config import driver, ERROR_MESSAGE, SUCESS_MESSAGE, CSS_SELECTOR
+from selenium.webdriver.common.by import By
 from mainapp.models import Company, Post
 from tqdm import tqdm
 from time import sleep
@@ -15,7 +16,11 @@ def get_contents(company):
             return ERROR_MESSAGE
 
         div = CSS_SELECTOR('section.post-content')[0]
-        articles = div.find_elements_by_css_selector('p')
+        articles = div.find_elements_by_css_selector('h1')
+        articles += div.find_elements_by_css_selector('h2')
+        articles += div.find_elements_by_css_selector('h3')
+        articles += div.find_elements_by_css_selector('p')
+
         try:
             image = CSS_SELECTOR(
                 'header.post-head')[0].get_attribute('style').split('url("')[1][:-3]
@@ -25,7 +30,8 @@ def get_contents(company):
 
         contents = ''
         for article in articles:
-            contents += article.text + '\n'
+            if not article.find_elements_by_css_selector('code'):
+                contents += article.text + ' '
 
         post.contents = contents
         post.image = image
