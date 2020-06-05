@@ -157,7 +157,7 @@ def tag_mention_count(request):
 @permission_classes([AllowAny, ])
 def company_rank_tag(request):
     tags = request.query_params.getlist('tags[]')
-    company = {'SAMSUNG SDS': '삼성 SDS', 'YANOLJA': '야놀자', 'SPOQA': '스포카', 'COUPANG': '쿠팡',
+    company = {'SAMSUNG SDS': '삼성 SDS', 'YANOLJA': '야놀자', 'SPOQA': '스포카', 'COUPANG TECH': '쿠팡',
                'LINE ENGINEERING': 'LINE', 'WOOWABROS': '우아한 형제들', 'TOAST': 'TOAST', 'KAKAO TECH': '카카오', 'NAVER D2': '네이버'}
 
     tag_rank_dict = []
