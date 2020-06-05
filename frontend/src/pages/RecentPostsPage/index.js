@@ -11,17 +11,24 @@ import SimpleTextField from '../../components/Material/SimpleTextField';
 import Carousel from './Carousel';
 
 const Title = styled.h1`
+  font-size: 1.5rem;
   margin-bottom: 1rem;
+`;
+
+const SelectorWrapper = styled.div`
+  border-radius: 5px;
+  box-shadow: 0 0px 1.1px rgba(0, 0, 0, 0.019), 0 0px 6.3px rgba(0, 0, 0, 0.027),
+    0 0px 16.4px rgba(0, 0, 0, 0.033), 0 0px 34.7px rgba(0, 0, 0, 0.041),
+    0 0px 80px rgba(0, 0, 0, 0.06);
+  padding: 2rem;
+  margin-bottom: 1rem;
+  .selector__header {
+    display: flex;
+    justify-content: space-between;
+  }
 `;
 
 const CompanySelector = styled.div`
-  margin-bottom: 1rem;
-`;
-
-const DropDownBar = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   margin-bottom: 1rem;
 `;
 
@@ -79,21 +86,9 @@ function RecentPostsPage() {
       <Carousel posts={mainPosts} />
       <Fade in={true} {...{ timeout: 1500 }}>
         <ContentsWrapper>
-          <Title>각 기업의 포스트를 찾아보세요.</Title>
-          <CompanySelector>
-            {companyLogoData.map((company) => (
-              <LogoButton
-                key={company.name}
-                company={company}
-                selected={queryParams.company}
-                handleClick={() => handleClick(company.name)}
-              />
-            ))}
-          </CompanySelector>
-
-          <PostList actionType="post/GET_ALL_POSTS">
-            <DropDownBar>
-              <h1>포스트</h1>
+          <SelectorWrapper>
+            <div className="selector__header">
+              <Title>각 기업의 포스트를 찾아보세요.</Title>
               <SimpleTextField
                 select
                 value={queryParams.sort}
@@ -103,10 +98,22 @@ function RecentPostsPage() {
               >
                 <MenuItem value="default">최신순</MenuItem>
                 <MenuItem value="likes">좋아요순</MenuItem>
-                {/* <MenuItem value="user_recommendation">매칭순</MenuItem> */}
               </SimpleTextField>
-            </DropDownBar>
-          </PostList>
+            </div>
+
+            <CompanySelector>
+              {companyLogoData.map((company) => (
+                <LogoButton
+                  key={company.name}
+                  company={company}
+                  selected={queryParams.company}
+                  handleClick={() => handleClick(company.name)}
+                />
+              ))}
+            </CompanySelector>
+          </SelectorWrapper>
+
+          <PostList actionType="post/GET_ALL_POSTS" />
           <SimplePagination
             currentPage={queryParams.page}
             handlePage={handlePage}
