@@ -38,15 +38,6 @@ class PostSerializer(serializers.ModelSerializer):
         return False
 
 
-class MainPostSerializer(serializers.ModelSerializer):
-    company = TempCompanySerializer()
-    tags = TagSerializer(many=True)
-
-    class Meta:
-        model = Post
-        fields = ['id', 'company', 'title', 'date', 'url', 'tags', ]
-
-
 class CompanySerializer(serializers.ModelSerializer):
     post = PostSerializer(source='posts', many=True)
 
