@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     'like',
     # additional libs
     'rest_framework',
-    'dnago_crontab',
+    'django_crontab',
     'corsheaders',
     'drf_yasg',
     # original libs
