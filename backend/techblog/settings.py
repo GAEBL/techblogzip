@@ -11,14 +11,12 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
-import datetime
 import sys
 import json
+import datetime
 from django.core.exceptions import ImproperlyConfigured
 
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 with open('secrets.json') as f:
     secrets = json.loads(f.read())
@@ -36,6 +34,7 @@ SECRET_KEY = get_secret('SECRET_KEY')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
+
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
@@ -149,7 +148,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MEDIA_URL = '/media/'
 
-
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -163,7 +161,6 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 12
 }
 
-
 JWT_AUTH = {
     'JWT_SECRET_KEY': SECRET_KEY,
     'JWT_ALGORITHM': 'HS256',
@@ -175,5 +172,8 @@ JWT_AUTH = {
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-
 AUTH_USER_MODEL = 'accounts.User'
+
+CRONJOBS = [
+    ('0 * * * *', 'crawling.cron.crawling'),
+]
