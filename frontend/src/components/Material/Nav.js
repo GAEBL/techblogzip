@@ -56,19 +56,19 @@ function NavMenu({ children, isLoggedIn }) {
           <SearchInput dense={'true'} handleClose={handleClose} />
         </InputWrapper>
         <NavMenuLink to="/posts">
-          <MenuItem onClick={handleClose}>최신글</MenuItem>
+          <MenuItem onClick={handleClose}>LATEST-POST</MenuItem>
         </NavMenuLink>
         <NavMenuLink to="/trend">
-          <MenuItem onClick={handleClose}>트렌드분석</MenuItem>
+          <MenuItem onClick={handleClose}>BLOG-TREND</MenuItem>
         </NavMenuLink>
         {!isLoggedIn && (
           <NavMenuLink to="/login">
-            <MenuItem onClick={handleClose}>로그인</MenuItem>
+            <MenuItem onClick={handleClose}>LOGIN</MenuItem>
           </NavMenuLink>
         )}
         {!isLoggedIn && (
           <NavMenuLink to="/register">
-            <MenuItem onClick={handleClose}>회원가입</MenuItem>
+            <MenuItem onClick={handleClose}>REGISTER</MenuItem>
           </NavMenuLink>
         )}
         {isLoggedIn && (
@@ -130,7 +130,7 @@ function Nav() {
             <Logo size="1rem" />
           </NavLink>
           <NavLink to="/posts">LATEST-POST</NavLink>
-          <NavLink to="/trend">ANALYZE</NavLink>
+          <NavLink to="/trend">BLOG-TREND</NavLink>
         </div>
         <div className="divider">
           {!isLoggedIn ? (
