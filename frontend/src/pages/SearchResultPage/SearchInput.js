@@ -36,7 +36,7 @@ function SearchInput({ history, handleClose = null, dense = false }) {
 
   return (
     <SearchInputWrapper onSubmit={handleSubmit}>
-      <CustomPaper dense={dense}>
+      <CustomPaper dense={dense.toString()}>
         <CustomInputBase
           placeholder="검색해보세요"
           value={query}

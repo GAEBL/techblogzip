@@ -1,22 +1,25 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import SimpleTextField from '../../components/Material/SimpleTextField';
 import SimpleButton from '../../components/Material/SimpleButton';
 import SimpleDatePicker from '../../components/Material/SimpleDatePicker';
-import targetDatas from '../../lib/targetDatas';
 import { MenuItem, colors, Fade } from '@material-ui/core';
 import DateFnsUtils from '@date-io/date-fns';
 import koLocale from 'date-fns/locale/ko';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import companyLogoData from '../../lib/companyLogoData';
-import { useDispatch } from 'react-redux';
-import { getTrendData } from '../../reducers/trend';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  getRankTags,
+  getCompanyPostingDates,
+  changeInput,
+} from '../../reducers/trend';
 import moment from 'moment';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 const TrendFormWrapper = styled.form`
   background-color: white;
-  max-width: 600px;
-  margin: 2rem auto;
+  margin: 2rem auto 6rem auto;
   display: grid;
   grid-gap: 1rem;
   padding: 2rem;
@@ -41,14 +44,11 @@ const DateWrapper = styled.div`
   }
 `;
 
-function TrendForm(props) {
+function TrendForm({ loading }) {
   const dispatch = useDispatch();
-  const [trendForm, setTrendForm] = useState({
-    company: 'WOOWABROS',
-    startDate: new Date(),
-    endDate: new Date(),
-    targetData: 'lib',
-  });
+  const { trendForm } = useSelector(({ trend }) => ({
+    trendForm: trend.trendForm,
+  }));
 
   const handleDateChange = (name, date) => {
     // 바뀌기 이전 값
@@ -68,19 +68,12 @@ function TrendForm(props) {
       alert('종료일은 시작일보다 이후여야 합니다.');
       return;
     }
-
-    setTrendForm({
-      ...trendForm,
-      [name]: date,
-    });
+    dispatch(changeInput({ name, value: date }));
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setTrendForm({
-      ...trendForm,
-      [name]: value,
-    });
+    dispatch(changeInput({ name, value }));
   };
 
   const handleSubmit = (e) => {
@@ -88,12 +81,13 @@ function TrendForm(props) {
     const startDateStr = moment(trendForm.startDate).format('YYYY.MM.DD');
     const endDateStr = moment(trendForm.endDate).format('YYYY.MM.DD');
     dispatch(
-      getTrendData({
+      getRankTags({
         ...trendForm,
         startDate: startDateStr,
         endDate: endDateStr,
       }),
     );
+    dispatch(getCompanyPostingDates({ company: trendForm.company }));
   };
 
   return (
@@ -137,21 +131,13 @@ function TrendForm(props) {
             />
           </MuiPickersUtilsProvider>
         </DateWrapper>
-        <SimpleTextField
-          label="타겟 데이터"
-          select
-          value={trendForm.targetData}
-          name="targetData"
-          onChange={handleChange}
-        >
-          {targetDatas.map((target, i) => (
-            <MenuItem key={i} value={target.targetData}>
-              {target.displayName}
-            </MenuItem>
-          ))}
-        </SimpleTextField>
+
         <SimpleButton fullWidth type="submit">
-          트렌드 분석
+          {loading ? (
+            <LoadingSpinner size={25} type={'cylon'} />
+          ) : (
+            '트렌드 분석'
+          )}
         </SimpleButton>
       </TrendFormWrapper>
     </Fade>

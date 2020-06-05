@@ -56,19 +56,19 @@ function NavMenu({ children, isLoggedIn }) {
           <SearchInput dense={'true'} handleClose={handleClose} />
         </InputWrapper>
         <NavMenuLink to="/posts">
-          <MenuItem onClick={handleClose}>최신글</MenuItem>
+          <MenuItem onClick={handleClose}>LATEST-POST</MenuItem>
         </NavMenuLink>
         <NavMenuLink to="/trend">
-          <MenuItem onClick={handleClose}>트렌드분석</MenuItem>
+          <MenuItem onClick={handleClose}>BLOG-TREND</MenuItem>
         </NavMenuLink>
         {!isLoggedIn && (
           <NavMenuLink to="/login">
-            <MenuItem onClick={handleClose}>로그인</MenuItem>
+            <MenuItem onClick={handleClose}>LOGIN</MenuItem>
           </NavMenuLink>
         )}
         {!isLoggedIn && (
           <NavMenuLink to="/register">
-            <MenuItem onClick={handleClose}>회원가입</MenuItem>
+            <MenuItem onClick={handleClose}>REGISTER</MenuItem>
           </NavMenuLink>
         )}
         {isLoggedIn && (
@@ -105,6 +105,8 @@ const WideNavWrapper = styled.div`
 `;
 
 const NavLink = styled(Link)`
+  font-family: 'VT323', monospace;
+  font-size: 1.3rem;
   text-decoration: none;
   color: white;
   font-weight: bold;
@@ -127,14 +129,14 @@ function Nav() {
           <NavLink to="/">
             <Logo size="1rem" />
           </NavLink>
-          <NavLink to="/posts">최신글</NavLink>
-          <NavLink to="/trend">트렌드분석</NavLink>
+          <NavLink to="/posts">LATEST-POST</NavLink>
+          <NavLink to="/trend">BLOG-TREND</NavLink>
         </div>
         <div className="divider">
           {!isLoggedIn ? (
             <>
-              <NavLink to="/login">로그인</NavLink>
-              <NavLink to="/register">회원가입</NavLink>
+              <NavLink to="/login">LOGIN</NavLink>
+              <NavLink to="/register">REGISTER</NavLink>
             </>
           ) : (
             <LogoutButtonSet />

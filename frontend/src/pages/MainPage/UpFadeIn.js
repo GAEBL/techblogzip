@@ -4,15 +4,11 @@ import cn from 'classnames';
 import _ from 'lodash';
 
 const UpFadeInWrapper = styled.div`
-  padding: 1rem;
   width: 100%;
 `;
 
 const FadeInTexts = styled.div`
-  padding: 1rem;
   .contents {
-    display: flex;
-    align-items: center;
     /* fade-in */
     transform: translateY(50px) scale(1);
     opacity: 0;
@@ -32,7 +28,7 @@ function UpFadeIn({ children }) {
   const handleScroll = () => {
     const { innerHeight } = window; // 화면 높이
     const { y } = texts.current.getBoundingClientRect();
-    if (y < innerHeight) {
+    if (y < innerHeight + 20) {
       setFadeIn(true);
     } else {
       setFadeIn(false);

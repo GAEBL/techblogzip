@@ -31,6 +31,36 @@ const ContentsWrapper = styled.div`
     font-size: 2.5rem;
     &.logo {
       font-family: 'Bungee Hairline', cursive;
+      font-size: 4rem;
+      /* animation: neon 3s cubic-bezier(0, 1.38, 1, -0.44) infinite;
+      -moz-animation: neon 3s cubic-bezier(0, 1.38, 1, -0.44) infinite;
+      -webkit-animation: neon 3s cubic-bezier(0, 1.38, 1, -0.44) infinite; */
+      @keyframes neon {
+        0%,
+        100% {
+          text-shadow: 0 0 1vw #fa1c16, 0 0 3vw #fa1c16, 0 0 10vw #fa1c16,
+            0 0 10vw #fa1c16, 0 0 0.4vw #fed128, 0.5vw 0.5vw 0.1vw #806914;
+          color: #fed128;
+        }
+        50% {
+          text-shadow: 0 0 0.5vw #800e0b, 0 0 1.5vw #800e0b, 0 0 5vw #800e0b,
+            0 0 5vw #800e0b, 0 0 0.2vw #800e0b, 0.5vw 0.5vw 0.1vw #40340a;
+          color: #806914;
+        }
+      }
+      @keyframes flux {
+        0%,
+        100% {
+          text-shadow: 0 0 1vw #1041ff, 0 0 3vw #1041ff, 0 0 10vw #1041ff,
+            0 0 10vw #1041ff, 0 0 0.4vw #8bfdfe, 0.5vw 0.5vw 0.1vw #147280;
+          color: #28d7fe;
+        }
+        50% {
+          text-shadow: 0 0 0.5vw #082180, 0 0 1.5vw #082180, 0 0 5vw #082180,
+            0 0 5vw #082180, 0 0 0.2vw #082180, 0.5vw 0.5vw 0.1vw #0a3940;
+          color: #146c80;
+        }
+      }
     }
   }
 
@@ -38,6 +68,9 @@ const ContentsWrapper = styled.div`
     align-items: center;
     h1 {
       font-size: 1.5rem;
+      &.logo {
+        font-size: 2rem;
+      }
     }
   }
 `;

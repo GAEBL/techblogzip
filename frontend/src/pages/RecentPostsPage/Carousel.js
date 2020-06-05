@@ -16,6 +16,13 @@ const CarouselBtn = styled.button`
   background-color: transparent;
   position: absolute;
   border: none;
+  cursor: pointer;
+  transform: scale(0.9);
+  transition: all 0.3s;
+  :hover {
+    color: orange;
+    transform: scale(1);
+  }
   :focus {
     outline: none;
   }
@@ -94,7 +101,7 @@ const CarouselItem = styled.div`
 const DotWrapper = styled.div`
   position: absolute;
   z-index: 2;
-  bottom: 20%;
+  bottom: 10%;
   left: 50%;
   transform: translateX(-50%);
 `;

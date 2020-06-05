@@ -15,11 +15,14 @@ import HideAppBar from './components/Material/HideAppBar';
 import Nav from './components/Material/Nav';
 import TagPage from './pages/TagPage';
 import MyPage from './pages/MyPage';
+import ScrollTopButton from './components/ScrollTopButton';
+import 'moment/locale/ko';
 
 const AppGridWrapper = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
+  position: relative;
 `;
 
 const Contents = styled.section`
@@ -45,6 +48,7 @@ function App() {
       <HideAppBar>
         <Nav />
       </HideAppBar>
+      <ScrollTopButton />
       <Contents id="contents">
         <Switch>
           <Route path="/" component={MainPage} exact />

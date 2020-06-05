@@ -6,14 +6,16 @@ const LoadingWrapper = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 `;
 
-function LoadingSpinner({ type, size, color }) {
+function LoadingSpinner({ type, size, color, children }) {
   return (
     <LoadingWrapper>
       <ReactLoading type={type} color={color} width={size} height={size} />
+      {children}
     </LoadingWrapper>
   );
 }
