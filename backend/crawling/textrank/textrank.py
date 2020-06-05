@@ -1,6 +1,7 @@
 from sklearn.feature_extraction.text import CountVectorizer
 from nltk.tokenize import TreebankWordTokenizer
 from sklearn.preprocessing import normalize
+from techblog.settings import BASE_DIR
 from decouple import Config, RepositoryEnv
 from konlpy.tag import Kkma
 from time import sleep
@@ -12,7 +13,7 @@ import os
 
 class ETRI(object):
     def __init__(self, n=0):
-        self.path = os.getcwd().replace('\\', '/') + '/crawling/data/api.env'
+        self.path = BASE_DIR + '/crawling/data/api.env'
         self.config = Config(RepositoryEnv(self.path))
 
         self.n = n

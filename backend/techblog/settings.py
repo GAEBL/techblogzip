@@ -18,7 +18,7 @@ from django.core.exceptions import ImproperlyConfigured
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-with open('secrets.json') as f:
+with open(BASE_DIR + '/secrets.json') as f:
     secrets = json.loads(f.read())
 
 
@@ -179,5 +179,5 @@ CORS_ORIGIN_ALLOW_ALL = True
 AUTH_USER_MODEL = 'accounts.User'
 
 CRONJOBS = [
-    ('0 * * * *', 'crawling.cron.crawling', '>> crawling_schdule.log'),
+    ('*/5 * * * *', 'crawling.cron.crawling', '>> crawling_schdule.log'),
 ]

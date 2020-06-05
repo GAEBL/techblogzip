@@ -1,3 +1,4 @@
+from techblog.settings import BASE_DIR
 from selenium import webdriver
 import platform
 import os
@@ -15,9 +16,8 @@ if system_name == 'Windows':
 else:
     driver = 'chromedriver'
 
-PATH = os.getcwd().replace('\\', '/')
 driver = webdriver.Chrome(
-    f'{PATH}/crawling/crawlers/{driver}', options=options)
+    BASE_DIR + f'/crawling/crawlers/{driver}', options=options)
 
 CSS_SELECTOR = driver.find_elements_by_css_selector
 
