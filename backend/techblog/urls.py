@@ -30,14 +30,14 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('auth/', include('accounts.urls')),
     path('', include('mainapp.urls')),
     path('like/', include('like.urls')),
-    path('search/', include('search.urls')),
     path('trend/', include('trend.urls')),
+    path('auth/', include('accounts.urls')),
+    path('search/', include('search.urls')),
     path('recommend/', include('recommend.urls')),
-    path('swagger/', schema_view.with_ui('swagger')),
     path('redoc/', schema_view.with_ui('redoc')),
+    path('swagger/', schema_view.with_ui('swagger')),
 ]
 
 urlpatterns += staticfiles_urlpatterns()
