@@ -5,8 +5,8 @@ import cs from 'classnames';
 import CompanyLogo from '../../components/CompanyLogo';
 
 const ButtonWrapper = styled.button`
-  height: 60px;
-  width: 60px;
+  height: 100px;
+  width: 100px;
   padding: 0;
   margin: 0.2rem 0.5rem 0 0;
   border: 2px solid ${colors.grey[100]};
@@ -30,6 +30,11 @@ const ButtonWrapper = styled.button`
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  @media all and (max-width: 1024px) {
+    height: 60px;
+    width: 60px;
   }
 `;
 
