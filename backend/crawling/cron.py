@@ -1,5 +1,6 @@
 from crawling.crawlers import naver_crawler, kakao_crawler, toast_crawler, woowabros_crawler, line_crawler, coupang_crawler, spoqa_crawler, yanolja_crawler, samsung_crawler
 from mainapp.models import Company, Post, Tag
+from techblog.settings import BASE_DIR
 from crawling.textrank.textrank import TextRank
 from datetime import datetime
 import pickle
@@ -9,17 +10,13 @@ import re
 import os
 
 
-# set log file path
-LOG_PATH = os.getcwd().replace('\\', '/') + '/crawling/logs/'
-
-
 # set companies` blog site list
-with open('./crawling/data/techblog_list.json', 'r', encoding='utf-8') as f:
+with open(BASE_DIR + '/crawling/data/techblog_list.json', 'r', encoding='utf-8') as f:
     companies = json.load(f)
 
 
 # set stopwords
-with open('./crawling/data/korean_stopwords.pkl', 'rb') as f:
+with open(BASE_DIR + '/crawling/data/korean_stopwords.pkl', 'rb') as f:
     korean_stopwords = pickle.load(f)
 
 try:
@@ -56,11 +53,11 @@ def add_tags():
         post.save()
 
     # save all keywords as pickle
-    with open('./recommend/data/new_words.pkl', 'wb') as f:
+    with open(BASE_DIR + '/recommend/data/new_words.pkl', 'wb') as f:
         pickle.dump(words, f)
 
     # write tag patch log
-    with open(LOG_PATH + f'/{datetime.today()}_add_tags.log', 'w', encoding='utf-8') as f:
+    with open(BASE_DIR + f'/{datetime.today()}_add_tags.log', 'w', encoding='utf-8') as f:
         f.write(
             f'{datetime.today()}: ADD TAGS TO {len(posts)}')
 
@@ -91,6 +88,6 @@ def crawling():
 
     # patch tags and write crawling log
     add_tags()
-    with open(LOG_PATH + f'/{datetime.today()}_crawling.log', 'w', encoding='utf-8') as f:
+    with open(BASE_DIR + f'/{datetime.today()}_crawling.log', 'w', encoding='utf-8') as f:
         f.write(
             f'{datetime.today()}: SUCESS: {sucess}/{len(data)}, ERROR: {error}/{len(data)}')

@@ -7,13 +7,14 @@ from django.shortcuts import get_object_or_404
 from django.http import JsonResponse, HttpResponse
 from django.db.models import Q
 
+from techblog.settings import BASE_DIR
 from mainapp.models import Post, Company
 from mainapp.serializers import PostSerializer
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 
-PATH = os.getcwd().replace('\\', '/')
+PATH = BASE_DIR
 
 
 @api_view(['GET'])
