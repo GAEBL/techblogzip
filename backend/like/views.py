@@ -14,8 +14,8 @@ from rest_framework_jwt.settings import api_settings
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated, ])
-def like(request, id):
-    posts = get_object_or_404(Post, id=id)
+def like(request, post_id):
+    posts = get_object_or_404(Post, id=post_id)
     user = request.user
     if user not in posts.is_liked.all():
         posts.is_liked.add(user)
@@ -25,7 +25,7 @@ def like(request, id):
         on_like = False
     posts.like_count = posts.is_liked.all().count()
     posts.save()
-    return JsonResponse({'id': id, 'result': 'true', 'count_like': posts.like_count, 'on_like': on_like})
+    return JsonResponse({'id': post_id, 'result': 'true', 'count_like': posts.like_count, 'on_like': on_like})
 
 
 @api_view(['GET'])
