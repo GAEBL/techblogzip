@@ -32,11 +32,10 @@ export const Trend = {
     ]
   }
   */
-  getTagDates: ({ tag, company }) =>
-    client.get(`/trend/tag/`, {
+  getTagCountByCompanies: (tags) =>
+    client.get(`/trend/company/tag/`, {
       params: {
-        tag,
-        company,
+        tags,
       },
     }),
   /**

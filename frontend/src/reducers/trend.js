@@ -13,10 +13,10 @@ const [
 ] = createActionTypes('trend/GET_RANK_TAGS');
 
 const [
-  GET_TAG_DATES,
-  GET_TAG_DATES_SUCCESS,
-  GET_TAG_DATES_FAILURE,
-] = createActionTypes('trend/GET_TAG_DATES');
+  GET_TAG_COUTN_BY_COMPANIES,
+  GET_TAG_COUTN_BY_COMPANIES_SUCCESS,
+  GET_TAG_COUTN_BY_COMPANIES_FAILURE,
+] = createActionTypes('trend/GET_TAG_COUTN_BY_COMPANIES');
 
 const [
   GET_COMPANY_POSTING_DATES,
@@ -31,7 +31,10 @@ export const changeInput = createAction(CHANGE_INPUT, ({ name, value }) => ({
   value,
 }));
 export const getRankTags = createRequestThunk(GET_RANK_TAGS, Trend.getRankTags);
-export const getTagDates = createRequestThunk(GET_TAG_DATES, Trend.getTagDates);
+export const getTagCounts = createRequestThunk(
+  GET_TAG_COUTN_BY_COMPANIES,
+  Trend.getTagCountByCompanies,
+);
 export const getCompanyPostingDates = createRequestThunk(
   GET_COMPANY_POSTING_DATES,
   Trend.getCompanyPostingDates,
@@ -40,13 +43,13 @@ export const clearTrendData = createAction(CLEAR_TREND_DATA);
 
 const initialState = {
   trendForm: {
-    company: 'WOOWABROS',
+    company: 'SAMSUNG SDS',
     startDate: new Date('2018-01-01'),
     endDate: new Date(),
     targetData: 'backend',
   },
   rankTags: null,
-  tagDates: null,
+  tagCounts: null,
   companyPostingDates: null,
   selectedCompany: null,
   selectedDate: {
@@ -55,7 +58,7 @@ const initialState = {
   },
   error: {
     rankTags: null,
-    tagDates: null,
+    tagCounts: null,
     companyPostingDates: null,
   },
 };
@@ -70,19 +73,19 @@ const trend = handleActions(
     [CLEAR_TREND_DATA]: (state) =>
       produce(state, (draft) => {
         draft.rankTags = null;
-        draft.tagDates = null;
+        draft.tagCounts = null;
         draft.companyPostingDates = null;
         draft.selectedCompany = null;
         draft.selectedDate = null;
         draft.error = {
           rankTags: null,
-          tagDates: null,
+          tagCounts: null,
           companyPostingDates: null,
         };
       }),
     [GET_RANK_TAGS_SUCCESS]: (state, { payload: { data } }) =>
       produce(state, (draft) => {
-        draft.rankTags = data.slice(0, 5);
+        draft.rankTags = data.slice(0, 10);
         draft.error.rankTags = null;
       }),
     [GET_RANK_TAGS_FAILURE]: (state, { payload: error }) =>
@@ -90,15 +93,15 @@ const trend = handleActions(
         draft.rankTags = null;
         draft.error.rankTags = error;
       }),
-    [GET_TAG_DATES_SUCCESS]: (state, { payload: { data } }) =>
+    [GET_TAG_COUTN_BY_COMPANIES_SUCCESS]: (state, { payload: { data } }) =>
       produce(state, (draft) => {
-        draft.tagDates = data;
-        draft.error.tagDates = null;
+        draft.tagCounts = data;
+        draft.error.tagCounts = null;
       }),
-    [GET_TAG_DATES_FAILURE]: (state, { payload: error }) =>
+    [GET_TAG_COUTN_BY_COMPANIES_FAILURE]: (state, { payload: error }) =>
       produce(state, (draft) => {
-        draft.tagDates = null;
-        draft.error.tagDates = error;
+        draft.tagCounts = null;
+        draft.error.tagCounts = error;
       }),
     [GET_COMPANY_POSTING_DATES_SUCCES]: (state, { payload }) =>
       produce(state, (draft) => {
