@@ -151,3 +151,28 @@ def tag_mention_count(request):
             })
         tag_mention.append(tag_dict)
     return JsonResponse({'data': tag_mention})
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny, ])
+def company_rank_tag(request):
+    tags = request.query_params.getlist('tags[]')
+    company = {'SAMSUNG SDS': '삼성 SDS', 'YANOLJA': '야놀자', 'SPOQA': '스포카', 'COUPANG': '쿠팡',
+               'LINE ENGINEERING': 'LINE', 'WOOWABROS': '우아한 형제들', 'TOAST': 'TOAST', 'KAKAO TECH': '카카오', 'NAVER D2': '네이버'}
+
+    tag_rank_dict = []
+    for idx, tag in enumerate(tags):
+        posts = Post.objects.filter(Q(tags__name__icontains=tag))
+
+        tag_date_count = {}
+        tag_date_count['tag'] = tag
+        if posts.exists():
+            for post in posts.iterator():
+                post_company = str(post.company)
+                change_company_name = company[post_company]
+                if change_company_name in tag_date_count:
+                    tag_date_count[change_company_name] += 1
+                else:
+                    tag_date_count[change_company_name] = 1
+        tag_rank_dict.append(tag_date_count)
+    return JsonResponse({'data': tag_rank_dict})
