@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 
 const ButtonWrapper = styled.button`
+  cursor: pointer;
   z-index: 2;
   position: fixed;
   right: 5%;
@@ -36,7 +37,7 @@ function ScrollTopButton(props) {
   }, []);
 
   const onClick = () => {
-    window.scrollTo(0, 0);
+    window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
   };
 
   return (
