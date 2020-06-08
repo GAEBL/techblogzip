@@ -3,6 +3,7 @@ import createRequestThunk from '../lib/createRequestThunk';
 import { Trend } from '../api/trend';
 import { handleActions, createAction } from 'redux-actions';
 import produce from 'immer';
+import notAllowed from '../lib/notAllowed';
 
 const CHANGE_INPUT = 'trend/CHANGE_INPUT';
 
@@ -85,7 +86,16 @@ const trend = handleActions(
       }),
     [GET_RANK_TAGS_SUCCESS]: (state, { payload: { data } }) =>
       produce(state, (draft) => {
-        draft.rankTags = data.slice(0, 10);
+        const filteredData = [];
+        const target = state.trendForm.targetData;
+        for (let i = 0; i < data.length; i++) {
+          if (filteredData.length === 10) break;
+
+          if (notAllowed[target].includes(data[i].name)) continue;
+
+          filteredData.push(data[i]);
+        }
+        draft.rankTags = filteredData;
         draft.error.rankTags = null;
       }),
     [GET_RANK_TAGS_FAILURE]: (state, { payload: error }) =>
