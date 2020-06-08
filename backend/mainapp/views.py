@@ -41,8 +41,6 @@ def posts(request):
         else:
             posts = Post.objects.annotate(like_counts=Count(
                 'is_liked')).filter(company=company_id).order_by('-like_counts', '-date')
-    elif sort == 'user_recommendation':  # IsAuthenticated
-        pass
     else:
         if company_id == 0:
             posts = Post.objects.all().order_by('-date')

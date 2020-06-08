@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'mainapp',
     'accounts',
     'crawling',
-    'recommend',
     'search',
     'trend',
     'like',
