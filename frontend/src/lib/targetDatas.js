@@ -13,6 +13,6 @@ export default [
   },
   {
     targetData: 'lib',
-    displayName: 'LIB/FRAMEWORK',
+    displayName: '개발ETC',
   },
 ];
