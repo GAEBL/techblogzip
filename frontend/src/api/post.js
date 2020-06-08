@@ -11,11 +11,10 @@ export const Post = {
     }),
   getMainPageData: () => client.get('/home/'),
   //   searchPosts:() => client
-  getSearchResults: ({ query, company, page }) =>
+  getSearchResults: ({ query, page }) =>
     client.get('/search/posts/', {
       params: {
         query,
-        company,
         page,
       },
     }),

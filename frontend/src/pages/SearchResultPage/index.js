@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import SearchInput from './SearchInput';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
@@ -38,7 +38,6 @@ function SearchResultPage({ match, page, setPage }) {
   const handlePage = (nextPage) => setPage(nextPage);
 
   useEffect(() => {
-    console.log(query, page);
     dispatch(clearPosts());
     dispatch(getSearchResults({ query, page }));
   }, [dispatch, query, page]);

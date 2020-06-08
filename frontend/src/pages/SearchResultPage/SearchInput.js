@@ -29,9 +29,17 @@ function SearchInput({ history, handleClose = null, dense = false, setPage }) {
     if (query.length === 0) return;
     setPage(1);
     setQuery('');
+
+    if (query.includes('#')) {
+      const word = query.replace('#', '');
+      history.push(`/tag/${word}`);
+      return;
+    }
+
     if (handleClose) {
       handleClose();
     }
+
     history.push(`/search/${query}`);
   };
 
@@ -39,7 +47,7 @@ function SearchInput({ history, handleClose = null, dense = false, setPage }) {
     <SearchInputWrapper onSubmit={handleSubmit}>
       <CustomPaper dense={dense.toString()}>
         <CustomInputBase
-          placeholder="검색해보세요"
+          placeholder="#검색어로 태그검색"
           value={query}
           onChange={handleQuery}
         />
