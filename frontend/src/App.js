@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import MainPage from './pages/MainPage';
 import RecentPostsPage from './pages/RecentPostsPage';
@@ -42,11 +42,11 @@ function App() {
     dispatch(tempSetUser(JSON.parse(user)));
     dispatch(check());
   }, [dispatch]);
-
+  const [page, setPage] = useState(1);
   return (
     <AppGridWrapper>
       <HideAppBar>
-        <Nav />
+        <Nav page={page} setPage={setPage} />
       </HideAppBar>
       <ScrollTopButton />
       <Contents id="contents">
@@ -55,7 +55,11 @@ function App() {
           <Route path="/login" component={LoginPage} exact />
           <Route path="/register" component={RegisterPage} exact />
           <Route path="/posts" component={RecentPostsPage} exact />
-          <Route path="/search/:query" component={SearchResultPage} exact />
+          <Route
+            path="/search/:query"
+            component={() => <SearchResultPage page={page} setPage={setPage} />}
+            exact
+          />
           <Route path="/trend" component={TrendPage} exact />
           <Route path="/tag/:tag" component={TagPage} exact />
           <Route path="/mypage" component={MyPage} exact />

@@ -16,7 +16,7 @@ const CustomInputBase = styled(InputBase)`
   width: 100%;
 `;
 
-function SearchInput({ history, handleClose = null, dense = false }) {
+function SearchInput({ history, handleClose = null, dense = false, setPage }) {
   const [query, setQuery] = useState('');
 
   const handleQuery = (e) => {
@@ -27,6 +27,7 @@ function SearchInput({ history, handleClose = null, dense = false }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (query.length === 0) return;
+    setPage(1);
     setQuery('');
     if (handleClose) {
       handleClose();
