@@ -6,6 +6,7 @@ import { getSearchResults, clearPosts } from '../../reducers/post';
 import PostList from '../../components/PostList';
 import SimplePagination from '../../components/Material/SimplePagination';
 import { Fade } from '@material-ui/core';
+import { withRouter } from 'react-router-dom';
 
 const SearchResultPageWraaper = styled.div`
   max-width: ${({ theme }) => theme.maxPageWidth};
@@ -26,9 +27,9 @@ const SearchResultPageWraaper = styled.div`
   }
 `;
 
-function SearchResultPage({ match }) {
+function SearchResultPage({ match, page, setPage }) {
   const { query } = match.params;
-  const [page, setPage] = useState(1);
+
   const { postsCount } = useSelector(({ post }) => ({
     postsCount: post.resultNum,
   }));
@@ -37,6 +38,7 @@ function SearchResultPage({ match }) {
   const handlePage = (nextPage) => setPage(nextPage);
 
   useEffect(() => {
+    console.log(query, page);
     dispatch(clearPosts());
     dispatch(getSearchResults({ query, page }));
   }, [dispatch, query, page]);
@@ -47,7 +49,7 @@ function SearchResultPage({ match }) {
         <h1 className="page__title">기술 블로그의 지식을 탐험하세요.</h1>
 
         <div className="search__input">
-          <SearchInput />
+          <SearchInput setPage={setPage} />
         </div>
         <PostList actionType="post/GET_SEARCHRESULTS">
           <div className="result__text">
@@ -64,4 +66,4 @@ function SearchResultPage({ match }) {
   );
 }
 
-export default SearchResultPage;
+export default withRouter(SearchResultPage);
