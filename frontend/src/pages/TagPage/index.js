@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getPostsByTag } from '../../reducers/post';
 import styled from 'styled-components';
 import PostList from '../../components/PostList';
@@ -23,13 +23,13 @@ const TagPageWrapper = styled.div`
 function TagPage({ match }) {
   const dispatch = useDispatch();
   const { tag } = match.params;
-  const [page, setPage] = useState(1);
+  const { page } = useSelector(({ post }) => ({
+    page: post.page,
+  }));
 
   useEffect(() => {
     dispatch(getPostsByTag({ tag, page }));
   }, [dispatch, tag, page]);
-
-  const handlePage = (nextPage) => setPage(nextPage);
 
   return (
     <TagPageWrapper>
@@ -38,7 +38,7 @@ function TagPage({ match }) {
           <span className="tag">#{tag}</span> 관련 글
         </h1>
       </PostList>
-      <SimplePagination currentPage={page} handlePage={handlePage} />
+      <SimplePagination />
     </TagPageWrapper>
   );
 }

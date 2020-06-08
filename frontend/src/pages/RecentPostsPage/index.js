@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import LogoButton from './LogoButton';
 import { MenuItem, Fade } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllPosts, clearPosts } from '../../reducers/post';
+import { getAllPosts, setPage } from '../../reducers/post';
 import PostList from '../../components/PostList';
 import SimplePagination from '../../components/Material/SimplePagination';
 import companyLogoData from '../../lib/companyLogoData';
@@ -41,22 +41,24 @@ const ContentsWrapper = styled.div`
 
 function RecentPostsPage() {
   const dispatch = useDispatch();
-  const { mainPosts } = useSelector(({ post }) => ({
+  const { mainPosts, page } = useSelector(({ post }) => ({
     mainPosts: post.main,
+    page: post.page,
   }));
 
   const [queryParams, setQueryParams] = useState({
     company: '',
     sort: 'default',
-    page: 1,
   });
 
   useEffect(() => {
-    dispatch(getAllPosts(queryParams));
-    return () => {
-      dispatch(clearPosts());
-    };
-  }, [dispatch, queryParams]);
+    dispatch(
+      getAllPosts({
+        ...queryParams,
+        page,
+      }),
+    );
+  }, [dispatch, queryParams, page]);
 
   const handleChange = (e) => {
     const { value } = e.target;
@@ -70,15 +72,8 @@ function RecentPostsPage() {
     setQueryParams({
       ...queryParams,
       company,
-      page: 1,
     });
-  };
-
-  const handlePage = (nextPage) => {
-    setQueryParams({
-      ...queryParams,
-      page: nextPage,
-    });
+    dispatch(setPage(1));
   };
 
   return (
@@ -114,10 +109,7 @@ function RecentPostsPage() {
           </SelectorWrapper>
 
           <PostList actionType="post/GET_ALL_POSTS" />
-          <SimplePagination
-            currentPage={queryParams.page}
-            handlePage={handlePage}
-          />
+          <SimplePagination />
         </ContentsWrapper>
       </Fade>
     </>

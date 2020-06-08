@@ -1,7 +1,8 @@
 import React from 'react';
 import Pagination from '@material-ui/lab/Pagination';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import { setPage } from '../../reducers/post';
 
 const PaginationWrapper = styled.div`
   display: flex;
@@ -9,10 +10,14 @@ const PaginationWrapper = styled.div`
   margin: 2rem 0 2rem 0;
 `;
 
-function SimplePagination({ currentPage, handlePage }) {
-  const { lastPage } = useSelector(({ post }) => ({
+function SimplePagination() {
+  const { page, lastPage } = useSelector(({ post }) => ({
     lastPage: post.lastPage,
+    page: post.page,
   }));
+
+  const dispatch = useDispatch();
+  const handlePage = (page) => dispatch(setPage(page));
 
   return (
     <>
@@ -25,8 +30,8 @@ function SimplePagination({ currentPage, handlePage }) {
               window.scrollTo(0, 450);
               handlePage(nextPage);
             }}
-            value={currentPage}
-            page={currentPage}
+            value={page}
+            page={page}
           />
         </PaginationWrapper>
       )}

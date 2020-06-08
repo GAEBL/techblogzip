@@ -3,6 +3,8 @@ import { InputBase, IconButton, Paper } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setPage } from '../../reducers/post';
 
 const SearchInputWrapper = styled.form``;
 
@@ -16,9 +18,9 @@ const CustomInputBase = styled(InputBase)`
   width: 100%;
 `;
 
-function SearchInput({ history, handleClose = null, dense = false, setPage }) {
+function SearchInput({ history, handleClose = null, dense = false }) {
   const [query, setQuery] = useState('');
-
+  const dispatch = useDispatch();
   const handleQuery = (e) => {
     const { value } = e.target;
     setQuery(value);
@@ -27,7 +29,8 @@ function SearchInput({ history, handleClose = null, dense = false, setPage }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (query.length === 0) return;
-    setPage(1);
+
+    dispatch(setPage(1));
     setQuery('');
 
     if (query.includes('#')) {

@@ -27,5 +27,10 @@ export const Post = {
       },
     }),
   toggleLike: (id) => client.post(`/like/posts/${id}/`),
-  getPostsByLiked: () => client.get(`/like/user/posts/`),
+  getPostsByLiked: (page) =>
+    client.get(`/like/user/posts/`, {
+      params: {
+        page,
+      },
+    }),
 };
