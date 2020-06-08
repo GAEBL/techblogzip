@@ -1,7 +1,20 @@
 from techblog.settings import BASE_DIR
 from selenium import webdriver
 import platform
+import psutil
 import os
+
+for proc in psutil.process_iter():
+    try:
+        pname, pid = proc.name(), proc.pid
+        if pname == 'chromedriver.exe':
+            parent_pid = pid
+            parent = psutil.Process(parent_pid)
+            for child in parent.children(recursive=True):
+                child.kill()
+            parent.kill()
+    except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+        pass
 
 options = webdriver.ChromeOptions()
 options.add_argument('headless')
