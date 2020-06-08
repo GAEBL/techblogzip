@@ -35,7 +35,6 @@ urlpatterns = [
     path('trend/', include('trend.urls')),
     path('auth/', include('accounts.urls')),
     path('search/', include('search.urls')),
-    path('recommend/', include('recommend.urls')),
     path('redoc/', schema_view.with_ui('redoc')),
     path('swagger/', schema_view.with_ui('swagger')),
 ]
