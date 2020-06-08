@@ -27,18 +27,17 @@ const SearchResultPageWraaper = styled.div`
   }
 `;
 
-function SearchResultPage({ match, page, setPage }) {
+function SearchResultPage({ match }) {
   const { query } = match.params;
 
-  const { postsCount } = useSelector(({ post }) => ({
+  const { postsCount, page } = useSelector(({ post }) => ({
     postsCount: post.resultNum,
+    page: post.page,
   }));
 
   const dispatch = useDispatch();
-  const handlePage = (nextPage) => setPage(nextPage);
 
   useEffect(() => {
-    dispatch(clearPosts());
     dispatch(getSearchResults({ query, page }));
   }, [dispatch, query, page]);
 
@@ -48,7 +47,7 @@ function SearchResultPage({ match, page, setPage }) {
         <h1 className="page__title">기술 블로그의 지식을 탐험하세요.</h1>
 
         <div className="search__input">
-          <SearchInput setPage={setPage} />
+          <SearchInput />
         </div>
         <PostList actionType="post/GET_SEARCHRESULTS">
           <div className="result__text">
@@ -59,7 +58,7 @@ function SearchResultPage({ match, page, setPage }) {
           </div>
         </PostList>
 
-        <SimplePagination currentPage={page} handlePage={handlePage} />
+        <SimplePagination />
       </SearchResultPageWraaper>
     </Fade>
   );

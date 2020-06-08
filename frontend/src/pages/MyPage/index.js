@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import PostList from '../../components/PostList';
@@ -51,21 +51,21 @@ const MyPageWrapper = styled.div`
 
 function MyPage({ history }) {
   const classes = useStyle();
-  const { isLoggedIn, currentUser } = useSelector(({ user, post }) => ({
+  const { isLoggedIn, currentUser, page } = useSelector(({ user, post }) => ({
     isLoggedIn: user.isLoggedIn,
     currentUser: user.currentUser,
     posts: post.posts,
+    page: post.page,
   }));
 
-  const [page, setPage] = useState(1);
   const dispatch = useDispatch();
-  const handlePage = (nextPage) => setPage(nextPage);
+
   useEffect(() => {
     if (!isLoggedIn) {
       history.push('/');
     }
-    dispatch(getPostsByLiked());
-  }, [dispatch, isLoggedIn, history]);
+    dispatch(getPostsByLiked(page));
+  }, [dispatch, isLoggedIn, history, page]);
   return (
     <Fade in={true} {...{ timeout: 1000 }}>
       <MyPageWrapper>
@@ -78,7 +78,7 @@ function MyPage({ history }) {
               </h1>
             </PostList>
 
-            <SimplePagination currentPage={page} handlePage={handlePage} />
+            <SimplePagination />
           </>
         )}
       </MyPageWrapper>

@@ -114,7 +114,7 @@ const NavLink = styled(Link)`
 `;
 
 // 리얼 네비
-function Nav({ setPage }) {
+function Nav() {
   const { isLoggedIn } = useSelector(({ user }) => ({
     isLoggedIn: user.isLoggedIn,
   }));
@@ -142,7 +142,7 @@ function Nav({ setPage }) {
             <LogoutButtonSet />
           )}
           <div className="search__input">
-            <SearchInput dense={'true'} setPage={setPage} />
+            <SearchInput dense={'true'} />
           </div>
         </div>
       </WideNavWrapper>
