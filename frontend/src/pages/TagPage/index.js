@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getPostsByTag } from '../../reducers/post';
 import styled from 'styled-components';
@@ -23,8 +23,9 @@ const TagPageWrapper = styled.div`
 function TagPage({ match }) {
   const dispatch = useDispatch();
   const { tag } = match.params;
-  const { page } = useSelector(({ post }) => ({
+  const { page, resultNum } = useSelector(({ post }) => ({
     page: post.page,
+    resultNum: post.resultNum,
   }));
 
   useEffect(() => {
@@ -35,7 +36,8 @@ function TagPage({ match }) {
     <TagPageWrapper>
       <PostList actionType="post/GET_POSTS_BY_TAG">
         <h1 className="page__title">
-          <span className="tag">#{tag}</span> 관련 글
+          <span className="tag">#{tag}</span> 관련 글(
+          {resultNum ? resultNum : 0})
         </h1>
       </PostList>
       <SimplePagination />
