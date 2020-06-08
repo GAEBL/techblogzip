@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import SearchInput from './SearchInput';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { getSearchResults, clearPosts } from '../../reducers/post';
+import { getSearchResults } from '../../reducers/post';
 import PostList from '../../components/PostList';
 import SimplePagination from '../../components/Material/SimplePagination';
 import { Fade } from '@material-ui/core';
