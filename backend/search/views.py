@@ -48,7 +48,7 @@ def posts(request):
 def tag(request):
     tag = request.query_params.get('tag')
 
-    posts = Post.objects.filter(Q(tags__name__icontains=tag)).order_by('-date')
+    posts = Post.objects.filter(Q(tags__name=tag)).order_by('-date')
 
     if len(posts) == 0:
         return HttpResponse(status=204)
