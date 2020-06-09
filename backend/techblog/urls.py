@@ -30,13 +30,13 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('auth/', include('accounts.urls')),
     path('', include('mainapp.urls')),
-    # 오프라인 상태에서 테스트용, 추후 crontab으로 변경
-    path('crawling/', include('crawling.urls')),
-    path('recommend/', include('recommend.urls')),
-    path('swagger/', schema_view.with_ui('swagger')),
+    path('like/', include('like.urls')),
+    path('trend/', include('trend.urls')),
+    path('auth/', include('accounts.urls')),
+    path('search/', include('search.urls')),
     path('redoc/', schema_view.with_ui('redoc')),
+    path('swagger/', schema_view.with_ui('swagger')),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

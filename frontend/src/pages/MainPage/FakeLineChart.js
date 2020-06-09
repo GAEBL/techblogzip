@@ -3,15 +3,16 @@ import { ResponsiveLine } from '@nivo/line';
 import styled from 'styled-components';
 
 const ChartContainer = styled.div`
+  max-width: 900px;
   height: 400px;
   width: 100%;
   @media all and (max-width: 600px) {
     height: 250px;
-    width: 400px;
+    width: 350px;
   }
   @media all and (max-width: 350px) {
     height: 200px;
-    width: 300px;
+    width: 200px;
   }
 `;
 
@@ -26,7 +27,7 @@ function FakeLineChart(props) {
           return prev + 1;
         }
       });
-    }, 3000);
+    }, 1500);
 
     return () => {
       clearInterval(interval);
@@ -52,12 +53,12 @@ function FakeLineChart(props) {
         colors={{ scheme: 'yellow_orange_red' }}
         pointSize={8}
         pointColor={{ theme: 'background' }}
-        pointBorderWidth={6}
+        pointBorderWidth={8}
         pointBorderColor={{ from: 'serieColor' }}
         enablePointLabel={false}
         pointLabel="y"
         pointLabelYOffset={-12}
-        lineWidth={6}
+        lineWidth={5}
         enableGridX={false}
         enableGridY={false}
       />
@@ -109,18 +110,6 @@ const data = [
           x: 'bicycle',
           y: 188,
         },
-        {
-          x: 'horse',
-          y: 291,
-        },
-        {
-          x: 'skateboard',
-          y: 57,
-        },
-        {
-          x: 'others',
-          y: 232,
-        },
       ],
     },
     {
@@ -163,18 +152,6 @@ const data = [
           x: 'bicycle',
           y: 206,
         },
-        {
-          x: 'horse',
-          y: 288,
-        },
-        {
-          x: 'skateboard',
-          y: 149,
-        },
-        {
-          x: 'others',
-          y: 249,
-        },
       ],
     },
     {
@@ -216,18 +193,6 @@ const data = [
         {
           x: 'bicycle',
           y: 243,
-        },
-        {
-          x: 'horse',
-          y: 294,
-        },
-        {
-          x: 'skateboard',
-          y: 252,
-        },
-        {
-          x: 'others',
-          y: 107,
         },
       ],
     },
@@ -273,18 +238,6 @@ const data = [
           x: 'bicycle',
           y: 83,
         },
-        {
-          x: 'horse',
-          y: 237,
-        },
-        {
-          x: 'skateboard',
-          y: 79,
-        },
-        {
-          x: 'others',
-          y: 160,
-        },
       ],
     },
     {
@@ -327,18 +280,6 @@ const data = [
           x: 'bicycle',
           y: 276,
         },
-        {
-          x: 'horse',
-          y: 181,
-        },
-        {
-          x: 'skateboard',
-          y: 254,
-        },
-        {
-          x: 'others',
-          y: 295,
-        },
       ],
     },
     {
@@ -380,18 +321,6 @@ const data = [
         {
           x: 'bicycle',
           y: 237,
-        },
-        {
-          x: 'horse',
-          y: 17,
-        },
-        {
-          x: 'skateboard',
-          y: 31,
-        },
-        {
-          x: 'others',
-          y: 112,
         },
       ],
     },
@@ -437,18 +366,6 @@ const data = [
           x: 'bicycle',
           y: 53,
         },
-        {
-          x: 'horse',
-          y: 227,
-        },
-        {
-          x: 'skateboard',
-          y: 276,
-        },
-        {
-          x: 'others',
-          y: 140,
-        },
       ],
     },
     {
@@ -491,18 +408,6 @@ const data = [
           x: 'bicycle',
           y: 112,
         },
-        {
-          x: 'horse',
-          y: 209,
-        },
-        {
-          x: 'skateboard',
-          y: 59,
-        },
-        {
-          x: 'others',
-          y: 77,
-        },
       ],
     },
     {
@@ -544,18 +449,6 @@ const data = [
         {
           x: 'bicycle',
           y: 290,
-        },
-        {
-          x: 'horse',
-          y: 263,
-        },
-        {
-          x: 'skateboard',
-          y: 10,
-        },
-        {
-          x: 'others',
-          y: 11,
         },
       ],
     },

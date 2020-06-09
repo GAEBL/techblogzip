@@ -14,9 +14,15 @@ def get_contents(company):
             ERROR_MESSAGE['company'] = company.name
             return ERROR_MESSAGE
 
-        contents, articles = '', CSS_SELECTOR('p')
+        articles = CSS_SELECTOR('h1')
+        articles += CSS_SELECTOR('h2')
+        articles += CSS_SELECTOR('h3')
+        articles += CSS_SELECTOR('p')
+
+        contents = ''
         for article in articles:
-            contents += article.text + '\n'
+            if not article.find_elements_by_css_selector('code'):
+                contents += article.text + ' '
 
         post.contents = contents
         post.save()

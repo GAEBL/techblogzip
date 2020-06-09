@@ -1,12 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import SimpleButton from './Material/SimpleButton';
 import SimpleTextField from './Material/SimpleTextField';
 import Logo from './Logo';
 import { Link, withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeInput, login, register } from '../reducers/auth';
+import { changeInput, login, register, clearError } from '../reducers/auth';
 import { colors, Fade } from '@material-ui/core';
+import LoadingSpinner from './LoadingSpinner';
 
 const AuthTemplateWrapper = styled.div`
   width: 100%;
@@ -44,20 +45,31 @@ const StyledLink = styled(Link)`
   color: black;
 `;
 
-const StyledCheckBox = styled.div`
-  justify-self: center;
-  align-self: center;
-  padding: 0.5rem 0;
-  input {
-    margin-right: 0.5rem;
-  }
-`;
-
 function AuthTemplate({ type, history }) {
-  const { form, isLoggedIn } = useSelector(({ auth, user }) => ({
-    form: auth[type],
-    isLoggedIn: user.isLoggedIn,
-  }));
+  const { form, isLoggedIn, error, loading } = useSelector(
+    ({ auth, user, loading }) => ({
+      form: auth[type],
+      isLoggedIn: user.isLoggedIn,
+      error: auth.error,
+      loading: loading[`auth/${type.toUpperCase()}`],
+    }),
+  );
+
+  const [errorMessage, setErrorMessage] = useState({
+    username: { state: false, text: '' },
+    password: { state: false, text: '' },
+    passwordConfirm: { state: false, text: '' },
+    email: { state: false, text: '' },
+  });
+
+  const clearErrorMessage = () => {
+    setErrorMessage({
+      username: { state: false, text: '' },
+      password: { state: false, text: '' },
+      passwordConfirm: { state: false, text: '' },
+      email: { state: false, text: '' },
+    });
+  };
 
   const dispatch = useDispatch();
   const handleChange = (e) => {
@@ -65,34 +77,73 @@ function AuthTemplate({ type, history }) {
     dispatch(changeInput({ type, name, value }));
   };
 
-  const handleCheckBox = (e) => {
-    const { name, value } = e.target;
-    dispatch(
-      changeInput({ type, name, value: value === 'false' ? true : false }),
-    );
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
+    clearErrorMessage();
     if (type === 'login') {
       dispatch(login({ username: form.username, password: form.password }));
     } else {
+      if (form.password !== form.passwordConfirm) {
+        setErrorMessage({
+          ...errorMessage,
+          passwordConfirm: { state: true, text: '비밀번호가 다릅니다.' },
+        });
+        return;
+      }
       dispatch(
         register({
           username: form.username,
           password: form.password,
           email: form.email,
-          is_subscribed: form.is_subscribed,
+          is_subscribed: true,
         }),
       );
     }
   };
 
   useEffect(() => {
+    clearErrorMessage();
     if (isLoggedIn) {
       history.push('/');
     }
   }, [isLoggedIn, history, dispatch]);
+
+  useEffect(() => {
+    if (error) {
+      const { status, config } = error.response;
+      if (config.url === '/auth/login/') {
+        if (status === 404) {
+          setErrorMessage({
+            ...errorMessage,
+            username: { state: true, text: '존재하지 않는 사용자 입니다.' },
+            password: { state: true, text: '존재하지 않는 사용자 입니다.' },
+          });
+        } else if (status === 400) {
+          setErrorMessage({
+            ...errorMessage,
+            password: { state: true, text: '올바른 비밀번호를 입력해주세요.' },
+          });
+        }
+      } else {
+        if (status === 409) {
+          setErrorMessage({
+            ...errorMessage,
+            username: { state: true, text: '이미 존재하는 사용자입니다.' },
+          });
+        } else {
+          const { data } = error.response;
+          if (data.email) {
+            setErrorMessage({
+              ...errorMessage,
+              email: { state: true, text: data.email },
+            });
+          }
+        }
+      }
+    }
+    dispatch(clearError());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error]);
 
   return (
     <Fade in={true} {...{ timeout: 1000 }}>
@@ -101,15 +152,18 @@ function AuthTemplate({ type, history }) {
           <Logo margin />
           <SimpleTextField
             value={form.username}
+            error={errorMessage.username.state}
+            helperText={errorMessage.username.text}
             type="text"
             name="username"
             label="유저명"
             onChange={handleChange}
             required
           />
-
           <SimpleTextField
             value={form.password}
+            error={errorMessage.password.state}
+            helperText={errorMessage.password.text}
             type="password"
             name="password"
             label="비밀번호"
@@ -120,6 +174,8 @@ function AuthTemplate({ type, history }) {
             <>
               <SimpleTextField
                 value={form.passwordConfirm}
+                error={errorMessage.passwordConfirm.state}
+                helperText={errorMessage.passwordConfirm.text}
                 type="password"
                 name="passwordConfirm"
                 label="비밀번호 확인"
@@ -128,26 +184,29 @@ function AuthTemplate({ type, history }) {
               />
               <SimpleTextField
                 value={form.email}
+                error={errorMessage.email.state}
+                helperText={errorMessage.email.text}
                 type="text"
                 name="email"
                 label="이메일"
                 onChange={handleChange}
                 required
               />
-              <StyledCheckBox>
-                <input
-                  type="checkbox"
-                  name="is_subscribed"
-                  value={form.is_subscribed}
-                  onChange={handleCheckBox}
-                />
-                <label htmlFor="is_subscribed">이메일 구독에 동의합니다.</label>
-              </StyledCheckBox>
             </>
           )}
           <ButtonContainer>
             <SimpleButton type="submit">
-              {type === 'login' ? '로그인' : '회원가입'}
+              {loading ? (
+                <LoadingSpinner
+                  type="cylon"
+                  size={'30px'}
+                  color={colors.grey[100]}
+                />
+              ) : type === 'login' ? (
+                '로그인'
+              ) : (
+                '회원가입'
+              )}
             </SimpleButton>
             <StyledLink to={type === 'login' ? '/register' : '/login'}>
               {type === 'login' ? '회원가입' : '로그인'}

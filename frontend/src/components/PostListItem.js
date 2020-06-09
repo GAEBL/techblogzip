@@ -1,14 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Card, colors, Fade } from '@material-ui/core';
+import { colors, Fade } from '@material-ui/core';
 import TagList from './TagList';
 import CompanyLogo from './CompanyLogo';
 import LikeButton from './LikeButton';
+import cn from 'classnames';
 
-const ItemCard = styled(Card)`
+const ItemCard = styled.div`
   display: grid;
   grid-gap: 1rem;
   padding: 1.5rem;
+  border-radius: 5px;
+  box-shadow: 0 0px 1.1px rgba(0, 0, 0, 0.019), 0 0px 6.3px rgba(0, 0, 0, 0.027),
+    0 0px 16.4px rgba(0, 0, 0, 0.033), 0 0px 34.7px rgba(0, 0, 0, 0.041),
+    0 0px 80px rgba(0, 0, 0, 0.06);
 
   .item__info {
     display: grid;
@@ -50,8 +55,12 @@ const ItemCard = styled(Card)`
     text-overflow: ellipsis;
     overflow: hidden;
     line-height: 25px;
-    max-height: 75px;
+    max-height: 275px;
     /* word-break: break-word; */
+    &.image {
+      line-height: 25px;
+      max-height: 75px;
+    }
   }
 `;
 
@@ -76,7 +85,12 @@ function PostListItem({ post }) {
       <ItemCard>
         <div className="item__info">
           <CompanyLogo name={company.name} />
-          <a className="info__title" href={url}>
+          <a
+            className="info__title"
+            target="_blank"
+            rel="noopener noreferrer"
+            href={url}
+          >
             {title}
           </a>
         </div>
@@ -88,8 +102,10 @@ function PostListItem({ post }) {
           />
           <span className="item__date">{date}</span>
         </div>
-        <p className="item__summary">{contents}</p>
-        <img className="item__img" src={image} alt="thumnail" />
+        <p className={cn('item__summary', { image })}>{contents}</p>
+        {image ? (
+          <img className="item__img" src={image} alt="thumnail" />
+        ) : null}
         <TagList tags={tags} />
       </ItemCard>
     </Fade>

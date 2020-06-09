@@ -3,6 +3,8 @@ import { InputBase, IconButton, Paper } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setPage } from '../../reducers/post';
 
 const SearchInputWrapper = styled.form``;
 
@@ -18,7 +20,7 @@ const CustomInputBase = styled(InputBase)`
 
 function SearchInput({ history, handleClose = null, dense = false }) {
   const [query, setQuery] = useState('');
-
+  const dispatch = useDispatch();
   const handleQuery = (e) => {
     const { value } = e.target;
     setQuery(value);
@@ -27,18 +29,28 @@ function SearchInput({ history, handleClose = null, dense = false }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (query.length === 0) return;
+
+    dispatch(setPage(1));
     setQuery('');
+
+    if (query.includes('#')) {
+      const word = query.replace('#', '');
+      history.push(`/tag/${word}`);
+      return;
+    }
+
     if (handleClose) {
       handleClose();
     }
+
     history.push(`/search/${query}`);
   };
 
   return (
     <SearchInputWrapper onSubmit={handleSubmit}>
-      <CustomPaper dense={dense}>
+      <CustomPaper dense={dense.toString()}>
         <CustomInputBase
-          placeholder="검색해보세요"
+          placeholder="#검색어로 태그검색"
           value={query}
           onChange={handleQuery}
         />

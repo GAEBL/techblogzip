@@ -3,19 +3,25 @@ import { useSelector, useDispatch } from 'react-redux';
 import PostListItem from './PostListItem';
 import { clearPosts } from '../reducers/post';
 import styled from 'styled-components';
-import ZipLoading from './ZipLoading';
+import CylonSpinner from './CylonSpinner';
 
 const PostListWrapper = styled.div`
   .posts__container {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     grid-gap: 1rem;
-    @media all and (max-width: 700px) {
+    @media all and (max-width: 1200px) {
+      grid-template-columns: 1fr 1fr;
+    }
+    @media all and (max-width: 800px) {
       grid-template-columns: 1fr;
     }
   }
 
   .posts__zeroitem {
+    font-family: 'VT323', monospace;
+    font-size: 4rem;
+    font-weight: bold;
   }
 `;
 
@@ -33,11 +39,11 @@ function PostList({ actionType, children }) {
   }, [dispatch]);
 
   return (
-    <PostListWrapper>
+    <>
       {loading ? (
-        <ZipLoading />
+        <CylonSpinner />
       ) : (
-        <>
+        <PostListWrapper>
           {children}
           {posts && posts.length > 0 ? (
             <div className="posts__container">
@@ -46,11 +52,16 @@ function PostList({ actionType, children }) {
               ))}
             </div>
           ) : (
-            <div className="posts__zeroitem">결과가 없습니다</div>
+            <div className="posts__zeroitem">
+              <span role="img" aria-label="img">
+                📭
+              </span>{' '}
+              EMPTY POST
+            </div>
           )}
-        </>
+        </PostListWrapper>
       )}
-    </PostListWrapper>
+    </>
   );
 }
 

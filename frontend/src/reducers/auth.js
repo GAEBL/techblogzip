@@ -9,6 +9,7 @@ const [LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE] = createActionTypes('auth/LOGIN');
 const [REGISTER, REGISTER_SUCCESS, REGISTER_FAILURE] = createActionTypes(
   'auth/REGISTER',
 );
+const CLEAR_ERROR = 'auth/CLEAR_ERROR';
 
 export const changeInput = createAction(
   CHANGE_INPUT,
@@ -20,6 +21,7 @@ export const changeInput = createAction(
 );
 export const login = createRequestThunk(LOGIN, Auth.login);
 export const register = createRequestThunk(REGISTER, Auth.register);
+export const clearError = createAction(CLEAR_ERROR);
 
 const initialState = {
   login: {
@@ -60,6 +62,9 @@ const auth = handleActions(
     [REGISTER_FAILURE]: (state, { payload: error }) => ({
       ...state,
       error,
+    }),
+    [CLEAR_ERROR]: (state) => ({
+      ...state,
     }),
   },
   initialState,

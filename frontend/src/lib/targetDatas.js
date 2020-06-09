@@ -1,18 +1,18 @@
 export default [
   {
-    targetData: 'language',
-    displayName: '프로그래밍언어',
-  },
-  {
-    targetData: 'lib',
-    displayName: 'LIB/FRAMEWORK',
+    targetData: 'backend',
+    displayName: '백엔드',
   },
   {
     targetData: 'frontend',
-    displayName: 'FRONTEND',
+    displayName: '프론트엔드',
   },
   {
-    targetData: 'backend',
-    displayName: 'BACKEND',
+    targetData: 'language',
+    displayName: '언어별',
+  },
+  {
+    targetData: 'lib',
+    displayName: '개발ETC',
   },
 ];

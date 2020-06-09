@@ -11,16 +11,14 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
-import datetime
 import sys
 import json
+import datetime
 from django.core.exceptions import ImproperlyConfigured
-
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
-with open('secrets.json') as f:
+with open(BASE_DIR + '/secrets.json') as f:
     secrets = json.loads(f.read())
 
 
@@ -36,6 +34,7 @@ SECRET_KEY = get_secret('SECRET_KEY')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
+
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
@@ -44,13 +43,19 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'accounts',
+    # applications
     'mainapp',
+    'accounts',
     'crawling',
-    'recommend',
+    'search',
+    'trend',
+    'like',
+    # additional libs
     'rest_framework',
+    'django_crontab',
     'corsheaders',
     'drf_yasg',
+    # original libs
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -146,7 +151,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MEDIA_URL = '/media/'
 
-
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -157,9 +161,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 12
 }
-
 
 JWT_AUTH = {
     'JWT_SECRET_KEY': SECRET_KEY,
@@ -172,5 +175,8 @@ JWT_AUTH = {
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-
 AUTH_USER_MODEL = 'accounts.User'
+
+CRONJOBS = [
+    ('0 5 * * *', 'crawling.cron.crawling', '>> crawling_schdule.log'),
+]

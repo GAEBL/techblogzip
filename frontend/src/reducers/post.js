@@ -40,6 +40,8 @@ const [
   GET_POSTS_BY_LIKED_FAILURE,
 ] = createActionTypes('post/GET_POSTS_BY_LIKED');
 
+const SET_PAGE = 'post/SET_PAGE';
+
 export const getAllPosts = createRequestThunk(GET_ALL_POSTS, Post.getAllPosts);
 export const clearPosts = createAction(CLEAR_POSTS);
 export const getMainpageData = createRequestThunk(
@@ -60,9 +62,12 @@ export const getPostsByLiked = createRequestThunk(
   Post.getPostsByLiked,
 );
 
+export const setPage = createAction(SET_PAGE, (page) => page);
+
 const initialState = {
   main: [],
   posts: [],
+  page: 1,
   lastPage: null,
   resultNum: null,
   error: null,
@@ -75,6 +80,7 @@ const post = handleActions(
     [CLEAR_POSTS]: (state) => ({
       ...state,
       posts: [],
+      page: 1,
       lastPage: null,
       resultNum: null,
       pageData: null,
@@ -162,6 +168,10 @@ const post = handleActions(
     [GET_POSTS_BY_LIKED_FAILURE]: (state, { payload: error }) => ({
       ...state,
       error,
+    }),
+    [SET_PAGE]: (state, { payload }) => ({
+      ...state,
+      page: payload,
     }),
   },
   initialState,

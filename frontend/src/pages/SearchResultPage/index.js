@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import SearchInput from './SearchInput';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { getSearchResults, clearPosts } from '../../reducers/post';
+import { getSearchResults } from '../../reducers/post';
 import PostList from '../../components/PostList';
 import SimplePagination from '../../components/Material/SimplePagination';
 import { Fade } from '@material-ui/core';
+import { withRouter } from 'react-router-dom';
 
 const SearchResultPageWraaper = styled.div`
   max-width: ${({ theme }) => theme.maxPageWidth};
@@ -28,16 +29,15 @@ const SearchResultPageWraaper = styled.div`
 
 function SearchResultPage({ match }) {
   const { query } = match.params;
-  const [page, setPage] = useState(1);
-  const { postsCount } = useSelector(({ post }) => ({
+
+  const { postsCount, page } = useSelector(({ post }) => ({
     postsCount: post.resultNum,
+    page: post.page,
   }));
 
   const dispatch = useDispatch();
-  const handlePage = (nextPage) => setPage(nextPage);
 
   useEffect(() => {
-    dispatch(clearPosts());
     dispatch(getSearchResults({ query, page }));
   }, [dispatch, query, page]);
 
@@ -58,10 +58,10 @@ function SearchResultPage({ match }) {
           </div>
         </PostList>
 
-        <SimplePagination currentPage={page} handlePage={handlePage} />
+        <SimplePagination />
       </SearchResultPageWraaper>
     </Fade>
   );
 }
 
-export default SearchResultPage;
+export default withRouter(SearchResultPage);
