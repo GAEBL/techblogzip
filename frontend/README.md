@@ -37,12 +37,8 @@ client.defaults.baseURL = 'BACKEND_API_ROOT_URL';
 ![와이어프레임](../md/mock2.png)
 ![와이어프레임](../md/mock3.png)
 
-#### 전체 목업
-
-![와이어프레임](../md/allmock.png)
-
-## 완성 디자인
+### 완성 디자인
 
 ![메인페이지1](../md/mainpage1.png)
 
-> **[gif 보러가기](../readme.md)**
+> **[gif 보러가기](../README.md)**
