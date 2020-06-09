@@ -8,7 +8,7 @@ IT 기업 기술 블로그 수집 및 데이터 분석을 통해 개발 트렌�
 2. 수많은 개발 블로그, 그런데 어디서 한눈에 👀 보지?
 3. 큐레이팅 🤳을 통해 줄 수 있는 다양한 가치들
 
-## 🙇‍♂️ 팀원
+## 👊 팀원
 
 | 역할                                 | 이름   |
 | ------------------------------------ | ------ |
@@ -28,7 +28,7 @@ IT 기업 기술 블로그 수집 및 데이터 분석을 통해 개발 트렌�
 - uWSGI
 - Crontab
 
-## 👋🏻 시작하기 Getting Started
+## 👋 시작하기 Getting Started
 
 [FRONTEND README](frontend/README.md)
 
@@ -38,22 +38,22 @@ IT 기업 기술 블로그 수집 및 데이터 분석을 통해 개발 트렌�
 
 ### 👐 메인페이지
 
-![메인페이지1](md/mainpage.gif)
+<p align="center"><img src="md/mainpage.gif"></p>
 
 ### 📝 LATEST-POST
 
-![최신글1](md/post1.gif)
+<p align="center"><img src="md/post1.gif"></p>
 
 ### 📈 TREND
 
-![트렌드1](md/trend1.gif)
+<p align="center"><img src="md/trend1.gif"></p>
 
 ### 🔎 SEARCH
 
 #### 일반검색
 
-![검색1](md/search1.gif)
+<p align="center"><img src="md/search1.gif"></p>
 
 #### 태그검색
 
-![검색2](md/search2.gif)
+<p align="center"><img src="md/search2.gif"></p>
