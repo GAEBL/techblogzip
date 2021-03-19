@@ -14,7 +14,7 @@ coreschema==0.0.4
 Django==3.0.6
 django-cors-headers==3.2.1
 django-crontab==0.7.1
-djangorestframework==3.11.0
+djangorestframework==3.11.2
 djangorestframework-jwt==1.11.0
 drf-yasg==1.17.1
 gast==0.3.3
