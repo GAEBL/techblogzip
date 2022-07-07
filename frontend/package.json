@@ -20,7 +20,7 @@
     "date-fns": "^2.14.0",
     "immer": "^6.0.5",
     "lodash": "^4.17.15",
-    "moment": "^2.26.0",
+    "moment": "^2.29.4",
     "react": "^16.13.1",
     "react-countup": "^4.3.3",
     "react-dom": "^16.13.1",
